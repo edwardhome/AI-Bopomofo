@@ -11,7 +11,7 @@ func fail(_ text: String) -> Never {
 }
 let args = Array(CommandLine.arguments.dropFirst())
 guard args.count <= 1 else { fail("Usage: ai-bopomofo-input [current|normal|insert|--vscode-obtain|source-id]") }
-let sources = TISCreateInputSourceList(nil, false).takeRetainedValue() as! [TISInputSource]
+let sources = TISCreateInputSourceList(nil, true).takeRetainedValue() as! [TISInputSource]
 let current = property(TISCopyCurrentKeyboardInputSource().takeRetainedValue(), kTISPropertyInputSourceID)
 let command = args.first ?? "current"
 if command == "current" { print(current); exit(0) }
@@ -41,5 +41,9 @@ default:
     target = sources.first { property($0, kTISPropertyInputSourceID) == command }
 }
 guard let target else { fail("Requested input source is not available") }
+if property(target, kTISPropertyBundleID) == "org.aibopomofo.inputmethod.AIBopomofo" {
+    let enabled = TISEnableInputSource(target)
+    guard enabled == noErr else { fail("Input source enable failed: \(enabled)") }
+}
 let result = TISSelectInputSource(target)
 guard result == noErr else { fail("Input source selection failed: \(result)") }

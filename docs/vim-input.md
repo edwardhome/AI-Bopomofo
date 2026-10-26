@@ -31,3 +31,5 @@ VS Code 使用已安裝的 VSCodeVim（vscodevim.vim）與其 autoSwitchInputMet
 參考：[VSCodeVim 輸入法切換](https://github.com/VSCodeVim/Vim#input-method)、[Neovim 自動命令](https://neovim.io/doc/user/autocmd/)。
 
 更新時間：2026-10-26T22:35:15+08:00
+
+本機 0.6.0 安裝後，新英文來源在本次登入期間尚未啟用（選取回傳 -50）。使用者決定稍後登出再登入；Vim 自動切換仍待重新登入後驗證，不能當作已實機通過。若重新登入後仍未自動啟用，需在鍵盤設定加入「AI注音輸入法 英文」。
