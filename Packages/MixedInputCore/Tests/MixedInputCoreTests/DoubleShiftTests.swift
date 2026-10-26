@@ -23,12 +23,12 @@ import Testing
         #expect(g.update(shiftDown: false, otherModifiers: false, time: 0.5) == false)
         #expect(!tap(&g, at: 0.6)); #expect(!tap(&g, at: 1.2))
     }
-    @Test func overlappingShiftsAndFocusChangeCancel() {
+    @Test func focusChangeClearsFirstTap() {
         var g = DoubleShiftGesture()
-        _ = g.update(shiftDown: true, otherModifiers: false, time: 0)
-        _ = g.update(shiftDown: true, otherModifiers: false, time: 0.01)
-        #expect(g.update(shiftDown: false, otherModifiers: false, time: 0.05) == false)
-        #expect(!tap(&g, at: 0.1)); g.reset(); #expect(!tap(&g, at: 0.2))
+        #expect(!tap(&g, at: 0))
+        g.reset()
+        #expect(!tap(&g, at: 0.1))
+        #expect(tap(&g, at: 0.2))
     }
     @Test func uppercaseFChordDoesNotCountAsShiftTap() {
         var g = DoubleShiftGesture()
@@ -59,14 +59,14 @@ import Testing
         #expect(tap(&g, at: 0.3))
     }
 
-    @Test func overlappingShiftsRequireFreshPairAfterBothRelease() {
+    @Test func continuousShiftStateCountsAsOnlyOneTap() {
         var g = DoubleShiftGesture()
         #expect(g.update(shiftDown: true, otherModifiers: false, time: 0) == false)
         #expect(g.update(shiftDown: true, otherModifiers: false, time: 0.01) == false)
         #expect(g.update(shiftDown: true, otherModifiers: false, time: 0.02) == false)
         #expect(g.update(shiftDown: false, otherModifiers: false, time: 0.03) == false)
-        #expect(!tap(&g, at: 0.1))
-        #expect(tap(&g, at: 0.2))
+        #expect(tap(&g, at: 0.1))
+        #expect(!tap(&g, at: 0.2))
     }
 
     @Test func invalidOrReversedTimesDoNotToggle() {
@@ -77,6 +77,47 @@ import Testing
         #expect(g.update(shiftDown: false, otherModifiers: false, time: 1.1) == false)
         #expect(!tap(&g, at: 1.2))
         #expect(tap(&g, at: 1.3))
+    }
+
+    @Test func duplicatedIMKStateTraceTogglesOncePerPair() {
+        // Relative times and Shift state from a user-operated IMK session; no text or key codes.
+        let events: [(Double, Bool)] = [
+            (0.000000, true),
+            (0.009039, true),
+            (0.093952, false),
+            (0.101317, false),
+            (0.177079, true),
+            (0.185815, true),
+            (0.259797, false),
+            (0.265476, false),
+            (0.696150, true),
+            (0.704858, true),
+            (0.799292, false),
+            (0.806327, false),
+            (0.881575, true),
+            (0.892519, true),
+            (0.960975, false),
+            (0.967865, false)
+        ]
+        var g = DoubleShiftGesture()
+        var toggles: [Int] = []
+        for (index, event) in events.enumerated() {
+            if g.update(shiftDown: event.1, otherModifiers: false, time: event.0) {
+                toggles.append(index)
+                g.reset() // The controller resets after changing modes.
+            }
+        }
+        #expect(toggles == [6, 14])
+    }
+
+    @Test func duplicateDownDoesNotRestartLongPressTimer() {
+        var g = DoubleShiftGesture()
+        #expect(!tap(&g, at: 0))
+        #expect(g.update(shiftDown: true, otherModifiers: false, time: 0.1) == false)
+        #expect(g.update(shiftDown: true, otherModifiers: false, time: 0.3) == false)
+        #expect(g.update(shiftDown: false, otherModifiers: false, time: 0.4) == false)
+        #expect(!tap(&g, at: 0.5))
+        #expect(tap(&g, at: 0.6))
     }
 
 }

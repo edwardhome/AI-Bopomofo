@@ -21,9 +21,8 @@ public struct DoubleShiftGesture {
         shiftWasDown = shiftDown
         guard time.isFinite, !otherModifiers else { cancelSequence(); return false }
         guard changed else {
-            // A second down notification can mean overlapping left/right Shift keys.
-            // An idle flags snapshot is harmless and must not erase the first tap.
-            if shiftDown { cancelSequence() }
+            // IMK may deliver each modifier snapshot more than once. Only an actual
+            // state transition can start/end a tap; repeats must not reset its timer.
             return false
         }
         if shiftDown {
