@@ -30,6 +30,7 @@ import InputMethodKit
 import InputSourceHelper
 import NotifierUI
 import OpenCCBridge
+import OSLog
 import SystemCharacterInfo
 import TooltipUI
 
@@ -60,6 +61,15 @@ class McBopomofoInputMethodController: IMKInputController {
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
     private var shiftGesture = DoubleShiftGesture()
+    // Explicitly enabled, bounded diagnostics. Never record text or key codes.
+    private static let shiftDiagnosticLog = Logger(
+        subsystem: "org.aibopomofo.inputmethod.AIBopomofo", category: "ShiftDiagnostic")
+    private static var shiftDiagnosticDeadline: TimeInterval = 0
+    private static var shiftDiagnosticRemaining = 0
+    private enum ShiftDiagnosticEvent: String {
+        case start, expired, limit, secureStop, activate, deactivate, setValue
+        case recognizedEvents, missingEvent, flags, keyDownReset, matched, toggle
+    }
     private var directEnglish = false
     private var modeIndicator: TooltipController?
     private var modeIndicatorTimer: Timer?
@@ -114,6 +124,9 @@ class McBopomofoInputMethodController: IMKInputController {
         let advanced = NSMenu(title: NSLocalizedString("Advanced Tools", comment: ""))
         let advancedItem = menu.addItem(withTitle: advanced.title, action: nil, keyEquivalent: "")
         advancedItem.submenu = advanced
+        advanced.addItem(
+            withTitle: NSLocalizedString("Diagnose Double Shift (20 Seconds)", comment: ""),
+            action: #selector(startShiftDiagnostic(_:)), keyEquivalent: "")
         let legacyItem = advanced.addItem(withTitle: NSLocalizedString("Backtick Opens Punctuation List", comment: ""),
                                           action: #selector(toggleBacktickMenu(_:)), keyEquivalent: "")
         legacyItem.state = Preferences.backtickOpensPunctuationList.state
@@ -222,6 +235,7 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        recordShiftDiagnostic(.activate)
         hideInputModeIndicator()
         shiftGesture.reset()
         directEnglish = false
@@ -248,6 +262,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        recordShiftDiagnostic(.deactivate)
         hideInputModeIndicator()
         shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
@@ -261,6 +276,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func setValue(_ value: Any!, forTag tag: Int, client: Any!) {
+        recordShiftDiagnostic(.setValue)
         hideInputModeIndicator()
         if let assistance = state as? InputState.Assistance {
             handle(state: assistance.original, client: client)
@@ -319,8 +335,37 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func recognizedEvents(_ sender: Any!) -> Int {
+        recordShiftDiagnostic(.recognizedEvents)
         let events: NSEvent.EventTypeMask = [.keyDown, .keyUp, .flagsChanged]
         return Int(events.rawValue)
+    }
+
+    @objc private func startShiftDiagnostic(_ sender: Any?) {
+        guard !IsSecureEventInputEnabled() else { return }
+        Self.shiftDiagnosticDeadline = ProcessInfo.processInfo.systemUptime + 20
+        Self.shiftDiagnosticRemaining = 80
+        recordShiftDiagnostic(.start)
+    }
+
+    private func recordShiftDiagnostic(_ event: ShiftDiagnosticEvent, flags: UInt = 0) {
+        guard Self.shiftDiagnosticDeadline > 0 else { return }
+        let now = ProcessInfo.processInfo.systemUptime
+        let recordedEvent: ShiftDiagnosticEvent
+        if IsSecureEventInputEnabled() {
+            recordedEvent = .secureStop
+        } else if now >= Self.shiftDiagnosticDeadline {
+            recordedEvent = .expired
+        } else if Self.shiftDiagnosticRemaining <= 0 {
+            recordedEvent = .limit
+        } else {
+            recordedEvent = event
+        }
+        let stopped = recordedEvent == .secureStop || recordedEvent == .expired || recordedEvent == .limit
+        if stopped { Self.shiftDiagnosticDeadline = 0 }
+        Self.shiftDiagnosticRemaining -= 1
+        let controller = ObjectIdentifier(self).hashValue
+        let safeFlags = stopped ? 0 : flags
+        Self.shiftDiagnosticLog.notice("event=\(recordedEvent.rawValue, privacy: .public) controller=\(controller, privacy: .public) uptime=\(now, privacy: .public) modifiers=\(safeFlags, privacy: .public) english=\(self.directEnglish, privacy: .public)")
     }
 
     @objc private func toggleDirectEnglish(_ sender: Any?) {
@@ -329,6 +374,7 @@ class McBopomofoInputMethodController: IMKInputController {
         keyHandler.clear()
         handle(state: .EmptyIgnoringPreviousState(), client: currentClient)
         directEnglish.toggle()
+        recordShiftDiagnostic(.toggle)
         shiftGesture.reset()
         showInputModeIndicator(client: currentClient)
     }
@@ -460,6 +506,7 @@ class McBopomofoInputMethodController: IMKInputController {
     override func handle(_ maybeEvent: NSEvent!, client: Any!) -> Bool {
         // nil may be passed, applefeedback://FB11472618
         guard let event = maybeEvent else {
+            recordShiftDiagnostic(.missingEvent)
             hideInputModeIndicator()
             commitComposition(client)
             return false
@@ -468,15 +515,23 @@ class McBopomofoInputMethodController: IMKInputController {
         if event.type == .keyDown || IsSecureEventInputEnabled() {
             hideInputModeIndicator()
         }
-        if IsSecureEventInputEnabled() { shiftGesture.reset() }
+        if IsSecureEventInputEnabled() {
+            recordShiftDiagnostic(.secureStop)
+            shiftGesture.reset()
+        }
         else if event.type == .flagsChanged {
+            recordShiftDiagnostic(.flags, flags: event.modifierFlags.rawValue)
             let other = !event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty
             if shiftGesture.update(shiftDown: event.modifierFlags.contains(.shift),
                                    otherModifiers: other, time: ProcessInfo.processInfo.systemUptime) {
+                recordShiftDiagnostic(.matched)
                 toggleDirectEnglish(nil)
                 return true
             }
-        } else if event.type == .keyDown { shiftGesture.reset() }
+        } else if event.type == .keyDown {
+            recordShiftDiagnostic(.keyDownReset)
+            shiftGesture.reset()
+        }
         // Keep ownership until key-up even when F was released before a symbol key.
         if event.type == .keyUp, symbolKeysDown.remove(event.keyCode) != nil { return true }
         if event.type == .keyDown, event.isARepeat, symbolKeysDown.contains(event.keyCode),
