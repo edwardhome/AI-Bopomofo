@@ -30,7 +30,6 @@ import InputMethodKit
 import InputSourceHelper
 import NotifierUI
 import OpenCCBridge
-import OSLog
 import SystemCharacterInfo
 import TooltipUI
 
@@ -62,8 +61,7 @@ class McBopomofoInputMethodController: IMKInputController {
     let textAssistant = TextAssistant()
     private var shiftGesture = DoubleShiftGesture()
     // Explicitly enabled, bounded diagnostics. Never record text or key codes.
-    private static let shiftDiagnosticLog = Logger(
-        subsystem: "org.aibopomofo.inputmethod.AIBopomofo", category: "ShiftDiagnostic")
+    private static var shiftDiagnosticLines: [String] = []
     private static var shiftDiagnosticDeadline: TimeInterval = 0
     private static var shiftDiagnosticRemaining = 0
     private enum ShiftDiagnosticEvent: String {
@@ -342,6 +340,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
     @objc private func startShiftDiagnostic(_ sender: Any?) {
         guard !IsSecureEventInputEnabled() else { return }
+        Self.shiftDiagnosticLines.removeAll()
         Self.shiftDiagnosticDeadline = ProcessInfo.processInfo.systemUptime + 20
         Self.shiftDiagnosticRemaining = 80
         recordShiftDiagnostic(.start)
@@ -365,7 +364,24 @@ class McBopomofoInputMethodController: IMKInputController {
         Self.shiftDiagnosticRemaining -= 1
         let controller = ObjectIdentifier(self).hashValue
         let safeFlags = stopped ? 0 : flags
-        Self.shiftDiagnosticLog.notice("event=\(recordedEvent.rawValue, privacy: .public) controller=\(controller, privacy: .public) uptime=\(now, privacy: .public) modifiers=\(safeFlags, privacy: .public) english=\(self.directEnglish, privacy: .public)")
+        Self.shiftDiagnosticLines.append(
+            "event=\(recordedEvent.rawValue) controller=\(controller) uptime=\(now) modifiers=\(safeFlags) english=\(directEnglish)")
+        do {
+            let cache = try FileManager.default.url(
+                for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let directory = cache.appendingPathComponent("org.aibopomofo.inputmethod.AIBopomofo", isDirectory: true)
+            try FileManager.default.createDirectory(
+                at: directory, withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700])
+            let report = directory.appendingPathComponent("shift-diagnostic.log")
+            let data = Data((Self.shiftDiagnosticLines.joined(separator: "\n") + "\n").utf8)
+            try data.write(to: report, options: .atomic)
+            try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: report.path)
+        } catch {
+            // A diagnostic write failure must never interfere with ordinary input.
+            Self.shiftDiagnosticDeadline = 0
+            Self.shiftDiagnosticLines.removeAll()
+        }
     }
 
     @objc private func toggleDirectEnglish(_ sender: Any?) {
