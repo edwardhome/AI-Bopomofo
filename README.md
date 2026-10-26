@@ -2,7 +2,7 @@
 
 以 [McBopomofo](https://github.com/openvanilla/McBopomofo) 為上游的獨立 macOS 注音輸入法專案，目標為繁體中文、中英文、數字與程式符號混打，以及可選的本機候選排序。以 Zing 的混打與智慧選字體驗為產品參考。
 
-已保存 `dist/0.5.0-alpha/` 的 app、pkg、zip（arm64／x86_64）。最新已安裝版本為 0.6.0-alpha，新增 [Vim／Shift 與英文 F 分層](docs/vim-input.md)；Vim 自動切換尚待重新登入後驗證。0.5.0-alpha 起新增[本機錯字檢查與英文上下文預測](docs/text-assistance.md)。已安裝的 0.4.0 保持不變；新版本須先完成人工驗收。
+0.6.1-alpha 移除本專案新增的 Vim 自動切換整合，保留雙擊 Shift，並加入游標旁的「英文」／「注音」提示；詳見 [Shift 與 F 操作](docs/vim-input.md)。0.5.0-alpha 起提供[本機錯字檢查與英文上下文預測](docs/text-assistance.md)。實際安裝與驗收狀態見 [交付報告](docs/DELIVERY.md)。
 
 以 Markdown 半形輸入為優先，新增不依賴 Kanata 的 [F 數字／符號分層](docs/quick-symbols.md)。
 

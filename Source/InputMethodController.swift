@@ -61,7 +61,8 @@ class McBopomofoInputMethodController: IMKInputController {
     let textAssistant = TextAssistant()
     private var shiftGesture = DoubleShiftGesture()
     private var directEnglish = false
-    private var englishInputSource = false
+    private var modeIndicator: TooltipController?
+    private var modeIndicatorTimer: Timer?
     private var fHoldGesture = FHoldGesture()
     private let fReleaseMonitor = FReleaseMonitor()
     private static var didRequestFMonitoring = false
@@ -221,8 +222,9 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        hideInputModeIndicator()
         shiftGesture.reset()
-        directEnglish = englishInputSource
+        directEnglish = false
         textAssistant.cancel()
         cancelFHold(client: client)
         symbolKeysDown.removeAll()
@@ -246,6 +248,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        hideInputModeIndicator()
         shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
@@ -258,21 +261,23 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func setValue(_ value: Any!, forTag tag: Int, client: Any!) {
+        hideInputModeIndicator()
         if let assistance = state as? InputState.Assistance {
             handle(state: assistance.original, client: client)
         }
         textAssistant.cancel()
         cancelFHold(client: client)
         let rawMode = value as? String ?? InputMode.bopomofo.rawValue
-        englishInputSource = rawMode == "org.aibopomofo.inputmethod.AIBopomofo.English"
-        if directEnglish != englishInputSource {
+        if directEnglish {
             commitComposition(client)
             keyHandler.clear()
             handle(state: .EmptyIgnoringPreviousState(), client: client)
         }
-        directEnglish = englishInputSource
+        directEnglish = false
         shiftGesture.reset()
-        let newInputMode = InputMode(rawValue: englishInputSource ? InputMode.bopomofo.rawValue : rawMode)
+        // A cached, retired mode must still use a valid language model after upgrading.
+        let newInputMode: InputMode = rawMode == InputMode.plainBopomofo.rawValue
+            ? .plainBopomofo : .bopomofo
         LanguageModelManager.loadDataModel(newInputMode)
         // Restore the client layout even when the internal input mode is unchanged.
         (client as? IMKTextInput)?.overrideKeyboard(
@@ -325,6 +330,7 @@ class McBopomofoInputMethodController: IMKInputController {
         handle(state: .EmptyIgnoringPreviousState(), client: currentClient)
         directEnglish.toggle()
         shiftGesture.reset()
+        showInputModeIndicator(client: currentClient)
     }
 
     @objc private func beginASCII(_ sender: Any?) {
@@ -454,10 +460,14 @@ class McBopomofoInputMethodController: IMKInputController {
     override func handle(_ maybeEvent: NSEvent!, client: Any!) -> Bool {
         // nil may be passed, applefeedback://FB11472618
         guard let event = maybeEvent else {
+            hideInputModeIndicator()
             commitComposition(client)
             return false
         }
 
+        if event.type == .keyDown || IsSecureEventInputEnabled() {
+            hideInputModeIndicator()
+        }
         if IsSecureEventInputEnabled() { shiftGesture.reset() }
         else if event.type == .flagsChanged {
             let isShift = event.keyCode == UInt16(kVK_Shift) || event.keyCode == UInt16(kVK_RightShift)
@@ -673,6 +683,7 @@ class McBopomofoInputMethodController: IMKInputController {
 extension McBopomofoInputMethodController {
 
     func handle(state newState: InputState, client: Any?) {
+        hideInputModeIndicator()
         textAssistant.cancel()
         let previous = state
         state = newState
@@ -1271,6 +1282,38 @@ extension McBopomofoInputMethodController {
 
     private func hideTooltip() {
         McBopomofoInputMethodController.tooltipController.hide()
+    }
+
+    private func showInputModeIndicator(client: Any?) {
+        hideInputModeIndicator()
+        guard !IsSecureEventInputEnabled(), let client = client as? IMKTextInput else { return }
+        var rect = NSRect.zero
+        let attributes = client.attributes(forCharacterIndex: 0, lineHeightRectangle: &rect)
+        // Some clients cannot report a caret. Do not display at an unrelated screen corner.
+        guard rect.origin.x.isFinite, rect.origin.y.isFinite,
+              rect.width.isFinite, rect.height.isFinite,
+              rect.width > 0 || rect.height > 0 else { return }
+        let vertical = (attributes?["IMKTextOrientation"] as? NSNumber)?.intValue == 0
+        let point = NSPoint(x: rect.origin.x + (vertical ? rect.width + 4 : 0),
+                            y: rect.origin.y - 4)
+        let indicator = modeIndicator ?? TooltipController()
+        modeIndicator = indicator
+        indicator.show(tooltip: directEnglish
+            ? NSLocalizedString("Input Mode: English", comment: "Brief caret indicator after switching input mode")
+            : NSLocalizedString("Input Mode: Bopomofo", comment: "Brief caret indicator after switching input mode"),
+            at: point)
+        let timer = Timer(timeInterval: 0.8, repeats: false) { [weak self] _ in
+            // This timer is installed only on the main run loop.
+            MainActor.assumeIsolated { self?.hideInputModeIndicator() }
+        }
+        modeIndicatorTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+
+    private func hideInputModeIndicator() {
+        modeIndicatorTimer?.invalidate()
+        modeIndicatorTimer = nil
+        modeIndicator?.hide()
     }
 
     private func checkUserFileIssues() {

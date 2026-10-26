@@ -297,3 +297,6 @@
 "Allow Input Monitoring for F Layer" = "允許 F 分層使用輸入監控";
 
 "Direct English (Double Shift)" = "全英文直接輸入（雙擊 Shift）";
+
+"Input Mode: English" = "英文";
+"Input Mode: Bopomofo" = "注音";

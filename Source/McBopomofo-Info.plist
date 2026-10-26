@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.0</string>
+	<string>0.6.1</string>
 	<key>CFBundleSignature</key>
 	<string>BPMF</string>
 	<key>CFBundleVersion</key>
-	<string>600</string>
+	<string>601</string>
 	<key>ComponentInputModeDict</key>
 	<dict>
 		<key>tsInputModeListKey</key>
@@ -82,37 +82,11 @@
 				<key>tsInputModeScriptKey</key>
 				<string>smTradChinese</string>
 			</dict>
-			<key>org.aibopomofo.inputmethod.AIBopomofo.English</key>
-			<dict>
-				<key>TISIntendedLanguage</key>
-				<string>en</string>
-				<key>tsInputModeAlternateMenuIconFileKey</key>
-				<string>Bopomofo.tiff</string>
-				<key>tsInputModeCharacterRepertoireKey</key>
-				<array>
-					<string>Latn</string>
-				</array>
-				<key>tsInputModeDefaultStateKey</key>
-				<true/>
-				<key>tsInputModeIsVisibleKey</key>
-				<true/>
-				<key>tsInputModeKeyEquivalentModifiersKey</key>
-				<integer>4608</integer>
-				<key>tsInputModeMenuIconFileKey</key>
-				<string>Bopomofo.tiff</string>
-				<key>tsInputModePaletteIconFileKey</key>
-				<string>Bopomofo.tiff</string>
-				<key>tsInputModePrimaryInScriptKey</key>
-				<false/>
-				<key>tsInputModeScriptKey</key>
-				<string>smRoman</string>
-			</dict>
 		</dict>
 		<key>tsVisibleInputModeOrderedArrayKey</key>
 		<array>
 			<string>org.aibopomofo.inputmethod.AIBopomofo.Bopomofo</string>
 			<string>org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo</string>
-			<string>org.aibopomofo.inputmethod.AIBopomofo.English</string>
 		</array>
 	</dict>
 	<key>InputMethodConnectionName</key>

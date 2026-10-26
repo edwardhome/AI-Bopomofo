@@ -297,3 +297,6 @@
 "Allow Input Monitoring for F Layer" = "Allow Input Monitoring for F Layer";
 
 "Direct English (Double Shift)" = "Direct English (Double Shift)";
+
+"Input Mode: English" = "English";
+"Input Mode: Bopomofo" = "Bopomofo";
