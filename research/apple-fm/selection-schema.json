@@ -1,0 +1,21 @@
+{
+  "properties" : {
+    "composition_version" : {
+      "type" : "integer"
+    },
+    "selected_id" : {
+      "type" : "integer"
+    }
+  },
+  "type" : "object",
+  "x-order" : [
+    "composition_version",
+    "selected_id"
+  ],
+  "required" : [
+    "composition_version",
+    "selected_id"
+  ],
+  "title" : "CandidateSelection",
+  "additionalProperties" : false
+}

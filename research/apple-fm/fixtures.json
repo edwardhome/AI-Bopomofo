@@ -1,0 +1,22 @@
+[
+  {"category":"general","context":"今天天氣很好，我們一起去","candidates":["公園","工員","供元"],"expected":0},
+  {"category":"general","context":"早餐想吃一片","candidates":["土司","吐司","圖思"],"expected":1},
+  {"category":"general","context":"搭火車之前要先購買","candidates":["車票","撤票","測票"],"expected":0},
+  {"category":"general","context":"他每天騎腳踏車去學校","candidates":["上課","尚客","上刻"],"expected":0},
+  {"category":"homophone","context":"請把程式的錯誤全部","candidates":["修正","休正","修證"],"expected":0},
+  {"category":"homophone","context":"這篇文章需要仔細","candidates":["校隊","校對","效對"],"expected":1},
+  {"category":"homophone","context":"買票之前請先查詢列車的","candidates":["時刻","石刻","食客"],"expected":0},
+  {"category":"homophone","context":"老師請學生在紙上寫下自己的","candidates":["性名","姓名","幸明"],"expected":1},
+  {"category":"mixed","context":"請使用 Python 讀取 JSON","candidates":["檔案","答案","擋案"],"expected":0},
+  {"category":"mixed","context":"在 GitHub 開啟新的","candidates":["議題","液體","一體"],"expected":0},
+  {"category":"mixed","context":"MacBook 的電池需要","candidates":["充電","衝店","沖墊"],"expected":0},
+  {"category":"mixed","context":"Flask 的服務已經完成","candidates":["部屬","部署","步數"],"expected":1},
+  {"category":"engineering","context":"這個 FPGA 需要重新","candidates":["編意","編譯","邊翼"],"expected":1},
+  {"category":"engineering","context":"SystemVerilog 的 module 有兩個輸入","candidates":["訊號","信號","迅號"],"expected":0},
+  {"category":"engineering","context":"請檢查電路圖上的電源","candidates":["電壓","店鴨","墊壓"],"expected":0},
+  {"category":"engineering","context":"Vivado 顯示時序分析尚未","candidates":["收斂","收練","收殮"],"expected":0},
+  {"category":"preserve","context":"自訂變數名稱是","candidates":["qz_module7","qzModule7","module"],"expected":0},
+  {"category":"preserve","context":"套件名稱請保留原文","candidates":["PySide6","PySide","Python"],"expected":0},
+  {"category":"preserve","context":"目前使用的顯示卡是","candidates":["RTX 4090","RTX 4080","RTX"],"expected":0},
+  {"category":"preserve","context":"在文件引用中保留拼字","candidates":["foo.bar","foobar","foo_bar"],"expected":0}
+]

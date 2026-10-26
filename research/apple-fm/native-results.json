@@ -1,0 +1,25 @@
+{
+  "availability" : "available",
+  "model" : "SystemLanguageModel.default (on-device)",
+  "rows" : [
+    {
+      "context" : "這個 FPGA 需要重新",
+      "expectedID" : 1,
+      "milliseconds" : 2372.362083,
+      "selectedID" : 1
+    },
+    {
+      "context" : "Flask 的服務已經完成",
+      "expectedID" : 1,
+      "milliseconds" : 733.405625,
+      "selectedID" : 1
+    },
+    {
+      "context" : "自訂變數名稱是",
+      "expectedID" : 0,
+      "milliseconds" : 677.122792,
+      "selectedID" : 1
+    }
+  ],
+  "supportsTraditionalChineseTaiwan" : true
+}
