@@ -214,8 +214,12 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "MixedEnglishEnabled", defaultValue: false)
+    @objc static var mixedEnglishEnabled: Bool
+
     static var allKeys: [String] {
         [
+            "MixedEnglishEnabled",
             kLetterBehaviorKey,
             kSwitchInputSourceUponShiftLetterKeyComboInputSourceIDKey,
             kSwitchInputSourceUponShiftLetterKeyComboEnabledKey,

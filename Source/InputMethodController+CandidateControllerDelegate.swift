@@ -53,6 +53,11 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
         let client = currentClient
 
         switch state {
+        case let state as InputState.ASCII:
+            guard Int(index) < state.candidateCount else { return }
+            keyHandler.clear()
+            handle(state: .Committing(poppedText: state.candidate(at: Int(index))), client: client)
+            handle(state: .Empty(), client: client)
         case let state as InputState.ChoosingCandidate:
             let selectedCandidate = state.candidates[Int(index)]
             keyHandler.fixNode(

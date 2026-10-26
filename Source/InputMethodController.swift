@@ -73,6 +73,10 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(
             withTitle: NSLocalizedString("English / ASCII", comment: ""),
             action: #selector(beginASCII(_:)), keyEquivalent: "")
+        let mixedItem = menu.addItem(
+            withTitle: NSLocalizedString("Shift + Letter Starts English", comment: ""),
+            action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
+        mixedItem.state = Preferences.mixedEnglishEnabled.state
 
         let chineseConversionItem = menu.addItem(
             withTitle: NSLocalizedString("Convert to Simplified Chinese", comment: ""),
@@ -145,6 +149,12 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(
             withTitle: NSLocalizedString("Reload User Phrases", comment: ""),
             action: #selector(reloadUserPhrases(_:)), keyEquivalent: "")
+        menu.addItem(
+            withTitle: NSLocalizedString("Import Technical Terms…", comment: ""),
+            action: #selector(importTechnicalTerms(_:)), keyEquivalent: "")
+        menu.addItem(
+            withTitle: NSLocalizedString("Export Technical Terms…", comment: ""),
+            action: #selector(exportTechnicalTerms(_:)), keyEquivalent: "")
 
         if !McBopomofoInputMethodController.latestUserFileIssues.isEmpty {
             // Setting menuItem.image does not work in input method menus even on macOS 26,
@@ -235,6 +245,18 @@ class McBopomofoInputMethodController: IMKInputController {
         }, errorCallback: {
             if Preferences.beepUponInputError { InputFeedback.beep() }
         })
+    }
+
+    @objc private func toggleMixedEnglish(_ sender: Any?) {
+        Preferences.mixedEnglishEnabled.toggle()
+    }
+
+    @objc private func importTechnicalTerms(_ sender: Any?) {
+        (NSApp.delegate as? AppDelegate)?.importTechnicalTerms(sender)
+    }
+
+    @objc private func exportTechnicalTerms(_ sender: Any?) {
+        (NSApp.delegate as? AppDelegate)?.exportTechnicalTerms(sender)
     }
 
     override func handle(_ maybeEvent: NSEvent!, client: Any!) -> Bool {
@@ -585,6 +607,10 @@ extension McBopomofoInputMethodController {
                 tooltip: state.tooltip, composingBuffer: state.composingBuffer,
                 cursorIndex: state.cursorIndex, client: client)
         }
+        if let ascii = state as? InputState.ASCII, ascii.candidateCount > 1 {
+            show(candidateWindowWith: ascii, client: client)
+            gCurrentCandidateController?.selectedCandidateIndex = UInt(ascii.composition.selectedIndex)
+        }
     }
 
     private func handle(state: InputState.Marking, previous: InputState, client: Any?) {
@@ -909,6 +935,12 @@ extension McBopomofoInputMethodController {
         }
         gCurrentCandidateController?.keyLabels = keyLabels.map {
             CandidateKeyLabel(key: String($0), displayedText: keyLabelFormat(String($0)))
+        }
+        if state is InputState.ASCII {
+            // Digits remain literal; selection uses Tab/arrows or a pointer.
+            gCurrentCandidateController?.keyLabels = keyLabels.map { _ in
+                CandidateKeyLabel(key: "", displayedText: "")
+            }
         }
 
         gCurrentCandidateController?.delegate = self

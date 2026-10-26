@@ -153,4 +153,38 @@ struct MixedInputTests {
         s.key("\u{8}"); s.key("b"); s.key("\r")
         #expect(s.committed == String(repeating: "a", count: 255) + "b")
     }
+
+    @Test func optInShiftLetterAndCancelRestart() {
+        let mixed = Preferences.mixedEnglishEnabled
+        let switching = Preferences.switchInputSourceUponShiftLetterKeyComboEnabled
+        defer {
+            Preferences.mixedEnglishEnabled = mixed
+            Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = switching
+        }
+        Preferences.mixedEnglishEnabled = true
+        Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = false
+        let s = Session()
+        s.key("P", flags: .shift); s.type("ython3")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "Python3")
+        s.key("\u{1B}")
+        s.key("F", flags: .shift); s.type("PGA")
+        s.key("\r")
+        #expect(s.committed == "FPGA")
+        Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = true
+        let other = Session()
+        #expect(!other.key("A", flags: .shift))
+        #expect(other.state is InputState.SwitchingInputSource)
+    }
+
+    @Test func englishCandidateDoesNotChangeRawAutomatically() {
+        let s = Session()
+        s.begin(); s.type("py")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "py")
+        s.key("\t", code: KeyCode.tab.rawValue)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer != "py")
+        s.key("\u{1B}")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "py")
+        s.key("\r")
+        #expect(s.committed == "py")
+    }
 }

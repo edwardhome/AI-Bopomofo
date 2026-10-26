@@ -17,6 +17,7 @@ licenses="$out/AI-Bopomofo.app/Contents/Resources/Licenses"
 mkdir -p "$licenses"
 cp LICENSE.txt "$licenses/McBopomofo-MIT.txt"
 cp ACKNOWLEDGEMENTS.md "$licenses/ACKNOWLEDGEMENTS.md"
+if [[ -d licenses ]]; then cp licenses/* "$licenses/"; fi
 python3 - "$licenses" <<'PY'
 import pathlib, shutil, sys
 target = pathlib.Path(sys.argv[1])

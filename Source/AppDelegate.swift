@@ -176,6 +176,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NonModalAlertWindowControlle
         LanguageModelManager.loadUserPhrases(
             enableForPlainBopomofo: Preferences.enableUserPhrasesInPlainBopomofo)
         LanguageModelManager.loadUserPhraseReplacement()
+        MixedInputHandler.reloadUserTerms()
 
         fsStreamHelper?.delegate = nil
         fsStreamHelper?.stop()

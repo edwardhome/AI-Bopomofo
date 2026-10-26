@@ -328,7 +328,9 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 - (BOOL)beginASCIIWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback errorCallback:(void (^)(void))errorCallback
 {
     if ((!_bpmfReadingBuffer->isEmpty()) ||
-        !([state isKindOfClass:[InputStateEmpty class]] || [state isKindOfClass:[InputStateInputting class]])) {
+        !([state isKindOfClass:[InputStateEmpty class]] ||
+          [state isKindOfClass:[InputStateEmptyIgnoringPreviousState class]] ||
+          [state isKindOfClass:[InputStateInputting class]])) {
         errorCallback();
         return NO;
     }
@@ -481,6 +483,17 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 
     BOOL keyConsumedByReading = NO;
     BOOL skipBpmfHandling = input.isReservedKey || input.isControlHold;
+
+    // Explicit uppercase intent, opt-in. Existing source-switch preference wins.
+    if (Preferences.mixedEnglishEnabled && !Preferences.switchInputSourceUponShiftLetterKeyComboEnabled &&
+        _inputMode == InputModeBopomofo && input.isShiftHold &&
+        !(input.isControlHold || input.isCommandHold || input.isOptionHold || input.isCapsLockOn) &&
+        charCode >= 'A' && charCode <= 'Z' && _bpmfReadingBuffer->isEmpty()) {
+        if ([self beginASCIIWithState:state stateCallback:stateCallback errorCallback:errorCallback]) {
+            stateCallback([[InputStateASCII alloc] initWithText:input.inputText cursor:input.inputText.length]);
+            return YES;
+        }
+    }
 
     // MARK: Handle BPMF Keys
 

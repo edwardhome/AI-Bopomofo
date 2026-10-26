@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB0000000000000000000011 /* MixedInputCore in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000013; };
 		AB0000000000000000000003 /* MixedInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000004; };
 		AB0000000000000000000001 /* MixedInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000000000000000000002; };
 		6A0D4F0815FC0DA600ABF4B3 /* Bopomofo.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 6A0D4EEF15FC0DA600ABF4B3 /* Bopomofo.tiff */; };
@@ -129,6 +130,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AB0000000000000000000012 /* MixedInputCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MixedInputCore; path = Packages/MixedInputCore; sourceTree = "<group>"; };
 		AB0000000000000000000004 /* MixedInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedInputTests.swift; sourceTree = "<group>"; };
 		AB0000000000000000000002 /* MixedInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedInput.swift; sourceTree = "<group>"; };
 		6A0D4EA215FC0D2D00ABF4B3 /* McBopomofo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI-Bopomofo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -275,6 +277,7 @@
 				D4451AC92E688C6B00E8F5AB /* SystemCharacterInfo in Frameworks */,
 				D47D73C327A7200500255A50 /* FSEventStreamHelper in Frameworks */,
 				D48F853E2EACDB6C00C2FDAB /* RomanNumbers in Frameworks */,
+				AB0000000000000000000011 /* MixedInputCore in Frameworks */,
 				D4E7917A2B52CDE500676A68 /* ChineseNumbers in Frameworks */,
 				D427F76A278C9E29004A2160 /* CandidateUI in Frameworks */,
 				D40EFFA22EB669F900C1728A /* InfoCollector in Frameworks */,
@@ -499,6 +502,7 @@
 				D41B626A2B86EAD400583148 /* BopomofoBraille */,
 				D4E791782B52CDCF00676A68 /* ChineseNumbers */,
 				D48F853C2EACCDE900C2FDAB /* RomanNumbers */,
+				AB0000000000000000000012 /* MixedInputCore */,
 				D427F768278C9D0D004A2160 /* CandidateUI */,
 				D427F7A727905E43004A2160 /* TooltipUI */,
 				D427F7AC27907B7E004A2160 /* NotifierUI */,
@@ -581,6 +585,7 @@
 				D41B626B2B86EAE900583148 /* BopomofoBraille */,
 				D4451AC82E688C6B00E8F5AB /* SystemCharacterInfo */,
 				D48F853D2EACDB6C00C2FDAB /* RomanNumbers */,
+				AB0000000000000000000013 /* MixedInputCore */,
 				D40EFFA12EB669F900C1728A /* InfoCollector */,
 			);
 			productName = McBopomofo;
@@ -1468,6 +1473,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AB0000000000000000000013 /* MixedInputCore */ = {isa = XCSwiftPackageProductDependency; productName = MixedInputCore; };
 		D40EFFA12EB669F900C1728A /* InfoCollector */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = InfoCollector;

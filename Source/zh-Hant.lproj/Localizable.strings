@@ -261,3 +261,9 @@
 
 "English / ASCII" = "英文／ASCII 組字";
 "ASCII: Enter to commit, Esc to cancel" = "ASCII：Enter 送出、Esc 取消";
+"Shift + Letter Starts English" = "Shift＋字母開始英文組字";
+"ASCII: Tab selects, Enter commits, Esc restores or cancels" = "ASCII：Tab 選詞、Enter 送出、Esc 還原或取消";
+"Import Technical Terms…" = "匯入專業詞彙…";
+"Export Technical Terms…" = "匯出專業詞彙…";
+"Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters." = "專業詞庫格式錯誤：每行一個 ASCII 詞彙，最多 5000 詞，每詞最多 64 字元。";
+"Unable to write user phrases. Some terms may have been imported; retry safely after checking the file." = "無法寫入使用者詞庫。部分詞彙可能已匯入，請檢查檔案後重試；重試不會重複新增相同詞彙。";

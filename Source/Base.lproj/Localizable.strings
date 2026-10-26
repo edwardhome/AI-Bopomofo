@@ -261,3 +261,9 @@
 
 "English / ASCII" = "English / ASCII";
 "ASCII: Enter to commit, Esc to cancel" = "ASCII: Enter to commit, Esc to cancel";
+"Shift + Letter Starts English" = "Shift + Letter Starts English";
+"ASCII: Tab selects, Enter commits, Esc restores or cancels" = "ASCII: Tab selects, Enter commits, Esc restores or cancels";
+"Import Technical Terms…" = "Import Technical Terms…";
+"Export Technical Terms…" = "Export Technical Terms…";
+"Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters." = "Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters.";
+"Unable to write user phrases. Some terms may have been imported; retry safely after checking the file." = "Unable to write user phrases. Some terms may have been imported; retry safely after checking the file.";
