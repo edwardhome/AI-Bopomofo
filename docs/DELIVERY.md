@@ -11,3 +11,13 @@
 新版本沒有自動安裝、沒有變更 Kanata、沒有推送遠端。目前系統的 0.4.0 安裝及備份記錄保存在 [先前交付報告](progress/delivery-0.4.0.md)。0.5.0 app 使用 ad-hoc 簽章，pkg 未簽署且未公證，僅供本機測試。
 
 Debug build-for-testing 與 arm64／x86_64 Release 建置成功。Bundle 識別碼、輸入模式、詞庫資源與簽章驗證通過；FoundationModels 採弱連結，以保留舊系統回退路徑。舊系統實機相容性仍待驗證。
+
+候選產物：dist/0.5.0-alpha/ 內的 app、pkg 與 zip。來源 Commit：72d27ede7ca1626163ff5b5377d338461a86143f。pkg 解包後 77 個檔案與 app 逐一比對一致，簽章驗證通過。包裝工具再次輸出 write: Permission denied 提示，但正常完成，後續內容及簽章驗證通過。
+
+pkg SHA-256：f13681da1524b3680c19a8a216bd0c6c6745c488a7d1d9ee5f5f945c0cd9a748
+
+zip SHA-256：39f2df9513f99998d94708a923697e78bfcb7b2cec33527a394242adfebf63a5
+
+交付前唯讀確認系統安裝版本仍為 0.4.0。沒有更換或重啟已安裝輸入法。
+
+驗證時間：2026-10-26T19:54:02+08:00
