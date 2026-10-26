@@ -53,6 +53,10 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
         let client = currentClient
 
         switch state {
+        case is InputState.QuickSymbols:
+            keyHandler.selectQuickSymbol(at: Int(index), state: state) {
+                self.handle(state: $0, client: client)
+            }
         case let state as InputState.ASCII:
             guard Int(index) < state.candidateCount else { return }
             keyHandler.clear()

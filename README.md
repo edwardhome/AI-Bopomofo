@@ -1,8 +1,10 @@
-# AI-Bopomofo
+# AI注音輸入法（AI-Bopomofo）
 
 以 [McBopomofo](https://github.com/openvanilla/McBopomofo) 為上游的獨立 macOS 注音輸入法專案，目標為繁體中文、中英文、數字與程式符號混打，以及可選的本機候選排序。以 Zing 的混打與智慧選字體驗為產品參考。
 
-目前已保存 `dist/0.3.1-alpha/` 的 app、pkg、zip，並保留 0.1／0.2／0.3.0 研究產物。最新 Release 含 arm64/x86_64，但實際 GUI 尚待驗收。
+目前已保存 `dist/0.4.0-alpha/` 的 app、pkg、zip，並保留 0.1／0.2／0.3.0 研究產物。最新 Release 含 arm64/x86_64，但實際 GUI 尚待驗收。
+
+以 Markdown 半形輸入為優先，新增不依賴 Kanata 的 [F 數字／符號分層](docs/quick-symbols.md)。
 
 已實作明確 ASCII／英文組字、技術詞候選與本機詞庫匯入／匯出；尚未達到任意小寫無感混打或可用 AI 排序。
 

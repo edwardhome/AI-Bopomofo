@@ -57,6 +57,10 @@ class McBopomofoInputMethodController: IMKInputController {
     var currentClient: Any?
     var keyHandler: KeyHandler = KeyHandler()
     var state: InputState = InputState.Empty()
+    private var fHoldGesture = FHoldGesture()
+    private var fHoldTimer: Timer?
+    private var pendingFEvent: NSEvent?
+    private var symbolKeysDown: Set<UInt16> = []
 
     // Share the stored issues, so a set of issues is shown as notification only once.
     static var latestUserFileIssues: [String] = []
@@ -79,18 +83,31 @@ class McBopomofoInputMethodController: IMKInputController {
             action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
         mixedItem.state = Preferences.mixedEnglishEnabled.state
 
-        let chineseConversionItem = menu.addItem(
+        menu.addItem(withTitle: NSLocalizedString("Quick Numbers / Symbols", comment: ""),
+                     action: #selector(beginQuickSymbols(_:)), keyEquivalent: "")
+        let holdItem = menu.addItem(withTitle: NSLocalizedString("Hold F for Numbers / Symbols", comment: ""),
+                                    action: #selector(toggleFHoldSymbols(_:)), keyEquivalent: "")
+        holdItem.state = Preferences.fHoldSymbolsEnabled.state
+
+        let advanced = NSMenu(title: NSLocalizedString("Advanced Tools", comment: ""))
+        let advancedItem = menu.addItem(withTitle: advanced.title, action: nil, keyEquivalent: "")
+        advancedItem.submenu = advanced
+        let legacyItem = advanced.addItem(withTitle: NSLocalizedString("Backtick Opens Punctuation List", comment: ""),
+                                          action: #selector(toggleBacktickMenu(_:)), keyEquivalent: "")
+        legacyItem.state = Preferences.backtickOpensPunctuationList.state
+
+        let chineseConversionItem = advanced.addItem(
             withTitle: NSLocalizedString("Convert to Simplified Chinese", comment: ""),
             action: #selector(toggleChineseConverter(_:)), keyEquivalent: "g")
         chineseConversionItem.keyEquivalentModifierMask = [.command, .control]
         chineseConversionItem.state = Preferences.chineseConversionEnabled.state
 
-        let halfWidthPunctuationItem = menu.addItem(
+        let halfWidthPunctuationItem = advanced.addItem(
             withTitle: NSLocalizedString("Use Half-Width Punctuations", comment: ""),
             action: #selector(toggleHalfWidthPunctuation(_:)), keyEquivalent: "h")
         halfWidthPunctuationItem.keyEquivalentModifierMask = [.command, .control]
         halfWidthPunctuationItem.state = Preferences.halfWidthPunctuationEnabled.state
-        let associatedPhrasesItem = menu.addItem(
+        let associatedPhrasesItem = advanced.addItem(
             withTitle: NSLocalizedString("Associated Phrases", comment: ""),
             action: #selector(toggleAssociatedPhrasesEnabled(_:)), keyEquivalent: "")
         associatedPhrasesItem.state = Preferences.associatedPhrasesEnabled.state
@@ -104,7 +121,7 @@ class McBopomofoInputMethodController: IMKInputController {
             && (Preferences.showBopomofoFontAnnotationSupportItemInInputMenu
                 || Preferences.bopomofoFontAnnotationSupportEnabled)
         {
-            let bopomofoFontAnnotationSupportItem = menu.addItem(
+            let bopomofoFontAnnotationSupportItem = advanced.addItem(
                 withTitle: NSLocalizedString("Bopomofo Font Annotation Support", comment: ""),
                 action: #selector(toggleBopomofoFontAnnotationSupport(_:)), keyEquivalent: "")
             bopomofoFontAnnotationSupportItem.state =
@@ -113,47 +130,47 @@ class McBopomofoInputMethodController: IMKInputController {
 
         let optionKeyPressed = NSEvent.modifierFlags.contains(.option)
         if inputMode == .bopomofo && optionKeyPressed {
-            let phaseReplacementItem = menu.addItem(
+            let phaseReplacementItem = advanced.addItem(
                 withTitle: NSLocalizedString("Use Phrase Replacement", comment: ""),
                 action: #selector(togglePhraseReplacement(_:)), keyEquivalent: "")
             phaseReplacementItem.state = Preferences.phraseReplacementEnabled.state
         }
 
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(
+        advanced.addItem(NSMenuItem.separator())
+        advanced.addItem(
             withTitle: NSLocalizedString("User Phrases", comment: ""), action: nil,
             keyEquivalent: "")
 
         if inputMode == .plainBopomofo {
             if Preferences.enableUserPhrasesInPlainBopomofo {
-                menu.addItem(
+                advanced.addItem(
                     withTitle: NSLocalizedString("Edit User Phrases", comment: ""),
                     action: #selector(openUserPhrasesPlainBopomofo(_:)), keyEquivalent: "")
             }
-            menu.addItem(
+            advanced.addItem(
                 withTitle: NSLocalizedString("Edit Excluded Phrases", comment: ""),
                 action: #selector(openExcludedPhrasesPlainBopomofo(_:)), keyEquivalent: "")
         } else {
-            menu.addItem(
+            advanced.addItem(
                 withTitle: NSLocalizedString("Edit User Phrases", comment: ""),
                 action: #selector(openUserPhrases(_:)), keyEquivalent: "")
-            menu.addItem(
+            advanced.addItem(
                 withTitle: NSLocalizedString("Edit Excluded Phrases", comment: ""),
                 action: #selector(openExcludedPhrasesMcBopomofo(_:)), keyEquivalent: "")
             if optionKeyPressed {
-                menu.addItem(
+                advanced.addItem(
                     withTitle: NSLocalizedString("Edit Phrase Replacement Table", comment: ""),
                     action: #selector(openPhraseReplacementMcBopomofo(_:)), keyEquivalent: "")
             }
         }
 
-        menu.addItem(
+        advanced.addItem(
             withTitle: NSLocalizedString("Reload User Phrases", comment: ""),
             action: #selector(reloadUserPhrases(_:)), keyEquivalent: "")
-        menu.addItem(
+        advanced.addItem(
             withTitle: NSLocalizedString("Import Technical Terms…", comment: ""),
             action: #selector(importTechnicalTerms(_:)), keyEquivalent: "")
-        menu.addItem(
+        advanced.addItem(
             withTitle: NSLocalizedString("Export Technical Terms…", comment: ""),
             action: #selector(exportTechnicalTerms(_:)), keyEquivalent: "")
 
@@ -163,7 +180,7 @@ class McBopomofoInputMethodController: IMKInputController {
             let menuItem = NSMenuItem(
                 title: NSLocalizedString("Show Issues in User Files ⚠️", comment: ""),
                 action: #selector(showUserFileIssues(_:)), keyEquivalent: "")
-            menu.addItem(menuItem)
+            advanced.addItem(menuItem)
         }
 
         menu.addItem(NSMenuItem.separator())
@@ -171,7 +188,7 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(
             withTitle: NSLocalizedString("McBopomofo Preferences", comment: ""),
             action: #selector(showPreferences(_:)), keyEquivalent: "")
-        menu.addItem(
+        advanced.addItem(
             withTitle: NSLocalizedString("Check for Updates…", comment: ""),
             action: #selector(checkForUpdate(_:)), keyEquivalent: "")
         menu.addItem(
@@ -183,6 +200,8 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        cancelFHold(client: client)
+        symbolKeysDown.removeAll()
         UserDefaults.standard.synchronize()
 
         // Override the keyboard layout. Use US if not set.
@@ -198,12 +217,16 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
+        cancelFHold(client: client)
+        symbolKeysDown.removeAll()
         currentClient = nil
         keyHandler.clear()
         self.handle(state: .Deactivated(), client: client)
     }
 
     override func setValue(_ value: Any!, forTag tag: Int, client: Any!) {
+        cancelFHold(client: client)
         let newInputMode = InputMode(rawValue: value as? String ?? InputMode.bopomofo.rawValue)
         LanguageModelManager.loadDataModel(newInputMode)
         // Restore the client layout even when the internal input mode is unchanged.
@@ -224,6 +247,14 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKServerInput protocol methods
 
     override func commitComposition(_ client: Any!) {
+        if fHoldGesture.phase == .pending {
+            _ = applyFHold(.otherKey, client: client)
+        }
+        cancelFHold(client: client)
+        if state is InputState.QuickSymbols {
+            keyHandler.endQuickSymbols(with: state) { self.handle(state: $0, client: client) }
+            return
+        }
         if let ascii = state as? InputState.ASCII {
             keyHandler.clear()
             handle(state: .Committing(poppedText: ascii.composingBuffer), client: client)
@@ -252,6 +283,65 @@ class McBopomofoInputMethodController: IMKInputController {
         Preferences.mixedEnglishEnabled.toggle()
     }
 
+    @objc private func toggleBacktickMenu(_ sender: Any?) {
+        Preferences.backtickOpensPunctuationList.toggle()
+    }
+
+    @objc private func beginQuickSymbols(_ sender: Any?) {
+        cancelFHold(client: currentClient)
+        keyHandler.beginQuickSymbols(with: state, held: false) {
+            self.handle(state: $0, client: self.currentClient)
+        }
+    }
+
+    @objc private func toggleFHoldSymbols(_ sender: Any?) {
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: currentClient) }
+        cancelFHold(client: currentClient)
+        Preferences.fHoldSymbolsEnabled.toggle()
+    }
+
+    private func cancelFHold(client: Any?) {
+        _ = applyFHold(.cancel, client: client)
+        pendingFEvent = nil
+    }
+
+    @discardableResult
+    private func applyFHold(_ gestureEvent: FHoldGesture.Event, client: Any?) -> Bool {
+        let effects = fHoldGesture.handle(gestureEvent)
+        for effect in effects {
+            switch effect {
+            case .schedule:
+                fHoldTimer?.invalidate()
+                let timer = Timer(timeInterval: FHoldGesture.delay, repeats: false) { [weak self] _ in
+                    guard let self else { return }
+                    self.applyFHold(.timeout, client: self.currentClient)
+                }
+                fHoldTimer = timer
+                RunLoop.main.add(timer, forMode: .common)
+            case .invalidate:
+                fHoldTimer?.invalidate()
+                fHoldTimer = nil
+            case .replayTap:
+                if let pending = pendingFEvent {
+                    pendingFEvent = nil
+                    _ = handleTextEvent(pending, client: client)
+                }
+            case .beginLayer:
+                let began = keyHandler.beginQuickSymbols(with: state, held: true) {
+                    self.handle(state: $0, client: client)
+                }
+                if !began, let pending = pendingFEvent { _ = handleTextEvent(pending, client: client) }
+                pendingFEvent = nil
+            case .endLayer:
+                if let symbols = state as? InputState.QuickSymbols, symbols.held {
+                    keyHandler.endQuickSymbols(with: state) { self.handle(state: $0, client: client) }
+                }
+            case .consume: break
+            }
+        }
+        return effects.contains(.consume)
+    }
+
     @objc private func importTechnicalTerms(_ sender: Any?) {
         (NSApp.delegate as? AppDelegate)?.importTechnicalTerms(sender)
     }
@@ -265,6 +355,30 @@ class McBopomofoInputMethodController: IMKInputController {
         guard let event = maybeEvent else {
             commitComposition(client)
             return false
+        }
+
+        // Keep ownership until key-up even when F was released before a symbol key.
+        if event.type == .keyUp, symbolKeysDown.remove(event.keyCode) != nil { return true }
+        if event.type == .keyDown, event.isARepeat, symbolKeysDown.contains(event.keyCode),
+           !(state is InputState.QuickSymbols) { return true }
+        if event.type == .keyDown, event.keyCode != UInt16(kVK_ANSI_F), state is InputState.QuickSymbols,
+           event.modifierFlags.intersection([.command, .control, .option]).isEmpty {
+            symbolKeysDown.insert(event.keyCode)
+        }
+
+        if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
+            if applyFHold(.release, client: client) { return true }
+        } else if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyDown {
+            let forbidden: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
+            let eligible = Preferences.fHoldSymbolsEnabled
+                && event.modifierFlags.intersection(forbidden).isEmpty
+                && keyHandler.canBeginQuickSymbols(with: state)
+            if fHoldGesture.phase == .idle && eligible && !event.isARepeat {
+                pendingFEvent = event
+            }
+            if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
+        } else if event.type == .keyDown || event.type == .flagsChanged {
+            _ = applyFHold(.otherKey, client: client)
         }
 
         let kind: InputEventKind
@@ -300,6 +414,10 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
+        return handleTextEvent(event, client: client)
+    }
+
+    private func handleTextEvent(_ event: NSEvent, client: Any?) -> Bool {
         var textFrame = NSRect.zero
         let attributes: [AnyHashable: Any]? = (client as? IMKTextInput)?.attributes(
             forCharacterIndex: 0, lineHeightRectangle: &textFrame)
@@ -465,6 +583,8 @@ extension McBopomofoInputMethodController {
             handle(state: newState, previous: previous, client: client)
         case let newState as InputState.SelectingFeature:
             handle(state: newState, previous: previous, client: client)
+        case let newState as InputState.QuickSymbols:
+            handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)
         case let newState as InputState.SelectingDateMacro:
             handle(state: newState, previous: previous, client: client)
         case let newState as InputState.Number:
@@ -847,6 +967,7 @@ extension McBopomofoInputMethodController {
                 useVerticalMode = state.useVerticalMode
                 candidates = state.candidates
             case is InputState.SelectingFeature,
+                is InputState.QuickSymbols,
                 is InputState.SelectingDateMacro,
                 is InputState.SelectingDictionary,
                 is InputState.ShowingCharInfo,
@@ -884,6 +1005,8 @@ extension McBopomofoInputMethodController {
 
         gCurrentCandidateController?.tooltip =
             switch state {
+            case let symbols as InputState.QuickSymbols:
+                NSLocalizedString(symbols.held ? "Release F to return; Esc cancels" : "Press a mapped key; Esc returns", comment: "")
             case let state as InputState.SelectingDictionary:
                 String(format: NSLocalizedString("Look up %@", comment: ""), state.selectedPhrase)
             case let state as InputState.AssociatedPhrases:
@@ -928,7 +1051,7 @@ extension McBopomofoInputMethodController {
         gCurrentCandidateController?.keyLabels = keyLabels.map {
             CandidateKeyLabel(key: String($0), displayedText: keyLabelFormat(String($0)))
         }
-        if state is InputState.ASCII {
+        if state is InputState.ASCII || state is InputState.QuickSymbols {
             // Digits remain literal; selection uses Tab/arrows or a pointer.
             gCurrentCandidateController?.keyLabels = keyLabels.map { _ in
                 CandidateKeyLabel(key: "", displayedText: "")

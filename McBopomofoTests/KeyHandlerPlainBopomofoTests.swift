@@ -28,9 +28,15 @@ import XCTest
 class KeyHandlerPlainBopomofoTests: XCTestCase {
 
     var savedKeyboardLayout: KeyboardLayout = .standard
+    var savedHalfWidthPunctuation = false
+    var savedBacktickMenu = false
     var handler = KeyHandler()
 
     override func setUpWithError() throws {
+        savedHalfWidthPunctuation = Preferences.halfWidthPunctuationEnabled
+        Preferences.halfWidthPunctuationEnabled = false
+        savedBacktickMenu = Preferences.backtickOpensPunctuationList
+        Preferences.backtickOpensPunctuationList = true
         LanguageModelManager.loadDataModels()
         handler = KeyHandler()
         handler.inputMode = .plainBopomofo
@@ -42,6 +48,8 @@ class KeyHandlerPlainBopomofoTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        Preferences.halfWidthPunctuationEnabled = savedHalfWidthPunctuation
+        Preferences.backtickOpensPunctuationList = savedBacktickMenu
         Preferences.keyboardLayout = savedKeyboardLayout
     }
 

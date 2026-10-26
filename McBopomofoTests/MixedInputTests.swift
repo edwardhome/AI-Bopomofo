@@ -39,6 +39,59 @@ struct MixedInputTests {
         }
     }
 
+    @Test func standaloneSymbolsCommitAndReturnToChinese() {
+        let s = Session()
+        s.type("ji3")
+        #expect((s.state as? InputState.Inputting)?.composingBuffer == "我")
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        #expect(s.committed == "我")
+        s.key("y", code: 16); s.key("r", code: 15); s.key("n", code: 45)
+        #expect(s.committed == "我7+1")
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        s.type("ji3"); s.key("\r")
+        #expect(s.committed == "我7+1我")
+        #expect(s.errors == 0)
+    }
+
+    @Test func symbolLayerDoesNotStealUnfinishedReadingsOrEnglish() {
+        let s = Session()
+        s.key("j")
+        #expect(!s.handler.canBeginQuickSymbols(with: s.state))
+        let text = (s.state as? InputState.Inputting)?.composingBuffer
+        #expect(!s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        #expect((s.state as? InputState.Inputting)?.composingBuffer == text)
+        let ascii = Session()
+        ascii.begin(); ascii.type("Markdown")
+        #expect(!ascii.handler.canBeginQuickSymbols(with: ascii.state))
+    }
+
+    @Test func backtickIsLiteralAndBig5RemainsAvailable() {
+        let old = Preferences.backtickOpensPunctuationList
+        let big5 = Preferences.big5InputEnabled
+        defer { Preferences.backtickOpensPunctuationList = old; Preferences.big5InputEnabled = big5 }
+        Preferences.backtickOpensPunctuationList = false
+        Preferences.big5InputEnabled = true
+        let s = Session()
+        s.type("ji3"); s.key("`", code: 50)
+        #expect(s.committed == "我`")
+        s.key("`", code: 50, flags: .control)
+        #expect(s.state is InputState.Big5)
+        #expect(s.committed == "我`")
+    }
+
+    @Test func symbolShortcutsEscapeAndPointerSelection() {
+        let s = Session()
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: false, stateCallback: s.transition))
+        s.handler.selectQuickSymbol(at: 0, state: s.state, stateCallback: s.transition)
+        #expect(s.committed == "7")
+        #expect(s.state is InputState.QuickSymbols)
+        #expect(!s.key("a", code: 0, flags: .command))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: false, stateCallback: s.transition))
+        s.key("\u{1B}")
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+    }
+
     @Test(arguments: ["1234567890", "[]", "{}", "()", "<>", "/ \\ _ - + = * # @",
                        "Python3", "PySide6", "RTX 4090", "module_name", "foo.bar", "path/to/file"])
     func literals(_ value: String) {

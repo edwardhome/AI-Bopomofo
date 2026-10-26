@@ -14,6 +14,19 @@ import MixedInputCore
 import UniformTypeIdentifiers
 
 extension InputState {
+    @objc(InputStateQuickSymbols)
+    class QuickSymbols: InputState, CandidateProvider {
+        @objc let held: Bool
+        @objc init(held: Bool) { self.held = held; super.init() }
+        var candidateCount: Int { QuickSymbolLayer.entries.count }
+        func candidate(at index: Int) -> String {
+            guard QuickSymbolLayer.entries.indices.contains(index) else { return "" }
+            let entry = QuickSymbolLayer.entries[index]
+            return entry.label + " → " + entry.output
+        }
+        func reading(at index: Int) -> String? { nil }
+    }
+
     @objc(InputStateASCII)
     class ASCII: Inputting, CandidateProvider {
         let composition: ASCIIComposition
@@ -36,6 +49,33 @@ extension InputState {
         }
         func reading(at index: Int) -> String? { nil }
         override var description: String { "<InputState.ASCII>" }
+    }
+}
+
+@objc class QuickSymbolHandler: NSObject {
+    @objc static func select(index: Int, state: InputState.QuickSymbols,
+                             stateCallback: (InputState) -> Void) {
+        guard QuickSymbolLayer.entries.indices.contains(index) else { return }
+        stateCallback(InputState.Committing(poppedText: QuickSymbolLayer.entries[index].output))
+        stateCallback(InputState.QuickSymbols(held: state.held))
+    }
+
+    @objc static func handle(input: KeyHandlerInput, state: InputState.QuickSymbols,
+                             stateCallback: (InputState) -> Void) -> Bool {
+        if input.isCommandHold || input.isOptionHold || input.isControlHold {
+            stateCallback(InputState.EmptyIgnoringPreviousState())
+            return false
+        }
+        if input.charCode == 27 || input.charCode == 13 || input.isEnter {
+            stateCallback(InputState.EmptyIgnoringPreviousState())
+            return true
+        }
+        if let value = QuickSymbolLayer.output(for: UInt16(input.keyCode)) {
+            stateCallback(InputState.Committing(poppedText: value))
+            stateCallback(InputState.QuickSymbols(held: state.held))
+        }
+        // Unassigned keys never leak into the phonetic buffer while the layer is active.
+        return true
     }
 }
 

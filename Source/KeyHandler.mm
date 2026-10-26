@@ -325,6 +325,37 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     return layout;
 }
 
+- (BOOL)canBeginQuickSymbolsWithState:(InputState *)state
+{
+    return _bpmfReadingBuffer->isEmpty() && ![state isKindOfClass:[InputStateASCII class]] &&
+        ([state isKindOfClass:[InputStateEmpty class]] ||
+         [state isKindOfClass:[InputStateEmptyIgnoringPreviousState class]] ||
+         [state isKindOfClass:[InputStateInputting class]]);
+}
+
+- (BOOL)beginQuickSymbolsWithState:(InputState *)state held:(BOOL)held stateCallback:(void (^)(InputState *))stateCallback
+{
+    if (![self canBeginQuickSymbolsWithState:state]) { return NO; }
+    [self clear];
+    stateCallback([[InputStateEmpty alloc] init]);
+    stateCallback([[InputStateQuickSymbols alloc] initWithHeld:held]);
+    return YES;
+}
+
+- (void)endQuickSymbolsWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if ([state isKindOfClass:[InputStateQuickSymbols class]]) {
+        stateCallback([[InputStateEmptyIgnoringPreviousState alloc] init]);
+    }
+}
+
+- (void)selectQuickSymbolAtIndex:(NSInteger)index state:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if ([state isKindOfClass:[InputStateQuickSymbols class]]) {
+        [QuickSymbolHandler selectWithIndex:index state:(InputStateQuickSymbols *)state stateCallback:stateCallback];
+    }
+}
+
 - (BOOL)beginASCIIWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback errorCallback:(void (^)(void))errorCallback
 {
     if ((!_bpmfReadingBuffer->isEmpty()) ||
@@ -349,6 +380,17 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 
     if ([state isKindOfClass:[InputStateASCII class]]) {
         return [MixedInputHandler handleWithInput:input state:(InputStateASCII *)state stateCallback:stateCallback errorCallback:errorCallback];
+    }
+
+    if ([state isKindOfClass:[InputStateQuickSymbols class]]) {
+        if (!(input.isCommandHold || input.isControlHold || input.isOptionHold)) {
+            VTCandidateController *gCurrentCandidateController = [self.delegate candidateControllerForKeyHandler:self];
+            if (input.isDown) { (void)[gCurrentCandidateController highlightNextCandidate]; return YES; }
+            if (input.isUp) { (void)[gCurrentCandidateController highlightPreviousCandidate]; return YES; }
+            if (input.isPageDown || input.isTab) { (void)[gCurrentCandidateController showNextPage]; return YES; }
+            if (input.isPageUp) { (void)[gCurrentCandidateController showPreviousPage]; return YES; }
+        }
+        return [QuickSymbolHandler handleWithInput:input state:(InputStateQuickSymbols *)state stateCallback:stateCallback];
     }
 
     // MARK: Handle Selecting Feature
@@ -786,6 +828,16 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     }
 
     // MARK: Punctuation list
+    if (charCode == '`' && !(input.isControlHold || input.isCommandHold || input.isOptionHold) &&
+        !Preferences.backtickOpensPunctuationList) {
+        // Preserve every visible character before inserting the literal backtick.
+        NSString *prefix = [state isKindOfClass:[InputStateInputting class]]
+            ? ((InputStateInputting *)state).composingBuffer : @"";
+        [self clear];
+        stateCallback([[InputStateCommitting alloc] initWithPoppedText:[prefix stringByAppendingString:@"`"]]);
+        stateCallback([[InputStateEmpty alloc] init]);
+        return YES;
+    }
     if ((char)charCode == '`' && !(input.isControlHold || input.isCommandHold || input.isOptionHold)) {
         if (_languageModel->hasUnigrams("_punctuation_list")) {
             if (_bpmfReadingBuffer->isEmpty()) {

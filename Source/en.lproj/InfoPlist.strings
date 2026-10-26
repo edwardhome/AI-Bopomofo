@@ -1,6 +1,6 @@
-CFBundleName = "AI-Bopomofo";
-CFBundleDisplayName = "AI-Bopomofo";
+CFBundleName = "AI注音輸入法";
+CFBundleDisplayName = "AI注音輸入法";
 NSHumanReadableCopyright = "Copyright © 2011-2026 Mengjuei Hsieh et al.\nAll Rights Reserved.";
-"org.aibopomofo.inputmethod.AIBopomofo.Bopomofo" = "AI-Bopomofo";
-"org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo" = "AI-Bopomofo Plain";
+"org.aibopomofo.inputmethod.AIBopomofo.Bopomofo" = "AI注音輸入法";
+"org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo" = "AI注音輸入法 Plain";
 

@@ -78,6 +78,14 @@ extern InputMode InputModePlainBopomofo;
                          associatedPhraseValue:(NSString *)phraseValue;
 - (void)clear;
 
+- (BOOL)canBeginQuickSymbolsWithState:(InputState *)state;
+- (BOOL)beginQuickSymbolsWithState:(InputState *)state held:(BOOL)held
+                    stateCallback:(void (^)(InputState *))stateCallback;
+- (void)endQuickSymbolsWithState:(InputState *)state
+                  stateCallback:(void (^)(InputState *))stateCallback;
+- (void)selectQuickSymbolAtIndex:(NSInteger)index state:(InputState *)state
+                  stateCallback:(void (^)(InputState *))stateCallback;
+
 - (BOOL)beginASCIIWithState:(InputState *)state
              stateCallback:(void (^)(InputState *))stateCallback
              errorCallback:(void (^)(void))errorCallback;

@@ -147,6 +147,7 @@ class InputState: NSObject {
                 }
             ),
             (NSLocalizedString("English / ASCII", comment: ""), { .ASCII(text: "", cursor: 0) }),
+            (NSLocalizedString("Quick Numbers / Symbols", comment: ""), { .QuickSymbols(held: false) }),
         ]
 
         override var description: String {

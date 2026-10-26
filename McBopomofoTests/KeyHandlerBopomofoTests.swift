@@ -33,12 +33,18 @@ func charCode(_ string: String) -> UInt16 {
 
 class KeyHandlerBopomofoTests: XCTestCase {
 
+    var savedHalfWidthPunctuation = false
+    var savedBacktickMenu = false
     var handler = KeyHandler()
     var savedKeyboardLayout: KeyboardLayout = .standard
     var chineseConversionEnabled: Bool = false
     var savedSwitchInputSourceUponShiftLetterKeyComboEnabled = false
 
     override func setUpWithError() throws {
+        savedHalfWidthPunctuation = Preferences.halfWidthPunctuationEnabled
+        Preferences.halfWidthPunctuationEnabled = false
+        savedBacktickMenu = Preferences.backtickOpensPunctuationList
+        Preferences.backtickOpensPunctuationList = true
         savedKeyboardLayout = Preferences.keyboardLayout
         chineseConversionEnabled = Preferences.chineseConversionEnabled
         savedSwitchInputSourceUponShiftLetterKeyComboEnabled = Preferences.switchInputSourceUponShiftLetterKeyComboEnabled
@@ -51,6 +57,8 @@ class KeyHandlerBopomofoTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        Preferences.halfWidthPunctuationEnabled = savedHalfWidthPunctuation
+        Preferences.backtickOpensPunctuationList = savedBacktickMenu
         Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = savedSwitchInputSourceUponShiftLetterKeyComboEnabled
         Preferences.chineseConversionEnabled = chineseConversionEnabled
         Preferences.keyboardLayout = savedKeyboardLayout

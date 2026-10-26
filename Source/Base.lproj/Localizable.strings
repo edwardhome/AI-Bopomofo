@@ -1,8 +1,8 @@
 /* No comment provided by engineer. */
-"About McBopomofo…" = "About McBopomofo…";
+"About McBopomofo…" = "About AI注音輸入法…";
 
 /* No comment provided by engineer. */
-"McBopomofo Preferences" = "McBopomofo Preferences";
+"McBopomofo Preferences" = "AI注音輸入法 Preferences";
 
 /* No comment provided by engineer. */
 "Check for Updates…" = "Check for Updates…";
@@ -29,7 +29,7 @@
 "Visit Website" = "Visit Website";
 
 /* No comment provided by engineer. */
-"You're currently using McBopomofo %@ (%@), a new version %@ (%@) is now available. Do you want to visit McBopomofo's website to download the version?%@" = "You're currently using McBopomofo %@ (%@), a new version %@ (%@) is now available. Do you want to visit McBopomofo's website to download the version?%@";
+"You're currently using McBopomofo %@ (%@), a new version %@ (%@) is now available. Do you want to visit McBopomofo's website to download the version?%@" = "You're currently using AI注音輸入法 %@ (%@), a new version %@ (%@) is now available. Do you want to visit AI注音輸入法's website to download the version?%@";
 
 "Convert to Simplified Chinese" = "Convert to Simplified Chinese";
 
@@ -95,7 +95,7 @@
 
 "Check for Update Completed" = "Check for Update Completed";
 
-"McBopomofo is up to date." = "McBopomofo is up to date.";
+"McBopomofo is up to date." = "AI注音輸入法 is up to date.";
 
 "Look up \"%1$@\" in %2$@" = "Look up \"%1$@\" in %2$@";
 
@@ -137,7 +137,7 @@
 
 "Issues were found in the following user phrase files:" = "Issues were found in the following user phrase files:";
 
-"Check McBopomofo menu for user file issues" = "Check McBopomofo menu for user file issues";
+"Check McBopomofo menu for user file issues" = "Check AI注音輸入法 menu for user file issues";
 
 "User phrase file" = "User phrase file";
 
@@ -267,3 +267,11 @@
 "Export Technical Terms…" = "Export Technical Terms…";
 "Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters." = "Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters.";
 "Unable to write user phrases. Some terms may have been imported; retry safely after checking the file." = "Unable to write user phrases. Some terms may have been imported; retry safely after checking the file.";
+
+// Independent quick symbol layer.
+"Quick Numbers / Symbols" = "Quick Numbers / Symbols";
+"Hold F for Numbers / Symbols" = "Hold F for Numbers / Symbols";
+"Advanced Tools" = "Advanced Tools";
+"Backtick Opens Punctuation List" = "Backtick Opens Punctuation List";
+"Release F to return; Esc cancels" = "Release F to return; Esc cancels";
+"Press a mapped key; Esc returns" = "Press a mapped key; Esc returns";

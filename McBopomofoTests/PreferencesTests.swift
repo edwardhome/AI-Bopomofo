@@ -151,7 +151,7 @@ final class PreferencesTests {
 
     @Test("Test half-width punctuation toggle")
     func testHalfWidthPunctuationEnabled() {
-        #expect(Preferences.halfWidthPunctuationEnabled == false)
+        #expect(Preferences.halfWidthPunctuationEnabled == true)
         Preferences.halfWidthPunctuationEnabled = true
         #expect(Preferences.halfWidthPunctuationEnabled == true)
         _ = Preferences.toggleHalfWidthPunctuationEnabled()

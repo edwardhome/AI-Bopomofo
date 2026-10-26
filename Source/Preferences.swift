@@ -214,11 +214,18 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "BacktickOpensPunctuationList", defaultValue: false)
+    @objc static var backtickOpensPunctuationList: Bool
+    @UserDefault(key: "FHoldSymbolsEnabled", defaultValue: false)
+    @objc static var fHoldSymbolsEnabled: Bool
+
     @UserDefault(key: "MixedEnglishEnabled", defaultValue: false)
     @objc static var mixedEnglishEnabled: Bool
 
     static var allKeys: [String] {
         [
+            "FHoldSymbolsEnabled",
+            "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",
             kLetterBehaviorKey,
             kSwitchInputSourceUponShiftLetterKeyComboInputSourceIDKey,
@@ -325,7 +332,7 @@ class Preferences: NSObject {
         return chineseConversionEnabled
     }
 
-    @UserDefault(key: kHalfWidthPunctuationEnabledKey, defaultValue: false)
+    @UserDefault(key: kHalfWidthPunctuationEnabledKey, defaultValue: true)
     @objc static var halfWidthPunctuationEnabled: Bool
 
     @objc static func toggleHalfWidthPunctuationEnabled() -> Bool {

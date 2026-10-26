@@ -1,21 +1,13 @@
-# AI-Bopomofo 本次交付
+# AI注音輸入法 0.4.0 交付
 
-已完成上游取得、獨立本地Fork、三份可安裝候選產物，以及不依賴AI的明確英文／ASCII組字與技術詞候選。原始碼與研究均已本地提交，沒有推送、公開發行或系統安裝。
+本次在 feature/ai-name-symbol-layer 分支完成：統一產品顯示名稱、獨立 F 數字／符號層、Markdown 半形預設與直接反引號、簡化主選單、修正 asdfghjkl 下拉選取的儲存時序。原有詞庫與功能保留，詳細操作與限制見 [F 分層說明](quick-symbols.md)。
 
-最新版：`dist/0.3.1-alpha/AI-Bopomofo-0.3.1-alpha.pkg`，另有zip與app。來源Commitcbaf71f；主要功能Commit43909cc。arm64/x86_64 Release編譯成功，77個套件檔案逐一比對一致。沒有使用私人憑證，pkg未簽署、app僅ad-hoc，尚未公證。
+F 分層不依賴 Kanata；44 個鍵位來源為使用者提供的配置。只在輸入法內運作，短按回放注音、約 200 毫秒長按進入、放開退出。未完成音節與英文組字期間不攔截 F，跨應用的按鍵放開事件仍須人工驗收。原始 ji3 顯示與 Vim 專用英文介面暫緩。
 
-pkg SHA-256：`e5b352e7905b87ca161865c14558f5381b262888bc6b747df5b565f751a9eeab`。
+檢查結果：C++ 122 通過、2 上游案例跳過；MixedInputCore 15 項通過；CandidateRanking 11 項通過；Python 14 項通過；詞庫檢查成功。Debug build-for-testing 與 arm64/x86_64 Release 建置成功。新增 4 項 IMK／KeyHandler 整合案例僅編譯，沒有執行 hosted／GUI 測試或音效。獨立識別碼、兩種輸入模式、名稱、詞庫資源與簽章驗證通過。
 
-已實作：原生注音與上游候選、明確ASCII數字符號、Enter送出／Esc取消、游標編輯、技術詞Tab補全、可選Shift字母英文入口、專業詞匯入／匯出與備份。原版Shift標點保持；Kanata設定未更改。
+本機候選產物為 dist/0.4.0-alpha/；app 使用 ad-hoc 簽章、pkg 未簽署且未公證。沒有建立公開遠端、推送或正式發行 tag。Apple FM 仍為研究模組，不參與輸入；不需要 Ollama。
 
-AI研究：本機FM可執行，原生adapter及非同步協調器完成；500筆模板語料全數評估。但有害重排14.23%、P95約682ms，未接入app。此數據不能代表真實McBopomofo提升。
+使用者已在本對話授權本機安裝與重啟。舊版 0.3.1 與偏好設定已備份於忽略追蹤的 artifacts/install-0.4.0/，保留現有使用者詞庫。安裝後的版本與程序確認會補記於本報告。
 
-自動化實測見各phase報告，不重複加總跨階段案例。使用者回報發聲後未再執行hosted／GUI測試，後續僅純邏輯與編譯。Kanata設定校驗值仍為f60746ca8dfb10316e213d98ef6925df2963f14b03a11030f54ec6d592320455。
-
-未完成：實機安裝／設定辨識、跨應用輸入與Kanata Unicode、詞庫面板操作、完整鍵盤事件P95、Secure Input／睡眠喚醒／長時間測試、無感小寫混打、AI品質與候選視窗生命週期整合、Developer ID／公證／公開遠端。因此沒有正式版本tag或daily-use beta聲明。
-
-第一個人工驗收入口：檢視docs/installation.md後，自行選擇使用者層安裝最新版bundle，再依docs/manual-validation.md檢查。開發階段不自動安裝或改變目前輸入來源。
-
-更新時間：2026-10-26T16:56:38+08:00
-
-最後修正：cbaf71f將keyUp與修飾鍵分流，防止放開按鍵再進入組字。純事件／組字測試8項通過、Release重建與套件77檔比對通過；未執行GUI。先前0.1／0.2／0.3.0為已被取代的研究產物，請改用0.3.1做人工驗收。
+Kanata 設定未修改，SHA-256 為 f60746ca8dfb10316e213d98ef6925df2963f14b03a11030f54ec6d592320455。先前應使用者要求停止 Kanata；本次不恢復它，以便驗證獨立分層。

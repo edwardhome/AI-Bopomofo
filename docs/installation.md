@@ -1,12 +1,12 @@
 # 本地開發版安裝
 
-目前為未經 Developer ID 簽署／公證的本地開發版；app 使用 ad-hoc 簽章，pkg 未簽署。不要關閉整體 Gatekeeper 或 SIP。本次開發不會自動安裝、切換輸入法或終止現有輸入法。
+目前為未經 Developer ID 簽署／公證的本地開發版；app 使用 ad-hoc 簽章，pkg 未簽署。不要關閉整體 Gatekeeper 或 SIP。一般開發不自動安裝；本次對話已明確授權在驗證與備份後更新並重啟本機輸入法。
 
-建議先用使用者層安裝：在專案目錄執行 `scripts/install-debug.sh dist/0.3.1-alpha/AI-Bopomofo.app`（換成欲測版本路徑）。安裝到 `~/Library/Input Methods/AI-Bopomofo.app`，不需管理員權限；既有版本存在時拒絕覆寫。
+建議先用使用者層安裝：在專案目錄執行 `scripts/install-debug.sh dist/0.4.0-alpha/AI-Bopomofo.app`（換成欲測版本路徑）。安裝到 `~/Library/Input Methods/AI-Bopomofo.app`，不需管理員權限；既有版本存在時拒絕覆寫。
 
 另一選項為開啟 dist 內的 pkg，由使用者自行授權，安裝到 `/Library/Input Methods/AI-Bopomofo.app`。這兩種方式擇一，不能同時安裝兩份。若系統因未公證而拒絕 pkg，使用本機自行建置的 bundle 與上述腳本。
 
-登出再登入，進入「系統設定 → 鍵盤 → 文字輸入 → 編輯 → 加入輸入方式」，尋找 AI-Bopomofo。確認原版小麥注音仍可選擇。尚需人工驗證設定辨識、組字、選字、標點與各應用相容性。
+登出再登入，進入「系統設定 → 鍵盤 → 文字輸入 → 編輯 → 加入輸入方式」，尋找「AI注音輸入法」。確認原版小麥注音仍可選擇。尚需人工驗證設定辨識、組字、選字、標點與各應用相容性。
 
 使用者層解除安裝：先切換為其他輸入法並從設定移除 AI-Bopomofo，再執行 `scripts/uninstall-debug.sh`；腳本把 bundle 移到備份資料夾，不刪除詞庫。登出再登入。
 

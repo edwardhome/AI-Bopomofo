@@ -1,8 +1,8 @@
 /* No comment provided by engineer. */
-"About McBopomofo…" = "關於小麥注音…";
+"About McBopomofo…" = "關於AI注音輸入法…";
 
 /* No comment provided by engineer. */
-"McBopomofo Preferences" = "小麥注音偏好設定";
+"McBopomofo Preferences" = "AI注音輸入法偏好設定";
 
 /* No comment provided by engineer. */
 "Check for Updates…" = "檢查是否有新版…";
@@ -29,7 +29,7 @@
 "Visit Website" = "前往網站";
 
 /* No comment provided by engineer. */
-"You're currently using McBopomofo %@ (%@), a new version %@ (%@) is now available. Do you want to visit McBopomofo's website to download the version?%@" = "目前使用的小麥注音版本是 %1$@ (%2$@)，網路上有更新版本 %3$@ (%4$@) 可供下載。是否要前往小麥注音網站下載新版來安裝？%5$@";
+"You're currently using McBopomofo %@ (%@), a new version %@ (%@) is now available. Do you want to visit McBopomofo's website to download the version?%@" = "目前使用的AI注音輸入法版本是 %1$@ (%2$@)，網路上有更新版本 %3$@ (%4$@) 可供下載。是否要前往AI注音輸入法網站下載新版來安裝？%5$@";
 
 "Convert to Simplified Chinese" = "輸出簡體中文";
 
@@ -95,7 +95,7 @@
 
 "Check for Update Completed" = "版本檢查完成";
 
-"McBopomofo is up to date." = "您的小麥注音不需要更新。";
+"McBopomofo is up to date." = "您的AI注音輸入法不需要更新。";
 
 "Look up \"%1$@\" in %2$@" = "在%2$@查詢「%1$@」";
 
@@ -137,7 +137,7 @@
 
 "Issues were found in the following user phrase files:" = "以下是用戶自訂詞庫檔案中發現的問題：";
 
-"Check McBopomofo menu for user file issues" = "自訂詞庫有誤，請從小麥注音選單點選「列出自訂詞庫中的問題」";
+"Check McBopomofo menu for user file issues" = "自訂詞庫有誤，請從AI注音輸入法選單點選「列出自訂詞庫中的問題」";
 
 "User phrase file" = "使用者自訂詞彙檔";
 
@@ -267,3 +267,11 @@
 "Export Technical Terms…" = "匯出專業詞彙…";
 "Invalid technical dictionary: use one ASCII term per line, up to 5000 terms of 64 characters." = "專業詞庫格式錯誤：每行一個 ASCII 詞彙，最多 5000 詞，每詞最多 64 字元。";
 "Unable to write user phrases. Some terms may have been imported; retry safely after checking the file." = "無法寫入使用者詞庫。部分詞彙可能已匯入，請檢查檔案後重試；重試不會重複新增相同詞彙。";
+
+// Independent quick symbol layer.
+"Quick Numbers / Symbols" = "快速數字／符號";
+"Hold F for Numbers / Symbols" = "長按 F 輸入數字／符號";
+"Advanced Tools" = "進階工具";
+"Backtick Opens Punctuation List" = "反引號開啟標點清單（舊版操作）";
+"Release F to return; Esc cancels" = "放開 F 返回中文；Esc 取消";
+"Press a mapped key; Esc returns" = "按對應鍵輸入；Esc 返回中文";

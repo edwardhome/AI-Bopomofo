@@ -793,7 +793,11 @@ private struct ComboBoxTextField: NSViewRepresentable {
         }
 
         func comboBoxSelectionDidChange(_ notification: Notification) {
-            updateText(notification)
+            guard let comboBox = notification.object as? NSComboBox,
+                  let selection = comboBox.objectValueOfSelectedItem as? String else { return }
+            // The selection notification can precede the field editor's string update.
+            comboBox.stringValue = selection
+            text = selection
         }
 
         func controlTextDidEndEditing(_ notification: Notification) {
