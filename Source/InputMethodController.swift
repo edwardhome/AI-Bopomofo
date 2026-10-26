@@ -470,12 +470,11 @@ class McBopomofoInputMethodController: IMKInputController {
         }
         if IsSecureEventInputEnabled() { shiftGesture.reset() }
         else if event.type == .flagsChanged {
-            let isShift = event.keyCode == UInt16(kVK_Shift) || event.keyCode == UInt16(kVK_RightShift)
             let other = !event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty
-            if shiftGesture.update(isShift: isShift, isDown: event.modifierFlags.contains(.shift),
-                                   otherModifiers: other, time: event.timestamp) {
+            if shiftGesture.update(shiftDown: event.modifierFlags.contains(.shift),
+                                   otherModifiers: other, time: ProcessInfo.processInfo.systemUptime) {
                 toggleDirectEnglish(nil)
-                return false
+                return true
             }
         } else if event.type == .keyDown { shiftGesture.reset() }
         // Keep ownership until key-up even when F was released before a symbol key.

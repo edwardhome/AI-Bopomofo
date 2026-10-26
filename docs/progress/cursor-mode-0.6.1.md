@@ -36,4 +36,8 @@
 
 已重新啟動目標輸入法，PID 由 41030 更換為 44815，並僅選取已啟用的 AI注音混打來源，回傳 0；沒有呼叫 TISEnableInputSource，也沒有重新安裝 Vim helper。最後目前來源為 `org.aibopomofo.inputmethod.AIBopomofo.AIBopomofo.Bopomofo`。
 
-安裝及重啟後的使用者資料雜湊與備份前一致；偏好僅 `NextUpdateCheckDate` 改變，既有輸入設定保持不變。核對摘要保存在 `artifacts/install-0.6.1/verification.json`。游標提示及新版 F 行為仍待使用者實測；沒有推送或公開發布。
+安裝及重啟後的使用者資料雜湊與備份前一致；偏好僅 `NextUpdateCheckDate` 改變，既有輸入設定保持不變。核對摘要保存在 `artifacts/install-0.6.1/verification.json`。沒有推送或公開發布。
+
+## 使用者回報
+
+後續使用者確認選單直接切換會出現英文提示、F＋R 正常；但雙擊 Shift 完全不切換，也沒有提示。不能將選單與 F 的成功當成雙 Shift 已驗收。後續修正位於 `fix/double-shift-modifier-events` 分支。
