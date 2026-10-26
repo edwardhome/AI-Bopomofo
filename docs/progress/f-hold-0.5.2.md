@@ -22,3 +22,11 @@ Debug build-for-testing 與 Release 建置成功。工作分支為 fix/f-hold-un
 865bda707608dca2d241bb31c1b78ef4ee2d4a24ef80cc3fae1c05f47d41eab1  ./AI-Bopomofo-0.5.2-alpha.pkg
 fb5e8a993633dfbee5f5206c7d3e74bfce4091989e9a9a9eedd9c294b54bdc92  ./AI-Bopomofo-0.5.2-alpha.zip
 ```
+
+## 安裝與重啟確認
+
+使用者後續明確授權本對話每次完成檢查後直接備份、安裝與重啟。檢查時已安裝 0.5.2／build 502，77 個檔案與候選 app 完全一致、簽章通過，因此沒有重複安裝。發現舊程序仍在執行，先備份偏好設定至 artifacts/install-0.5.2/，切換鍵盤配置後僅終止本專案舊程序，再啟動已驗證的 0.5.2。新 PID：32537。TIS 啟用及選取回傳 0，確認目前輸入來源為 AI注音輸入法。
+
+系統只有一份 AI注音輸入法，位於 /Library/Input Methods；使用者目錄的原版 McBopomofo 與 ZingIME 為不同產品，予以保留。未修改詞庫、Kanata 或音量，未執行實際按鍵測試。先前版本包仍保存在 dist，未刪除。
+
+確認時間：2026-10-26T21:55:57+08:00

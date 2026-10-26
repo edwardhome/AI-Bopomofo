@@ -1,12 +1,12 @@
 # AI-Bopomofo fork rules
 
 - Work only on isolated `feature/*`, `research/*`, `fix/*` or `release/*` branches.
-- Do not push, publish, sign with private credentials, change Kanata, or install automatically.
+- Do not push, publish, sign with private credentials, change Kanata, or install without user authorization.
 - Keep upstream copyright, source history, and traditional input behavior.
 - Product identity: `org.aibopomofo.inputmethod.AIBopomofo`; internal module/target remains `McBopomofo`.
 - User-facing product name: `AI注音輸入法`; keep upstream authorship and license notices.
 - Prioritize Markdown-friendly half-width punctuation and explicit English input. The F number/symbol layer must work without Kanata. Keep the original phonetic display; raw `ji3` display and Vim-specific English mode are deferred by the user.
-- Installation/restart is authorized for the 0.4.0 iteration in this conversation, after checks and a recoverable backup. This does not authorize hosted/GUI tests, sound, changing Kanata configuration, or remote pushes. Never store credentials in project files or reports.
+- The user authorizes installation and restart for subsequent iterations in this conversation after checks and a recoverable backup; no repeated confirmation is needed. Preserve the installed location, preferences and user dictionaries. This does not authorize hosted/GUI tests, sound, changing Kanata configuration, or remote pushes. Never store credentials in project files or reports.
 - Text assistance only sees current uncommitted composition. Keep original text first and require explicit acceptance; predictions must append without changing their prefix. Invalidate on editing, selection, focus/mode changes, and Secure Input.
 - NSSpellChecker background callbacks run on arbitrary queues: explicitly use nonisolated Sendable callbacks and hop to MainActor for UI/state, rather than inheriting actor isolation from the caller.
 - Local builds: `scripts/build.sh`; packaging: `scripts/package.sh`; private artifacts stay ignored.
