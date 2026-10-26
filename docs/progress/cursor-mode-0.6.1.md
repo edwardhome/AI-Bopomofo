@@ -1,6 +1,6 @@
 # 0.6.1 移除 Vim 整合與游標模式提示
 
-更新時間：2026-10-26T23:26:22+08:00
+更新時間：2026-10-26T23:49:02+08:00
 
 ## 需求與處理
 
@@ -30,6 +30,10 @@
 
 套件保存在 `dist/0.6.1-alpha/`，pkg／zip 校驗、bundle 資源與簽章核對通過；pkg 解包後 77 個檔案與候選 app 一致。封裝與驗證記錄：`artifacts/cursor-mode-package.log`、`artifacts/cursor-mode-verify.log`。
 
-安裝前已將現有 0.6.0 app 與偏好備份至 `artifacts/install-0.6.1/`，77 個備份檔案逐一核對一致。為避免外接磁碟權限問題，將 pkg 複製到獨立 `/private/tmp/` 目錄，確認 SHA-256 相同後交由系統 Installer 開啟。當前仍等待使用者在 macOS 驗證視窗核准；最後唯讀確認已安裝版本仍為 0.6.0，尚未執行重啟或宣稱提示已生效。
+安裝前已將現有 0.6.0 app 與偏好備份至 `artifacts/install-0.6.1/`，77 個備份檔案逐一核對一致。為避免外接磁碟權限問題，將 pkg 複製到獨立 `/private/tmp/` 目錄，確認 SHA-256 相同後交由系統 Installer 開啟。使用者完成系統驗證後，已確認原位置安裝為 **0.6.1／build 601**，77 個檔案與保存的候選 app 相同，bundle 資源及簽章核對通過。
 
-完成安裝後須核對安裝檔案、版本及偏好，並重新確認 F 輸入監控授權是否符合新版本，必要時只透過系統設定重新加入；再重啟目標輸入法並由使用者驗收。沒有推送或公開發布。
+更新後輸入監控仍為允許，但舊授權需求不符合新簽章。經使用者在系統設定完成驗證，移除舊項目並重新加入同一安裝位置的 app；唯讀驗證確認允許且符合 0.6.1。沒有改寫權限資料庫或修改其他 app 權限。
+
+已重新啟動目標輸入法，PID 由 41030 更換為 44815，並僅選取已啟用的 AI注音混打來源，回傳 0；沒有呼叫 TISEnableInputSource，也沒有重新安裝 Vim helper。最後目前來源為 `org.aibopomofo.inputmethod.AIBopomofo.AIBopomofo.Bopomofo`。
+
+安裝及重啟後的使用者資料雜湊與備份前一致；偏好僅 `NextUpdateCheckDate` 改變，既有輸入設定保持不變。核對摘要保存在 `artifacts/install-0.6.1/verification.json`。游標提示及新版 F 行為仍待使用者實測；沒有推送或公開發布。
