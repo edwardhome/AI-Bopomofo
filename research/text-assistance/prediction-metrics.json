@@ -1,0 +1,27 @@
+{
+  "completed": true,
+  "categories": {
+    "prediction": {
+      "count": 20,
+      "first_suggestion_or_original_matches_reference": 0,
+      "reference_in_suggestions": 0,
+      "system_first_or_original_matches_reference": 0,
+      "cases_with_suggestions": 20
+    }
+  },
+  "status": {
+    "ready": 18,
+    "timedOut": 2
+  },
+  "provider_ms": {
+    "p50": 896.193625,
+    "p95": 5075.219708,
+    "p99": 5181.734959
+  },
+  "request_with_system_spelling_ms": {
+    "p50": 900.342958,
+    "p95": 5080.033167,
+    "p99": 5186.808959
+  },
+  "caveats": "Individually authored synthetic examples, not independently reviewed. UI keeps original first. No GUI/key-event latency measurement. Warm model and background build load not isolated."
+}

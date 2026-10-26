@@ -1,0 +1,162 @@
+[
+  {
+    "id": "prediction-01",
+    "category": "prediction",
+    "text": "I would like to ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-02",
+    "category": "prediction",
+    "text": "Thank you for your ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-03",
+    "category": "prediction",
+    "text": "Please let me know if ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-04",
+    "category": "prediction",
+    "text": "We are looking forward to ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-05",
+    "category": "prediction",
+    "text": "Could you please send ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-06",
+    "category": "prediction",
+    "text": "The meeting will start ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-07",
+    "category": "prediction",
+    "text": "I am writing to ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-08",
+    "category": "prediction",
+    "text": "This feature helps users ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-09",
+    "category": "prediction",
+    "text": "We need to fix ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-10",
+    "category": "prediction",
+    "text": "The results show that ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-11",
+    "category": "prediction",
+    "text": "Please review the docum",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-12",
+    "category": "prediction",
+    "text": "I have a ques",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-13",
+    "category": "prediction",
+    "text": "The new version supp",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-14",
+    "category": "prediction",
+    "text": "We should discuss the ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-15",
+    "category": "prediction",
+    "text": "Before making changes please ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-16",
+    "category": "prediction",
+    "text": "The weather today is ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-17",
+    "category": "prediction",
+    "text": "I prefer a simple ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-18",
+    "category": "prediction",
+    "text": "This example demonstrates how ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-19",
+    "category": "prediction",
+    "text": "The task was completed ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  },
+  {
+    "id": "prediction-20",
+    "category": "prediction",
+    "text": "Please save the file before ",
+    "expected": [],
+    "isEnglish": true,
+    "protectedWords": []
+  }
+]

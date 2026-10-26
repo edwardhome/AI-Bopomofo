@@ -11,6 +11,7 @@ enum InputFeedback {
 }
 
 import MixedInputCore
+import CandidateRanking
 import UniformTypeIdentifiers
 
 extension InputState {
@@ -30,22 +31,30 @@ extension InputState {
     @objc(InputStateASCII)
     class ASCII: Inputting, CandidateProvider {
         let composition: ASCIIComposition
+        let prediction: String?
+        let predictionSuppressed: Bool
 
         @objc init(text: String, cursor: UInt) {
             composition = ASCIIComposition(raw: text, cursor: Int(cursor), lexicon: MixedInputHandler.lexicon)
+            prediction = nil
+            predictionSuppressed = false
             super.init(composingBuffer: composition.display, cursorIndex: UInt(composition.displayCursor))
             tooltip = NSLocalizedString("ASCII: Tab selects, Enter commits, Esc restores or cancels", comment: "")
         }
 
-        init(composition: ASCIIComposition) {
+        init(composition: ASCIIComposition, prediction: String? = nil, predictionSuppressed: Bool = false) {
             self.composition = composition
+            self.prediction = prediction
+            self.predictionSuppressed = predictionSuppressed
             super.init(composingBuffer: composition.display, cursorIndex: UInt(composition.displayCursor))
             tooltip = NSLocalizedString("ASCII: Tab selects, Enter commits, Esc restores or cancels", comment: "")
+            if prediction != nil { tooltip = NSLocalizedString("Prediction: Tab accepts; Esc dismisses; Enter sends only your text", comment: "") }
         }
 
-        var candidateCount: Int { composition.candidates.count }
+        var candidateCount: Int { prediction == nil ? composition.candidates.count : 2 }
         func candidate(at index: Int) -> String {
-            composition.candidates.indices.contains(index) ? composition.candidates[index] : ""
+            if let prediction { return index == 1 ? prediction : composition.raw }
+            return composition.candidates.indices.contains(index) ? composition.candidates[index] : ""
         }
         func reading(at index: Int) -> String? { nil }
         override var description: String { "<InputState.ASCII>" }
@@ -82,6 +91,20 @@ extension InputState {
 @objc class MixedInputHandler: NSObject {
     static var lexicon = TechnicalLexicon()
 
+    @objc static func withPrediction(_ text: String, state: InputState.ASCII) -> InputState.ASCII {
+        guard state.composition.selectedIndex == 0, !state.predictionSuppressed,
+              state.composition.cursor == state.composition.raw.utf16.count else { return state }
+        let request = CorrectionRequest(revision: 0, text: state.composition.raw, mode: .prediction,
+                                        isEnglish: true, protectedWords: lexicon.words)
+        let prediction = request.validated([text]).first
+        return InputState.ASCII(composition: state.composition, prediction: prediction)
+    }
+
+    @objc static func acceptPrediction(state: InputState.ASCII, stateCallback: (InputState) -> Void) {
+        guard let prediction = state.prediction else { return }
+        stateCallback(InputState.ASCII(composition: ASCIIComposition(raw: prediction, lexicon: lexicon)))
+    }
+
     static func reloadUserTerms() {
         let path = LanguageModelManager.userPhrasesDataPathMcBopomofo
         guard let size = (try? FileManager.default.attributesOfItem(atPath: path)[.size]) as? NSNumber,
@@ -97,6 +120,16 @@ extension InputState {
         input: KeyHandlerInput, state: InputState.ASCII,
         stateCallback: (InputState) -> Void, errorCallback: () -> Void
     ) -> Bool {
+        if state.prediction != nil && !(input.isCommandHold || input.isOptionHold || input.isControlHold) {
+            if input.charCode == 27 {
+                stateCallback(InputState.ASCII(composition: state.composition, predictionSuppressed: true))
+                return true
+            }
+            if input.isTab && !input.isShiftHold {
+                acceptPrediction(state: state, stateCallback: stateCallback)
+                return true
+            }
+        }
         let action: ASCIIComposition.Action
         if input.charCode == 27 { action = .escape }
         else if input.isCommandHold || input.isOptionHold || input.isControlHold { action = .shortcut }
@@ -113,7 +146,9 @@ extension InputState {
         else { action = .insert(input.inputText ?? "") }
 
         switch state.composition.applying(action, lexicon: lexicon) {
-        case .updated(let composition): stateCallback(InputState.ASCII(composition: composition))
+        case .updated(let composition):
+            let navigated = input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight || input.isHome || input.isEnd
+            stateCallback(InputState.ASCII(composition: composition, predictionSuppressed: navigated))
         case .commit(let value):
             stateCallback(InputState.Committing(poppedText: value))
             stateCallback(InputState.Empty())

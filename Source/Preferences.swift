@@ -214,6 +214,8 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "EnglishPredictionEnabled", defaultValue: true)
+    @objc static var englishPredictionEnabled: Bool
     @UserDefault(key: "BacktickOpensPunctuationList", defaultValue: false)
     @objc static var backtickOpensPunctuationList: Bool
     @UserDefault(key: "FHoldSymbolsEnabled", defaultValue: false)
@@ -225,6 +227,7 @@ class Preferences: NSObject {
     static var allKeys: [String] {
         [
             "FHoldSymbolsEnabled",
+            "EnglishPredictionEnabled",
             "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",
             kLetterBehaviorKey,

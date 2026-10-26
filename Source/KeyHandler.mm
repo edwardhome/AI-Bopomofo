@@ -333,6 +333,40 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
          [state isKindOfClass:[InputStateInputting class]]);
 }
 
+- (BOOL)canBeginAssistanceWithState:(InputState *)state
+{
+    return _bpmfReadingBuffer->isEmpty() && [state isKindOfClass:[InputStateInputting class]] &&
+        ((InputStateInputting *)state).composingBuffer.length > 0;
+}
+
+- (void)publishAssistance:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if ([state isKindOfClass:[InputStateAssistance class]]) { stateCallback(state); }
+}
+
+- (void)acceptAssistanceAtIndex:(NSInteger)index state:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if (![state isKindOfClass:[InputStateAssistance class]]) { return; }
+    [AssistanceKeyHandler acceptWithIndex:index state:(InputStateAssistance *)state stateCallback:^(InputState *next) {
+        if ([next isKindOfClass:[InputStateCommitting class]]) { [self clear]; }
+        stateCallback(next);
+    }];
+}
+
+- (void)publishPrediction:(NSString *)text state:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if ([state isKindOfClass:[InputStateASCII class]]) {
+        stateCallback([MixedInputHandler withPrediction:text state:(InputStateASCII *)state]);
+    }
+}
+
+- (void)acceptPredictionWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    if ([state isKindOfClass:[InputStateASCII class]]) {
+        [MixedInputHandler acceptPredictionWithState:(InputStateASCII *)state stateCallback:stateCallback];
+    }
+}
+
 - (BOOL)beginQuickSymbolsWithState:(InputState *)state held:(BOOL)held stateCallback:(void (^)(InputState *))stateCallback
 {
     if (![self canBeginQuickSymbolsWithState:state]) { return NO; }
@@ -377,6 +411,17 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     InputState *state = inState;
     UniChar charCode = input.charCode;
     McBopomofoEmacsKey emacsKey = input.emacsKey;
+
+    if ([state isKindOfClass:[InputStateAssistance class]]) {
+        InputStateAssistance *assistance = (InputStateAssistance *)state;
+        BOOL handled = [AssistanceKeyHandler handleWithInput:input state:assistance stateCallback:^(InputState *next) {
+            if ([next isKindOfClass:[InputStateCommitting class]]) { [self clear]; }
+            stateCallback(next);
+        }];
+        if (handled) { return YES; }
+        state = assistance.original;
+        stateCallback(state);
+    }
 
     if ([state isKindOfClass:[InputStateASCII class]]) {
         return [MixedInputHandler handleWithInput:input state:(InputStateASCII *)state stateCallback:stateCallback errorCallback:errorCallback];

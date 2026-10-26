@@ -53,6 +53,95 @@ struct MixedInputTests {
         #expect(s.errors == 0)
     }
 
+    @Test func contextualPredictionAcceptsOnlyOnTab() {
+        let s = Session()
+        s.begin(); s.type("I would like to ")
+        s.handler.publishPrediction("I would like to learn", state: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "I would like to ")
+        #expect(s.committed.isEmpty)
+        s.key("\t", code: 48)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "I would like to learn")
+        #expect(s.committed.isEmpty)
+        s.key("\r")
+        #expect(s.committed == "I would like to learn")
+    }
+
+    @Test func predictionEnterNeverCommitsUnacceptedSuffix() {
+        let s = Session()
+        s.begin(); s.type("hel")
+        s.handler.publishPrediction("hello", state: s.state, stateCallback: s.transition)
+        s.key("\r")
+        #expect(s.committed == "hel")
+    }
+
+    @Test func predictionEscapeKeepsOriginalAndSuppressesRepeat() {
+        let s = Session()
+        s.begin(); s.type("hel")
+        s.handler.publishPrediction("hello", state: s.state, stateCallback: s.transition)
+        s.key("\u{1B}")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "hel")
+        #expect((s.state as? InputState.ASCII)?.prediction == nil)
+        #expect((s.state as? InputState.ASCII)?.predictionSuppressed == true)
+        s.key("p")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "help")
+        #expect((s.state as? InputState.ASCII)?.predictionSuppressed == false)
+    }
+
+    @Test func typingDoesNotInsertPredictionOrProtectCodeIncorrectly() {
+        let s = Session()
+        s.begin(); s.type("hel")
+        s.handler.publishPrediction("hello", state: s.state, stateCallback: s.transition)
+        s.key("p"); s.key("\r")
+        #expect(s.committed == "help")
+        let code = Session()
+        code.begin(); code.type("foo_bar")
+        code.handler.publishPrediction("foo_bar value", state: code.state, stateCallback: code.transition)
+        #expect((code.state as? InputState.ASCII)?.prediction == nil)
+    }
+
+    @Test func correctionEscapeRestoresChineseEngineAndCursor() {
+        let s = Session()
+        s.type("ji3")
+        let original = s.state as! InputState.Inputting
+        #expect(s.handler.canBeginAssistance(with: original))
+        s.handler.publishAssistance(InputState.Assistance(original: original, suggestions: ["你"], message: "test"), stateCallback: s.transition)
+        s.key("\u{1B}")
+        #expect(s.state === original)
+        #expect(s.committed.isEmpty)
+        s.type("su3"); s.key("\r")
+        #expect(s.committed == "我你")
+    }
+
+    @Test func correctionCommitClearsEngineAndCommitsOnlyOnce() {
+        let s = Session()
+        s.type("ji3")
+        let original = s.state as! InputState.Inputting
+        s.handler.publishAssistance(InputState.Assistance(original: original, suggestions: ["你"], message: "test"), stateCallback: s.transition)
+        s.handler.acceptAssistance(at: 1, state: s.state, stateCallback: s.transition)
+        #expect(s.committed == "你")
+        s.type("ji3"); s.key("\r")
+        #expect(s.committed == "你我")
+    }
+
+    @Test func typingWhileCheckingRestoresInsteadOfSelectingHotkey() {
+        let s = Session()
+        s.begin(); s.type("teh")
+        let original = s.state as! InputState.ASCII
+        s.handler.publishAssistance(InputState.Assistance(original: original, suggestions: ["the"], isChecking: true, message: "test"), stateCallback: s.transition)
+        s.key("a")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "teha")
+        #expect(s.committed.isEmpty)
+    }
+
+    @Test func correctionShortcutRestoresAndPassesThrough() {
+        let s = Session()
+        s.begin(); s.type("teh")
+        let original = s.state as! InputState.ASCII
+        s.handler.publishAssistance(InputState.Assistance(original: original, suggestions: ["the"], message: "test"), stateCallback: s.transition)
+        #expect(!s.key("a", flags: .command))
+        #expect(s.committed == "teh")
+    }
+
     @Test func symbolLayerDoesNotStealUnfinishedReadingsOrEnglish() {
         let s = Session()
         s.key("j")

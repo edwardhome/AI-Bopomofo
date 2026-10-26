@@ -275,3 +275,19 @@
 "Backtick Opens Punctuation List" = "反引號開啟標點清單（舊版操作）";
 "Release F to return; Esc cancels" = "放開 F 返回中文；Esc 取消";
 "Press a mapped key; Esc returns" = "按對應鍵輸入；Esc 返回中文";
+
+// Local correction and contextual English prediction.
+"Check Spelling / Chinese Typos" = "檢查錯字／英文拼字";
+"English Prediction (Tab to Accept)" = "英文上下文預測（Tab 接受）";
+"Original" = "原文";
+"English spelling" = "英文拼字";
+"Chinese correction" = "中文糾錯";
+"Choose a suggestion; Esc returns to your text" = "選取建議；Esc 返回原始組字";
+"Check up to 256 characters and 1024 bytes at a time" = "每次可檢查最多 256 個字元、1024 位元組";
+"Checking on this Mac; you can keep typing" = "正在本機檢查，可繼續輸入";
+"No correction suggested" = "目前沒有修正建議";
+"Apple AI unavailable; showing original or system spelling" = "Apple AI 無法使用，保留原文或系統拼字建議";
+"Check timed out; showing original or system spelling" = "檢查逾時，保留原文或系統拼字建議";
+"Apple AI is busy; showing original or system spelling" = "Apple AI 忙碌中，保留原文或系統拼字建議";
+"Prediction: Tab accepts; Esc dismisses; Enter sends only your text" = "預測：Tab 接受、Esc 隱藏；Enter 只送出已輸入文字";
+"Tab accepts prediction; Esc dismisses" = "Tab 接受預測；Esc 隱藏";

@@ -53,12 +53,20 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
         let client = currentClient
 
         switch state {
+        case is InputState.Assistance:
+            keyHandler.acceptAssistance(at: Int(index), state: state) {
+                self.handle(state: $0, client: client)
+            }
         case is InputState.QuickSymbols:
             keyHandler.selectQuickSymbol(at: Int(index), state: state) {
                 self.handle(state: $0, client: client)
             }
         case let state as InputState.ASCII:
             guard Int(index) < state.candidateCount else { return }
+            if state.prediction != nil && index == 1 {
+                keyHandler.acceptPrediction(with: state) { self.handle(state: $0, client: client) }
+                return
+            }
             keyHandler.clear()
             handle(state: .Committing(poppedText: state.candidate(at: Int(index))), client: client)
             handle(state: .Empty(), client: client)

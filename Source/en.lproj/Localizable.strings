@@ -277,3 +277,19 @@
 "Backtick Opens Punctuation List" = "Backtick Opens Punctuation List";
 "Release F to return; Esc cancels" = "Release F to return; Esc cancels";
 "Press a mapped key; Esc returns" = "Press a mapped key; Esc returns";
+
+// Local correction and contextual English prediction.
+"Check Spelling / Chinese Typos" = "Check Spelling / Chinese Typos";
+"English Prediction (Tab to Accept)" = "English Prediction (Tab to Accept)";
+"Original" = "Original";
+"English spelling" = "English spelling";
+"Chinese correction" = "Chinese correction";
+"Choose a suggestion; Esc returns to your text" = "Choose a suggestion; Esc returns to your text";
+"Check up to 256 characters and 1024 bytes at a time" = "Check up to 256 characters and 1024 bytes at a time";
+"Checking on this Mac; you can keep typing" = "Checking on this Mac; you can keep typing";
+"No correction suggested" = "No correction suggested";
+"Apple AI unavailable; showing original or system spelling" = "Apple AI unavailable; showing original or system spelling";
+"Check timed out; showing original or system spelling" = "Check timed out; showing original or system spelling";
+"Apple AI is busy; showing original or system spelling" = "Apple AI is busy; showing original or system spelling";
+"Prediction: Tab accepts; Esc dismisses; Enter sends only your text" = "Prediction: Tab accepts; Esc dismisses; Enter sends only your text";
+"Tab accepts prediction; Esc dismisses" = "Tab accepts prediction; Esc dismisses";

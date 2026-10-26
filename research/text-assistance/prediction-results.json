@@ -1,0 +1,450 @@
+{
+  "availability" : "available",
+  "completed" : true,
+  "model" : "SystemLanguageModel.default (on-device)",
+  "notes" : "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.",
+  "rows" : [
+    {
+      "baseline" : [
+        "I would like to see "
+      ],
+      "baselineMilliseconds" : 62.790583,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-01",
+      "milliseconds" : 1147.483291,
+      "raw" : [
+        "I would like to buy a ticket.",
+        "I would like to visit the museum.",
+        "I would like to learn more about the exhibition."
+      ],
+      "source" : "I would like to ",
+      "status" : "ready",
+      "suggestions" : [
+        "I would like to see "
+      ],
+      "totalRequestMilliseconds" : 1210.273874
+    },
+    {
+      "baseline" : [
+        "Thank you for your help "
+      ],
+      "baselineMilliseconds" : 5.436667,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-02",
+      "milliseconds" : 897.442916,
+      "raw" : [
+        "Thank you for your patience",
+        "Thank you for your understanding",
+        "Thank you for your cooperation"
+      ],
+      "source" : "Thank you for your ",
+      "status" : "ready",
+      "suggestions" : [
+        "Thank you for your patience"
+      ],
+      "totalRequestMilliseconds" : 902.8795829999999
+    },
+    {
+      "baseline" : [
+        "Please let me know if you "
+      ],
+      "baselineMilliseconds" : 5.615709,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-03",
+      "milliseconds" : 683.443458,
+      "raw" : [
+        "Please let me know if 妳"
+      ],
+      "source" : "Please let me know if ",
+      "status" : "ready",
+      "suggestions" : [
+        "Please let me know if you "
+      ],
+      "totalRequestMilliseconds" : 689.059167
+    },
+    {
+      "baseline" : [
+        "We are looking forward to seeing "
+      ],
+      "baselineMilliseconds" : 5.074,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-04",
+      "milliseconds" : 5181.734959,
+      "raw" : [
+
+      ],
+      "source" : "We are looking forward to ",
+      "status" : "timedOut",
+      "suggestions" : [
+        "We are looking forward to seeing "
+      ],
+      "totalRequestMilliseconds" : 5186.808959
+    },
+    {
+      "baseline" : [
+        "Could you please send me "
+      ],
+      "baselineMilliseconds" : 4.521875,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-05",
+      "milliseconds" : 807.335042,
+      "raw" : [
+        "Could you please send me the details?"
+      ],
+      "source" : "Could you please send ",
+      "status" : "ready",
+      "suggestions" : [
+        "Could you please send me "
+      ],
+      "totalRequestMilliseconds" : 811.8569170000001
+    },
+    {
+      "baseline" : [
+        "The meeting will start at "
+      ],
+      "baselineMilliseconds" : 4.113667,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-06",
+      "milliseconds" : 1109.450584,
+      "raw" : [
+        "The meeting will start at 10:00 AM.",
+        "The meeting will start tomorrow.",
+        "The meeting will start at 10:00 AM sharp."
+      ],
+      "source" : "The meeting will start ",
+      "status" : "ready",
+      "suggestions" : [
+        "The meeting will start at "
+      ],
+      "totalRequestMilliseconds" : 1113.564251
+    },
+    {
+      "baseline" : [
+        "I am writing to see "
+      ],
+      "baselineMilliseconds" : 4.280125,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-07",
+      "milliseconds" : 949.770084,
+      "raw" : [
+        "I am writing to you",
+        "I am writing to your boss",
+        "I am writing to the manager"
+      ],
+      "source" : "I am writing to ",
+      "status" : "ready",
+      "suggestions" : [
+        "I am writing to you"
+      ],
+      "totalRequestMilliseconds" : 954.050209
+    },
+    {
+      "baseline" : [
+        "This feature helps users to "
+      ],
+      "baselineMilliseconds" : 4.4985,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-08",
+      "milliseconds" : 684.107,
+      "raw" : [
+        "This feature helps users save time."
+      ],
+      "source" : "This feature helps users ",
+      "status" : "ready",
+      "suggestions" : [
+        "This feature helps users to "
+      ],
+      "totalRequestMilliseconds" : 688.6055
+    },
+    {
+      "baseline" : [
+        "We need to fix the "
+      ],
+      "baselineMilliseconds" : 4.558459,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-09",
+      "milliseconds" : 694.113083,
+      "raw" : [
+        "We need to fix the issue."
+      ],
+      "source" : "We need to fix ",
+      "status" : "ready",
+      "suggestions" : [
+        "We need to fix the "
+      ],
+      "totalRequestMilliseconds" : 698.6715419999999
+    },
+    {
+      "baseline" : [
+        "The results show that you "
+      ],
+      "baselineMilliseconds" : 4.352375,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-10",
+      "milliseconds" : 1156.348958,
+      "raw" : [
+        "The results show that the data is reliable.",
+        "The results show that the model performs well.",
+        "The results show that the predictions are accurate."
+      ],
+      "source" : "The results show that ",
+      "status" : "ready",
+      "suggestions" : [
+        "The results show that you "
+      ],
+      "totalRequestMilliseconds" : 1160.701333
+    },
+    {
+      "baseline" : [
+        "Please review the document "
+      ],
+      "baselineMilliseconds" : 4.972125,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-11",
+      "milliseconds" : 542.084166,
+      "raw" : [
+        "Please review the document"
+      ],
+      "source" : "Please review the docum",
+      "status" : "ready",
+      "suggestions" : [
+        "Please review the document"
+      ],
+      "totalRequestMilliseconds" : 547.056291
+    },
+    {
+      "baseline" : [
+        "I have a question "
+      ],
+      "baselineMilliseconds" : 3.823958,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-12",
+      "milliseconds" : 555.186875,
+      "raw" : [
+        "I have a question"
+      ],
+      "source" : "I have a ques",
+      "status" : "ready",
+      "suggestions" : [
+        "I have a question"
+      ],
+      "totalRequestMilliseconds" : 559.0108329999999
+    },
+    {
+      "baseline" : [
+        "The new version supports "
+      ],
+      "baselineMilliseconds" : 4.619583,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-13",
+      "milliseconds" : 784.080167,
+      "raw" : [
+        "The new version supports",
+        "The new version supports",
+        "The new version supports"
+      ],
+      "source" : "The new version supp",
+      "status" : "ready",
+      "suggestions" : [
+        "The new version supports"
+      ],
+      "totalRequestMilliseconds" : 788.69975
+    },
+    {
+      "baseline" : [
+        "We should discuss the details "
+      ],
+      "baselineMilliseconds" : 4.314417,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-14",
+      "milliseconds" : 902.731208,
+      "raw" : [
+        "We should discuss the project",
+        "We should discuss the plan",
+        "We should discuss the strategy"
+      ],
+      "source" : "We should discuss the ",
+      "status" : "ready",
+      "suggestions" : [
+        "We should discuss the project"
+      ],
+      "totalRequestMilliseconds" : 907.0456250000001
+    },
+    {
+      "baseline" : [
+        "Before making changes please let "
+      ],
+      "baselineMilliseconds" : 4.504042,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-15",
+      "milliseconds" : 961.820083,
+      "raw" : [
+        "Before making changes，please ",
+        "Before making changes，please check ",
+        "Before making changes，please review "
+      ],
+      "source" : "Before making changes please ",
+      "status" : "ready",
+      "suggestions" : [
+        "Before making changes please let "
+      ],
+      "totalRequestMilliseconds" : 966.324125
+    },
+    {
+      "baseline" : [
+        "The weather today is pretty "
+      ],
+      "baselineMilliseconds" : 3.806708,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-16",
+      "milliseconds" : 869.472417,
+      "raw" : [
+        "The weather today is nice.",
+        "The weather today is hot.",
+        "The weather today is cold."
+      ],
+      "source" : "The weather today is ",
+      "status" : "ready",
+      "suggestions" : [
+        "The weather today is pretty "
+      ],
+      "totalRequestMilliseconds" : 873.2791249999999
+    },
+    {
+      "baseline" : [
+        "I prefer a simple one "
+      ],
+      "baselineMilliseconds" : 4.149333,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-17",
+      "milliseconds" : 896.193625,
+      "raw" : [
+        "I prefer a simple style",
+        "I prefer a simple approach",
+        "I prefer a simple solution"
+      ],
+      "source" : "I prefer a simple ",
+      "status" : "ready",
+      "suggestions" : [
+        "I prefer a simple style"
+      ],
+      "totalRequestMilliseconds" : 900.342958
+    },
+    {
+      "baseline" : [
+        "This example demonstrates how much "
+      ],
+      "baselineMilliseconds" : 4.813459,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-18",
+      "milliseconds" : 5075.219708,
+      "raw" : [
+
+      ],
+      "source" : "This example demonstrates how ",
+      "status" : "timedOut",
+      "suggestions" : [
+        "This example demonstrates how much "
+      ],
+      "totalRequestMilliseconds" : 5080.033167
+    },
+    {
+      "baseline" : [
+        "The task was completed and "
+      ],
+      "baselineMilliseconds" : 5.091583,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-19",
+      "milliseconds" : 933.297208,
+      "raw" : [
+        "The task was completed",
+        "The task was finished",
+        "The task was finished"
+      ],
+      "source" : "The task was completed ",
+      "status" : "ready",
+      "suggestions" : [
+        "The task was completed and "
+      ],
+      "totalRequestMilliseconds" : 938.388791
+    },
+    {
+      "baseline" : [
+        "Please save the file before you "
+      ],
+      "baselineMilliseconds" : 4.269083,
+      "category" : "prediction",
+      "expected" : [
+
+      ],
+      "id" : "prediction-20",
+      "milliseconds" : 653.909375,
+      "raw" : [
+        "Please save the file before closing"
+      ],
+      "source" : "Please save the file before ",
+      "status" : "ready",
+      "suggestions" : [
+        "Please save the file before closing"
+      ],
+      "totalRequestMilliseconds" : 658.178458
+    }
+  ]
+}

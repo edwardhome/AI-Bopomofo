@@ -1,0 +1,48 @@
+{
+  "completed": true,
+  "categories": {
+    "chinese": {
+      "count": 50,
+      "first_suggestion_or_original_matches_reference": 31,
+      "reference_in_suggestions": 31,
+      "system_first_or_original_matches_reference": 0,
+      "cases_with_suggestions": 43
+    },
+    "correct": {
+      "count": 50,
+      "first_suggestion_or_original_matches_reference": 44,
+      "reference_in_suggestions": 0,
+      "system_first_or_original_matches_reference": 50,
+      "cases_with_suggestions": 6
+    },
+    "english": {
+      "count": 50,
+      "first_suggestion_or_original_matches_reference": 50,
+      "reference_in_suggestions": 50,
+      "system_first_or_original_matches_reference": 49,
+      "cases_with_suggestions": 50
+    },
+    "protected": {
+      "count": 50,
+      "first_suggestion_or_original_matches_reference": 50,
+      "reference_in_suggestions": 0,
+      "system_first_or_original_matches_reference": 50,
+      "cases_with_suggestions": 0
+    }
+  },
+  "status": {
+    "ready": 196,
+    "timedOut": 4
+  },
+  "provider_ms": {
+    "p50": 703.8315,
+    "p95": 1081.238958,
+    "p99": 5119.869417
+  },
+  "request_with_system_spelling_ms": {
+    "p50": 713.502958,
+    "p95": 1082.386041,
+    "p99": 5119.871542
+  },
+  "caveats": "Individually authored synthetic examples, not independently reviewed. UI keeps original first. No GUI/key-event latency measurement. Warm model and background build load not isolated."
+}

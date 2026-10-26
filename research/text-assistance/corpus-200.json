@@ -1,0 +1,2602 @@
+[
+  {
+    "id": "chinese-01",
+    "category": "chinese",
+    "text": "今天的天汽很好。",
+    "expected": [
+      "今天的天氣很好。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-02",
+    "category": "chinese",
+    "text": "請把會議記祿寄給我。",
+    "expected": [
+      "請把會議紀錄寄給我。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-03",
+    "category": "chinese",
+    "text": "這份報告需要重新編輯與校隊。",
+    "expected": [
+      "這份報告需要重新編輯與校對。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-04",
+    "category": "chinese",
+    "text": "我們明天再討倫這件事。",
+    "expected": [
+      "我們明天再討論這件事。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-05",
+    "category": "chinese",
+    "text": "請確認收件人的地止。",
+    "expected": [
+      "請確認收件人的地址。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-06",
+    "category": "chinese",
+    "text": "這台電腦的記憶提不足。",
+    "expected": [
+      "這台電腦的記憶體不足。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-07",
+    "category": "chinese",
+    "text": "檔案已經順利儲純。",
+    "expected": [
+      "檔案已經順利儲存。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-08",
+    "category": "chinese",
+    "text": "請先備份重要資聊。",
+    "expected": [
+      "請先備份重要資料。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-09",
+    "category": "chinese",
+    "text": "這個問題已經解絕了。",
+    "expected": [
+      "這個問題已經解決了。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-10",
+    "category": "chinese",
+    "text": "我需要申請一張發漂。",
+    "expected": [
+      "我需要申請一張發票。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-11",
+    "category": "chinese",
+    "text": "今天下午有一場演獎。",
+    "expected": [
+      "今天下午有一場演講。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-12",
+    "category": "chinese",
+    "text": "請在期限內繳交申請標。",
+    "expected": [
+      "請在期限內繳交申請表。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-13",
+    "category": "chinese",
+    "text": "捷運站的出口正在維羞。",
+    "expected": [
+      "捷運站的出口正在維修。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-14",
+    "category": "chinese",
+    "text": "他對這項工作很負則。",
+    "expected": [
+      "他對這項工作很負責。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-15",
+    "category": "chinese",
+    "text": "請耐心等後通知。",
+    "expected": [
+      "請耐心等候通知。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-16",
+    "category": "chinese",
+    "text": "這個產品的品直很好。",
+    "expected": [
+      "這個產品的品質很好。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-17",
+    "category": "chinese",
+    "text": "我們需要更多實驗正據。",
+    "expected": [
+      "我們需要更多實驗證據。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-18",
+    "category": "chinese",
+    "text": "早餐店今天提早打洋。",
+    "expected": [
+      "早餐店今天提早打烊。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-19",
+    "category": "chinese",
+    "text": "這條路正在進行施公。",
+    "expected": [
+      "這條路正在進行施工。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-20",
+    "category": "chinese",
+    "text": "明天的會議延後半小實。",
+    "expected": [
+      "明天的會議延後半小時。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-21",
+    "category": "chinese",
+    "text": "請把窗戶關緊以免下雨滲誰。",
+    "expected": [
+      "請把窗戶關緊以免下雨滲水。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-22",
+    "category": "chinese",
+    "text": "這是一個值得參考的建義。",
+    "expected": [
+      "這是一個值得參考的建議。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-23",
+    "category": "chinese",
+    "text": "我已經收到您的回復信鍵。",
+    "expected": [
+      "我已經收到您的回復信件。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-24",
+    "category": "chinese",
+    "text": "這家餐廳的服務很周稻。",
+    "expected": [
+      "這家餐廳的服務很周到。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-25",
+    "category": "chinese",
+    "text": "請遵守公共場所的歸定。",
+    "expected": [
+      "請遵守公共場所的規定。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-26",
+    "category": "chinese",
+    "text": "新的軟體版本修正了許多錯誤與缺現。",
+    "expected": [
+      "新的軟體版本修正了許多錯誤與缺陷。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-27",
+    "category": "chinese",
+    "text": "這筆交易需要再次確任。",
+    "expected": [
+      "這筆交易需要再次確認。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-28",
+    "category": "chinese",
+    "text": "我們應該尊重不同的觀典。",
+    "expected": [
+      "我們應該尊重不同的觀點。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-29",
+    "category": "chinese",
+    "text": "這項研究的結果相當有趣且直得注意。",
+    "expected": [
+      "這項研究的結果相當有趣且值得注意。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-30",
+    "category": "chinese",
+    "text": "請將垃圾做好分淚。",
+    "expected": [
+      "請將垃圾做好分類。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-31",
+    "category": "chinese",
+    "text": "這場比賽的競爭非常激列。",
+    "expected": [
+      "這場比賽的競爭非常激烈。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-32",
+    "category": "chinese",
+    "text": "運動之後記得補充水份與電解直。",
+    "expected": [
+      "運動之後記得補充水份與電解質。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-33",
+    "category": "chinese",
+    "text": "電池的電量已經耗徑。",
+    "expected": [
+      "電池的電量已經耗盡。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-34",
+    "category": "chinese",
+    "text": "這個帳號尚未完成驗正。",
+    "expected": [
+      "這個帳號尚未完成驗證。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-35",
+    "category": "chinese",
+    "text": "密碼請妥善保管不要外洩給陌生仁。",
+    "expected": [
+      "密碼請妥善保管不要外洩給陌生人。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-36",
+    "category": "chinese",
+    "text": "我的行事曆新增了一個提刑。",
+    "expected": [
+      "我的行事曆新增了一個提醒。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-37",
+    "category": "chinese",
+    "text": "請問最近的郵局在哪裡可以寄性？",
+    "expected": [
+      "請問最近的郵局在哪裡可以寄信？"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-38",
+    "category": "chinese",
+    "text": "大家一起整理辦公室的環竟。",
+    "expected": [
+      "大家一起整理辦公室的環境。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-39",
+    "category": "chinese",
+    "text": "這本書的內容相當豐付。",
+    "expected": [
+      "這本書的內容相當豐富。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-40",
+    "category": "chinese",
+    "text": "請勿在圖書館內大聲喧華。",
+    "expected": [
+      "請勿在圖書館內大聲喧嘩。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-41",
+    "category": "chinese",
+    "text": "新的政策將於下個月實十。",
+    "expected": [
+      "新的政策將於下個月實施。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-42",
+    "category": "chinese",
+    "text": "他正在準備研究所的口是。",
+    "expected": [
+      "他正在準備研究所的口試。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-43",
+    "category": "chinese",
+    "text": "這套系統可以自動產生圖標與報告。",
+    "expected": [
+      "這套系統可以自動產生圖表與報告。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-44",
+    "category": "chinese",
+    "text": "訊號受到附近設備的干饒。",
+    "expected": [
+      "訊號受到附近設備的干擾。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-45",
+    "category": "chinese",
+    "text": "工程師正在檢查網路連現。",
+    "expected": [
+      "工程師正在檢查網路連線。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-46",
+    "category": "chinese",
+    "text": "請依照步驟完成安裝程續。",
+    "expected": [
+      "請依照步驟完成安裝程序。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-47",
+    "category": "chinese",
+    "text": "這個功能可以提高工作效綠。",
+    "expected": [
+      "這個功能可以提高工作效率。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-48",
+    "category": "chinese",
+    "text": "開會之前請先閱讀附鍵。",
+    "expected": [
+      "開會之前請先閱讀附件。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-49",
+    "category": "chinese",
+    "text": "所有測試案例都已經通果。",
+    "expected": [
+      "所有測試案例都已經通過。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "chinese-50",
+    "category": "chinese",
+    "text": "請保留原始檔案方便日後追縱。",
+    "expected": [
+      "請保留原始檔案方便日後追蹤。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-01",
+    "category": "english",
+    "text": "Please send teh report.",
+    "expected": [
+      "Please send the report."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-02",
+    "category": "english",
+    "text": "I will recieve the package tomorrow.",
+    "expected": [
+      "I will receive the package tomorrow."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-03",
+    "category": "english",
+    "text": "This is a seperate document.",
+    "expected": [
+      "This is a separate document."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-04",
+    "category": "english",
+    "text": "The meeting is definately confirmed.",
+    "expected": [
+      "The meeting is definitely confirmed."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-05",
+    "category": "english",
+    "text": "We need to accomodate more guests.",
+    "expected": [
+      "We need to accommodate more guests."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-06",
+    "category": "english",
+    "text": "The address is not availble yet.",
+    "expected": [
+      "The address is not available yet."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-07",
+    "category": "english",
+    "text": "Please check the enviroment settings.",
+    "expected": [
+      "Please check the environment settings."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-08",
+    "category": "english",
+    "text": "Your subscription was succesful.",
+    "expected": [
+      "Your subscription was successful."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-09",
+    "category": "english",
+    "text": "I forgot my passwrod again.",
+    "expected": [
+      "I forgot my password again."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-10",
+    "category": "english",
+    "text": "This change is neccessary for safety.",
+    "expected": [
+      "This change is necessary for safety."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-11",
+    "category": "english",
+    "text": "The library contains useful informtion.",
+    "expected": [
+      "The library contains useful information."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-12",
+    "category": "english",
+    "text": "Please update the documantation.",
+    "expected": [
+      "Please update the documentation."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-13",
+    "category": "english",
+    "text": "I appreciate your patiance.",
+    "expected": [
+      "I appreciate your patience."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-14",
+    "category": "english",
+    "text": "The server is currenly offline.",
+    "expected": [
+      "The server is currently offline."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-15",
+    "category": "english",
+    "text": "We should discuss this tommorow.",
+    "expected": [
+      "We should discuss this tomorrow."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-16",
+    "category": "english",
+    "text": "This is an excelent idea.",
+    "expected": [
+      "This is an excellent idea."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-17",
+    "category": "english",
+    "text": "Please confirm your attendence.",
+    "expected": [
+      "Please confirm your attendance."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-18",
+    "category": "english",
+    "text": "The project has a strict deadlien.",
+    "expected": [
+      "The project has a strict deadline."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-19",
+    "category": "english",
+    "text": "I am writting a short note.",
+    "expected": [
+      "I am writing a short note."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-20",
+    "category": "english",
+    "text": "They recieved our invitation.",
+    "expected": [
+      "They received our invitation."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-21",
+    "category": "english",
+    "text": "We need a reliable soluton.",
+    "expected": [
+      "We need a reliable solution."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-22",
+    "category": "english",
+    "text": "Please use the correct formatt.",
+    "expected": [
+      "Please use the correct format."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-23",
+    "category": "english",
+    "text": "The application needs permision.",
+    "expected": [
+      "The application needs permission."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-24",
+    "category": "english",
+    "text": "This feature improves accesibility.",
+    "expected": [
+      "This feature improves accessibility."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-25",
+    "category": "english",
+    "text": "We found an unexpected excepetion.",
+    "expected": [
+      "We found an unexpected exception."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-26",
+    "category": "english",
+    "text": "The connection was interupted.",
+    "expected": [
+      "The connection was interrupted."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-27",
+    "category": "english",
+    "text": "Please restart the computre.",
+    "expected": [
+      "Please restart the computer."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-28",
+    "category": "english",
+    "text": "I have a simple questoin.",
+    "expected": [
+      "I have a simple question."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-29",
+    "category": "english",
+    "text": "This sample demonstrates the diffrence.",
+    "expected": [
+      "This sample demonstrates the difference."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-30",
+    "category": "english",
+    "text": "The new design is more flexble.",
+    "expected": [
+      "The new design is more flexible."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-31",
+    "category": "english",
+    "text": "Please verify the mesage before sending.",
+    "expected": [
+      "Please verify the message before sending."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-32",
+    "category": "english",
+    "text": "This behavior is inconsistant.",
+    "expected": [
+      "This behavior is inconsistent."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-33",
+    "category": "english",
+    "text": "The file contains a duplciate entry.",
+    "expected": [
+      "The file contains a duplicate entry."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-34",
+    "category": "english",
+    "text": "We should preserve compatiblity.",
+    "expected": [
+      "We should preserve compatibility."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-35",
+    "category": "english",
+    "text": "The document includes an introducton.",
+    "expected": [
+      "The document includes an introduction."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-36",
+    "category": "english",
+    "text": "Please provide a clear explanaton.",
+    "expected": [
+      "Please provide a clear explanation."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-37",
+    "category": "english",
+    "text": "This is a temporary workarond.",
+    "expected": [
+      "This is a temporary workaround."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-38",
+    "category": "english",
+    "text": "The process completed automaticly.",
+    "expected": [
+      "The process completed automatically."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-39",
+    "category": "english",
+    "text": "We need to measure the latancy.",
+    "expected": [
+      "We need to measure the latency."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-40",
+    "category": "english",
+    "text": "The results are reproducable.",
+    "expected": [
+      "The results are reproducible."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-41",
+    "category": "english",
+    "text": "Please record the temperatue.",
+    "expected": [
+      "Please record the temperature."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-42",
+    "category": "english",
+    "text": "This experiment requires precison.",
+    "expected": [
+      "This experiment requires precision."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-43",
+    "category": "english",
+    "text": "The response arrived immediatly.",
+    "expected": [
+      "The response arrived immediately."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-44",
+    "category": "english",
+    "text": "I prefer a concise sumary.",
+    "expected": [
+      "I prefer a concise summary."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-45",
+    "category": "english",
+    "text": "The team reached an agrement.",
+    "expected": [
+      "The team reached an agreement."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-46",
+    "category": "english",
+    "text": "This version includes several improvments.",
+    "expected": [
+      "This version includes several improvements."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-47",
+    "category": "english",
+    "text": "Please review the requirments.",
+    "expected": [
+      "Please review the requirements."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-48",
+    "category": "english",
+    "text": "The resource is temporarily unavailble.",
+    "expected": [
+      "The resource is temporarily unavailable."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-49",
+    "category": "english",
+    "text": "The operation was cancelled intentionaly.",
+    "expected": [
+      "The operation was cancelled intentionally."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "english-50",
+    "category": "english",
+    "text": "We should investigate the root cuase.",
+    "expected": [
+      "We should investigate the root cause."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-01",
+    "category": "protected",
+    "text": "Use `teh_value` exactly.",
+    "expected": [
+      "Use `teh_value` exactly."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-02",
+    "category": "protected",
+    "text": "Keep `recieve()` in the example.",
+    "expected": [
+      "Keep `recieve()` in the example."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-03",
+    "category": "protected",
+    "text": "Open src/config.json before editing.",
+    "expected": [
+      "Open src/config.json before editing."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-04",
+    "category": "protected",
+    "text": "Visit https://example.com/teh for details.",
+    "expected": [
+      "Visit https://example.com/teh for details."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-05",
+    "category": "protected",
+    "text": "The variable is qz_module7.",
+    "expected": [
+      "The variable is qz_module7."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-06",
+    "category": "protected",
+    "text": "Install PySide6 for this project.",
+    "expected": [
+      "Install PySide6 for this project."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-07",
+    "category": "protected",
+    "text": "Our project uses SystemVerilog.",
+    "expected": [
+      "Our project uses SystemVerilog."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-08",
+    "category": "protected",
+    "text": "Use HTTP for this example.",
+    "expected": [
+      "Use HTTP for this example."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-09",
+    "category": "protected",
+    "text": "Do not change RTX4090.",
+    "expected": [
+      "Do not change RTX4090."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-10",
+    "category": "protected",
+    "text": "Run `git checkout feature/teh` now.",
+    "expected": [
+      "Run `git checkout feature/teh` now."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-11",
+    "category": "protected",
+    "text": "# Project status",
+    "expected": [
+      "# Project status"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-12",
+    "category": "protected",
+    "text": "## Installation steps",
+    "expected": [
+      "## Installation steps"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-13",
+    "category": "protected",
+    "text": "**Keep this emphasis**",
+    "expected": [
+      "**Keep this emphasis**"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-14",
+    "category": "protected",
+    "text": "*Keep this italic text*",
+    "expected": [
+      "*Keep this italic text*"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-15",
+    "category": "protected",
+    "text": "[Read the guide](https://example.org/guide)",
+    "expected": [
+      "[Read the guide](https://example.org/guide)"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-16",
+    "category": "protected",
+    "text": "![Diagram](images/diagram.png)",
+    "expected": [
+      "![Diagram](images/diagram.png)"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-17",
+    "category": "protected",
+    "text": "> Keep this quoted sentence.",
+    "expected": [
+      "> Keep this quoted sentence."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-18",
+    "category": "protected",
+    "text": "- Keep this list item.",
+    "expected": [
+      "- Keep this list item."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-19",
+    "category": "protected",
+    "text": "1. Keep this numbered item.",
+    "expected": [
+      "1. Keep this numbered item."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-20",
+    "category": "protected",
+    "text": "The version is 0.4.0.",
+    "expected": [
+      "The version is 0.4.0."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-21",
+    "category": "protected",
+    "text": "The amount is 12.50 dollars.",
+    "expected": [
+      "The amount is 12.50 dollars."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-22",
+    "category": "protected",
+    "text": "Store it in /usr/local/bin/tool.",
+    "expected": [
+      "Store it in /usr/local/bin/tool."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-23",
+    "category": "protected",
+    "text": "Use foo.bar as the file name.",
+    "expected": [
+      "Use foo.bar as the file name."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-24",
+    "category": "protected",
+    "text": "The address is team@example.com.",
+    "expected": [
+      "The address is team@example.com."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-25",
+    "category": "protected",
+    "text": "Keep the literal `print(\"helllo\")`.",
+    "expected": [
+      "Keep the literal `print(\"helllo\")`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-26",
+    "category": "protected",
+    "text": "Use the flag `--no-verify`.",
+    "expected": [
+      "Use the flag `--no-verify`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-27",
+    "category": "protected",
+    "text": "Set `MAX_RETRY` to 3.",
+    "expected": [
+      "Set `MAX_RETRY` to 3."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-28",
+    "category": "protected",
+    "text": "Keep `user_name` unchanged.",
+    "expected": [
+      "Keep `user_name` unchanged."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-29",
+    "category": "protected",
+    "text": "The type is MyWidgetFactory.",
+    "expected": [
+      "The type is MyWidgetFactory."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-30",
+    "category": "protected",
+    "text": "The command is `npm run build`.",
+    "expected": [
+      "The command is `npm run build`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-31",
+    "category": "protected",
+    "text": "Save the table as report_2026.csv.",
+    "expected": [
+      "Save the table as report_2026.csv."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-32",
+    "category": "protected",
+    "text": "Use `a != b` for comparison.",
+    "expected": [
+      "Use `a != b` for comparison."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-33",
+    "category": "protected",
+    "text": "Keep the expression `x += 1`.",
+    "expected": [
+      "Keep the expression `x += 1`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-34",
+    "category": "protected",
+    "text": "The branch is fix/typo_handler.",
+    "expected": [
+      "The branch is fix/typo_handler."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-35",
+    "category": "protected",
+    "text": "The path is C:\\work\\teh.txt.",
+    "expected": [
+      "The path is C:\\work\\teh.txt."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-36",
+    "category": "protected",
+    "text": "Open README.md in the editor.",
+    "expected": [
+      "Open README.md in the editor."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-37",
+    "category": "protected",
+    "text": "The package is tensorflow2.",
+    "expected": [
+      "The package is tensorflow2."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-38",
+    "category": "protected",
+    "text": "Run `python -m pytest`.",
+    "expected": [
+      "Run `python -m pytest`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-39",
+    "category": "protected",
+    "text": "Use the key `Ctrl+Shift+P`.",
+    "expected": [
+      "Use the key `Ctrl+Shift+P`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-40",
+    "category": "protected",
+    "text": "Keep the unclosed code `recieve",
+    "expected": [
+      "Keep the unclosed code `recieve"
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-41",
+    "category": "protected",
+    "text": "Use the placeholder ${HOME}.",
+    "expected": [
+      "Use the placeholder ${HOME}."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-42",
+    "category": "protected",
+    "text": "Set `timeout_ms=5000`.",
+    "expected": [
+      "Set `timeout_ms=5000`."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-43",
+    "category": "protected",
+    "text": "The release tag is v0.5.0.",
+    "expected": [
+      "The release tag is v0.5.0."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-44",
+    "category": "protected",
+    "text": "Keep the acronym FPGA.",
+    "expected": [
+      "Keep the acronym FPGA."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-45",
+    "category": "protected",
+    "text": "Use the custom term mybrand.",
+    "expected": [
+      "Use the custom term mybrand."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-46",
+    "category": "protected",
+    "text": "The custom word is qzword.",
+    "expected": [
+      "The custom word is qzword."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-47",
+    "category": "protected",
+    "text": "請保留變數 qz_module7。",
+    "expected": [
+      "請保留變數 qz_module7。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-48",
+    "category": "protected",
+    "text": "請安裝 PySide6 套件。",
+    "expected": [
+      "請安裝 PySide6 套件。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-49",
+    "category": "protected",
+    "text": "路徑是 src/main.swift。",
+    "expected": [
+      "路徑是 src/main.swift。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "protected-50",
+    "category": "protected",
+    "text": "標題是 **測試結果**。",
+    "expected": [
+      "標題是 **測試結果**。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-01",
+    "category": "correct",
+    "text": "今天下午我們會一起討論專案進度。",
+    "expected": [
+      "今天下午我們會一起討論專案進度。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-02",
+    "category": "correct",
+    "text": "請先備份資料再更新系統。",
+    "expected": [
+      "請先備份資料再更新系統。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-03",
+    "category": "correct",
+    "text": "這個功能目前仍在測試中。",
+    "expected": [
+      "這個功能目前仍在測試中。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-04",
+    "category": "correct",
+    "text": "我想在週末去圖書館看書。",
+    "expected": [
+      "我想在週末去圖書館看書。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-05",
+    "category": "correct",
+    "text": "請將會議紀錄寄給所有同事。",
+    "expected": [
+      "請將會議紀錄寄給所有同事。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-06",
+    "category": "correct",
+    "text": "明天早上九點開始上課。",
+    "expected": [
+      "明天早上九點開始上課。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-07",
+    "category": "correct",
+    "text": "這份報告需要清楚的數據支持。",
+    "expected": [
+      "這份報告需要清楚的數據支持。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-08",
+    "category": "correct",
+    "text": "運動之後要記得補充水分。",
+    "expected": [
+      "運動之後要記得補充水分。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-09",
+    "category": "correct",
+    "text": "請尊重每個人的不同意見。",
+    "expected": [
+      "請尊重每個人的不同意見。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-10",
+    "category": "correct",
+    "text": "我們已經完成第一階段的工作。",
+    "expected": [
+      "我們已經完成第一階段的工作。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-11",
+    "category": "correct",
+    "text": "這家咖啡店的環境很安靜。",
+    "expected": [
+      "這家咖啡店的環境很安靜。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-12",
+    "category": "correct",
+    "text": "請在離開之前確認門窗關好。",
+    "expected": [
+      "請在離開之前確認門窗關好。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-13",
+    "category": "correct",
+    "text": "新的方法可以節省不少時間。",
+    "expected": [
+      "新的方法可以節省不少時間。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-14",
+    "category": "correct",
+    "text": "這個例子有助於理解問題。",
+    "expected": [
+      "這個例子有助於理解問題。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-15",
+    "category": "correct",
+    "text": "我正在學習如何使用這套工具。",
+    "expected": [
+      "我正在學習如何使用這套工具。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-16",
+    "category": "correct",
+    "text": "如果遇到問題可以查看說明文件。",
+    "expected": [
+      "如果遇到問題可以查看說明文件。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-17",
+    "category": "correct",
+    "text": "謝謝您提供詳細的回覆。",
+    "expected": [
+      "謝謝您提供詳細的回覆。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-18",
+    "category": "correct",
+    "text": "這項決定需要更多討論。",
+    "expected": [
+      "這項決定需要更多討論。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-19",
+    "category": "correct",
+    "text": "請保留原始文字以便比較。",
+    "expected": [
+      "請保留原始文字以便比較。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-20",
+    "category": "correct",
+    "text": "我們希望輸入時能保持流暢。",
+    "expected": [
+      "我們希望輸入時能保持流暢。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-21",
+    "category": "correct",
+    "text": "修改完成後請重新執行測試。",
+    "expected": [
+      "修改完成後請重新執行測試。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-22",
+    "category": "correct",
+    "text": "這些資料只會保存在本機。",
+    "expected": [
+      "這些資料只會保存在本機。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-23",
+    "category": "correct",
+    "text": "他對新技術充滿好奇。",
+    "expected": [
+      "他對新技術充滿好奇。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-24",
+    "category": "correct",
+    "text": "這個句子沒有需要修正的錯字。",
+    "expected": [
+      "這個句子沒有需要修正的錯字。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-25",
+    "category": "correct",
+    "text": "我們下次會議再確認結果。",
+    "expected": [
+      "我們下次會議再確認結果。"
+    ],
+    "isEnglish": false,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-26",
+    "category": "correct",
+    "text": "Please keep the original text.",
+    "expected": [
+      "Please keep the original text."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-27",
+    "category": "correct",
+    "text": "The meeting starts at noon.",
+    "expected": [
+      "The meeting starts at noon."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-28",
+    "category": "correct",
+    "text": "I would like to learn more about this topic.",
+    "expected": [
+      "I would like to learn more about this topic."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-29",
+    "category": "correct",
+    "text": "This feature is still being tested.",
+    "expected": [
+      "This feature is still being tested."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-30",
+    "category": "correct",
+    "text": "We need more evidence before deciding.",
+    "expected": [
+      "We need more evidence before deciding."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-31",
+    "category": "correct",
+    "text": "Thank you for your careful review.",
+    "expected": [
+      "Thank you for your careful review."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-32",
+    "category": "correct",
+    "text": "Please back up your files first.",
+    "expected": [
+      "Please back up your files first."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-33",
+    "category": "correct",
+    "text": "The application works without a network connection.",
+    "expected": [
+      "The application works without a network connection."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-34",
+    "category": "correct",
+    "text": "I prefer short and clear explanations.",
+    "expected": [
+      "I prefer short and clear explanations."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-35",
+    "category": "correct",
+    "text": "We can discuss the details tomorrow.",
+    "expected": [
+      "We can discuss the details tomorrow."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-36",
+    "category": "correct",
+    "text": "The results look consistent so far.",
+    "expected": [
+      "The results look consistent so far."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-37",
+    "category": "correct",
+    "text": "Please do not change the variable names.",
+    "expected": [
+      "Please do not change the variable names."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-38",
+    "category": "correct",
+    "text": "This example explains the basic idea.",
+    "expected": [
+      "This example explains the basic idea."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-39",
+    "category": "correct",
+    "text": "We should test the failure cases as well.",
+    "expected": [
+      "We should test the failure cases as well."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-40",
+    "category": "correct",
+    "text": "The document is ready for review.",
+    "expected": [
+      "The document is ready for review."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-41",
+    "category": "correct",
+    "text": "I am looking forward to your reply.",
+    "expected": [
+      "I am looking forward to your reply."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-42",
+    "category": "correct",
+    "text": "Please select a suggestion before accepting it.",
+    "expected": [
+      "Please select a suggestion before accepting it."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-43",
+    "category": "correct",
+    "text": "The original order should remain unchanged.",
+    "expected": [
+      "The original order should remain unchanged."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-44",
+    "category": "correct",
+    "text": "This approach protects user privacy.",
+    "expected": [
+      "This approach protects user privacy."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-45",
+    "category": "correct",
+    "text": "We will measure performance separately.",
+    "expected": [
+      "We will measure performance separately."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-46",
+    "category": "correct",
+    "text": "The current version supports both languages.",
+    "expected": [
+      "The current version supports both languages."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-47",
+    "category": "correct",
+    "text": "Please use the existing configuration.",
+    "expected": [
+      "Please use the existing configuration."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-48",
+    "category": "correct",
+    "text": "This sentence does not contain a spelling error.",
+    "expected": [
+      "This sentence does not contain a spelling error."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-49",
+    "category": "correct",
+    "text": "The task can continue in the background.",
+    "expected": [
+      "The task can continue in the background."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  },
+  {
+    "id": "correct-50",
+    "category": "correct",
+    "text": "We should verify the result before publishing.",
+    "expected": [
+      "We should verify the result before publishing."
+    ],
+    "isEnglish": true,
+    "protectedWords": [
+      "mybrand",
+      "qzword"
+    ]
+  }
+]

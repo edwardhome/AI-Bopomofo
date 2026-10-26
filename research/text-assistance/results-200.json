@@ -1,0 +1,4437 @@
+{
+  "availability" : "available",
+  "completed" : true,
+  "model" : "SystemLanguageModel.default (on-device)",
+  "notes" : "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.",
+  "rows" : [
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.024875,
+      "category" : "chinese",
+      "expected" : [
+        "今天的天氣很好。"
+      ],
+      "id" : "chinese-01",
+      "milliseconds" : 2131.245542,
+      "raw" : [
+        "今天的天氣很好。",
+        "今天的天氣很好。"
+      ],
+      "source" : "今天的天汽很好。",
+      "status" : "ready",
+      "suggestions" : [
+        "今天的天氣很好。"
+      ],
+      "totalRequestMilliseconds" : 2131.270417
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002416,
+      "category" : "chinese",
+      "expected" : [
+        "請把會議紀錄寄給我。"
+      ],
+      "id" : "chinese-02",
+      "milliseconds" : 994.549417,
+      "raw" : [
+        "請把會議紀錄寄給我。",
+        "請把會議記錄寄給我。",
+        "請把會議記錄電子郵件寄給我。"
+      ],
+      "source" : "請把會議記祿寄給我。",
+      "status" : "ready",
+      "suggestions" : [
+        "請把會議紀錄寄給我。",
+        "請把會議記錄寄給我。",
+        "請把會議記錄電子郵件寄給我。"
+      ],
+      "totalRequestMilliseconds" : 994.551833
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002792,
+      "category" : "chinese",
+      "expected" : [
+        "這份報告需要重新編輯與校對。"
+      ],
+      "id" : "chinese-03",
+      "milliseconds" : 1005.908,
+      "raw" : [
+        "這份報告需要重新編輯與校對。",
+        "這份報告需要重新編輯與校對。",
+        "這份報告需要重新編輯與校對。"
+      ],
+      "source" : "這份報告需要重新編輯與校隊。",
+      "status" : "ready",
+      "suggestions" : [
+        "這份報告需要重新編輯與校對。"
+      ],
+      "totalRequestMilliseconds" : 1005.910792
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002875,
+      "category" : "chinese",
+      "expected" : [
+        "我們明天再討論這件事。"
+      ],
+      "id" : "chinese-04",
+      "milliseconds" : 922.306167,
+      "raw" : [
+        "我們明天再討倫這件事。",
+        "我們明天再討倫這件事。",
+        "我們明天再討倫這件事。"
+      ],
+      "source" : "我們明天再討倫這件事。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 922.309042
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003208,
+      "category" : "chinese",
+      "expected" : [
+        "請確認收件人的地址。"
+      ],
+      "id" : "chinese-05",
+      "milliseconds" : 876.546125,
+      "raw" : [
+        "請確認收件人的地址。",
+        "請確認收件人的地址。",
+        "請確認收件人的地址。"
+      ],
+      "source" : "請確認收件人的地止。",
+      "status" : "ready",
+      "suggestions" : [
+        "請確認收件人的地址。"
+      ],
+      "totalRequestMilliseconds" : 876.5493329999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0045,
+      "category" : "chinese",
+      "expected" : [
+        "這台電腦的記憶體不足。"
+      ],
+      "id" : "chinese-06",
+      "milliseconds" : 1008.177666,
+      "raw" : [
+        "這台電腦的記憶體不足。",
+        "這台電腦的記憶體空間不足。",
+        "這台電腦的記憶體容量不足。"
+      ],
+      "source" : "這台電腦的記憶提不足。",
+      "status" : "ready",
+      "suggestions" : [
+        "這台電腦的記憶體不足。",
+        "這台電腦的記憶體空間不足。",
+        "這台電腦的記憶體容量不足。"
+      ],
+      "totalRequestMilliseconds" : 1008.182166
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003709,
+      "category" : "chinese",
+      "expected" : [
+        "檔案已經順利儲存。"
+      ],
+      "id" : "chinese-07",
+      "milliseconds" : 887.013,
+      "raw" : [
+        "檔案已經順利儲存。",
+        "檔案已經順利儲存完成。",
+        "檔案已經順利儲存完成。"
+      ],
+      "source" : "檔案已經順利儲純。",
+      "status" : "ready",
+      "suggestions" : [
+        "檔案已經順利儲存。",
+        "檔案已經順利儲存完成。"
+      ],
+      "totalRequestMilliseconds" : 887.016709
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002792,
+      "category" : "chinese",
+      "expected" : [
+        "請先備份重要資料。"
+      ],
+      "id" : "chinese-08",
+      "milliseconds" : 900.209417,
+      "raw" : [
+        "請先備份重要資料。",
+        "請先備份重要資訊。",
+        "請先備份重要資料。"
+      ],
+      "source" : "請先備份重要資聊。",
+      "status" : "ready",
+      "suggestions" : [
+        "請先備份重要資料。",
+        "請先備份重要資訊。"
+      ],
+      "totalRequestMilliseconds" : 900.212209
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003667,
+      "category" : "chinese",
+      "expected" : [
+        "這個問題已經解決了。"
+      ],
+      "id" : "chinese-09",
+      "milliseconds" : 738.068542,
+      "raw" : [
+        "這個問題已經解決了。",
+        "這個問題已經解決了。"
+      ],
+      "source" : "這個問題已經解絕了。",
+      "status" : "ready",
+      "suggestions" : [
+        "這個問題已經解決了。"
+      ],
+      "totalRequestMilliseconds" : 738.0722089999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002125,
+      "category" : "chinese",
+      "expected" : [
+        "我需要申請一張發票。"
+      ],
+      "id" : "chinese-10",
+      "milliseconds" : 5119.869417,
+      "raw" : [
+
+      ],
+      "source" : "我需要申請一張發漂。",
+      "status" : "timedOut",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 5119.871542
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.005708,
+      "category" : "chinese",
+      "expected" : [
+        "今天下午有一場演講。"
+      ],
+      "id" : "chinese-11",
+      "milliseconds" : 1088.914084,
+      "raw" : [
+        "今天下午有一場頒獎典禮。",
+        "今天下午有一場頒獎活動。",
+        "今天下午有一場頒獎儀式。"
+      ],
+      "source" : "今天下午有一場演獎。",
+      "status" : "ready",
+      "suggestions" : [
+        "今天下午有一場頒獎典禮。",
+        "今天下午有一場頒獎活動。",
+        "今天下午有一場頒獎儀式。"
+      ],
+      "totalRequestMilliseconds" : 1088.9197920000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00275,
+      "category" : "chinese",
+      "expected" : [
+        "請在期限內繳交申請表。"
+      ],
+      "id" : "chinese-12",
+      "milliseconds" : 1012.403459,
+      "raw" : [
+        "請在期限內繳交申請標示。",
+        "請在期限內繳交申請標籤。",
+        "請在期限內繳交申請標示。"
+      ],
+      "source" : "請在期限內繳交申請標。",
+      "status" : "ready",
+      "suggestions" : [
+        "請在期限內繳交申請標示。",
+        "請在期限內繳交申請標籤。"
+      ],
+      "totalRequestMilliseconds" : 1012.406209
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003958,
+      "category" : "chinese",
+      "expected" : [
+        "捷運站的出口正在維修。"
+      ],
+      "id" : "chinese-13",
+      "milliseconds" : 756.582667,
+      "raw" : [
+        "捷運站的出口正在維修。",
+        "[unidentified text]"
+      ],
+      "source" : "捷運站的出口正在維羞。",
+      "status" : "ready",
+      "suggestions" : [
+        "捷運站的出口正在維修。"
+      ],
+      "totalRequestMilliseconds" : 756.586625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002,
+      "category" : "chinese",
+      "expected" : [
+        "他對這項工作很負責。"
+      ],
+      "id" : "chinese-14",
+      "milliseconds" : 837.988166,
+      "raw" : [
+        "他對這項工作很負責任。",
+        "他對這項工作很負責任。"
+      ],
+      "source" : "他對這項工作很負則。",
+      "status" : "ready",
+      "suggestions" : [
+        "他對這項工作很負責任。"
+      ],
+      "totalRequestMilliseconds" : 837.9901659999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003375,
+      "category" : "chinese",
+      "expected" : [
+        "請耐心等候通知。"
+      ],
+      "id" : "chinese-15",
+      "milliseconds" : 920.353833,
+      "raw" : [
+        "請耐心等候後通知。",
+        "請耐心等候後再通知。",
+        "請耐心等候後通知您。"
+      ],
+      "source" : "請耐心等後通知。",
+      "status" : "ready",
+      "suggestions" : [
+        "請耐心等候後通知。",
+        "請耐心等候後再通知。",
+        "請耐心等候後通知您。"
+      ],
+      "totalRequestMilliseconds" : 920.357208
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003084,
+      "category" : "chinese",
+      "expected" : [
+        "這個產品的品質很好。"
+      ],
+      "id" : "chinese-16",
+      "milliseconds" : 1012.447958,
+      "raw" : [
+        "這個產品的品質很好。",
+        "這個產品的品質很棒。",
+        "這個產品的品質非常好。",
+        "這個產品的品質很棒。"
+      ],
+      "source" : "這個產品的品直很好。",
+      "status" : "ready",
+      "suggestions" : [
+        "這個產品的品質很好。",
+        "這個產品的品質很棒。",
+        "這個產品的品質非常好。"
+      ],
+      "totalRequestMilliseconds" : 1012.4510419999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004,
+      "category" : "chinese",
+      "expected" : [
+        "我們需要更多實驗證據。"
+      ],
+      "id" : "chinese-17",
+      "milliseconds" : 847.500167,
+      "raw" : [
+        "我們需要更多實驗證據。",
+        "我們需要更多實驗證據。",
+        "我們需要更多實驗證據。"
+      ],
+      "source" : "我們需要更多實驗正據。",
+      "status" : "ready",
+      "suggestions" : [
+        "我們需要更多實驗證據。"
+      ],
+      "totalRequestMilliseconds" : 847.504167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0035,
+      "category" : "chinese",
+      "expected" : [
+        "早餐店今天提早打烊。"
+      ],
+      "id" : "chinese-18",
+      "milliseconds" : 1045.468709,
+      "raw" : [
+        "早餐店今天提早打烊。",
+        "早餐店今天提早打烊了。",
+        "早餐店今天提早打烊。"
+      ],
+      "source" : "早餐店今天提早打洋。",
+      "status" : "ready",
+      "suggestions" : [
+        "早餐店今天提早打烊。",
+        "早餐店今天提早打烊了。"
+      ],
+      "totalRequestMilliseconds" : 1045.472209
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003542,
+      "category" : "chinese",
+      "expected" : [
+        "這條路正在進行施工。"
+      ],
+      "id" : "chinese-19",
+      "milliseconds" : 935.546542,
+      "raw" : [
+        "這條路正在進行施工。",
+        "這條路正在進行工程。",
+        "這條路正在進行修繕。"
+      ],
+      "source" : "這條路正在進行施公。",
+      "status" : "ready",
+      "suggestions" : [
+        "這條路正在進行施工。",
+        "這條路正在進行工程。",
+        "這條路正在進行修繕。"
+      ],
+      "totalRequestMilliseconds" : 935.5500840000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002083,
+      "category" : "chinese",
+      "expected" : [
+        "明天的會議延後半小時。"
+      ],
+      "id" : "chinese-20",
+      "milliseconds" : 5148.679958,
+      "raw" : [
+
+      ],
+      "source" : "明天的會議延後半小實。",
+      "status" : "timedOut",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 5148.682041
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.006834,
+      "category" : "chinese",
+      "expected" : [
+        "請把窗戶關緊以免下雨滲水。"
+      ],
+      "id" : "chinese-21",
+      "milliseconds" : 5046.768417,
+      "raw" : [
+
+      ],
+      "source" : "請把窗戶關緊以免下雨滲誰。",
+      "status" : "timedOut",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 5046.775251
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.006125,
+      "category" : "chinese",
+      "expected" : [
+        "這是一個值得參考的建議。"
+      ],
+      "id" : "chinese-22",
+      "milliseconds" : 982.419042,
+      "raw" : [
+        "這是一個值得參考的建義。",
+        "這是一個值得參考的建義。",
+        "這是一個值得參考的建義。"
+      ],
+      "source" : "這是一個值得參考的建義。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 982.425167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002667,
+      "category" : "chinese",
+      "expected" : [
+        "我已經收到您的回復信件。"
+      ],
+      "id" : "chinese-23",
+      "milliseconds" : 793.888958,
+      "raw" : [
+        "我已經收到您的回覆信。",
+        "[English text continues]"
+      ],
+      "source" : "我已經收到您的回復信鍵。",
+      "status" : "ready",
+      "suggestions" : [
+        "我已經收到您的回覆信。"
+      ],
+      "totalRequestMilliseconds" : 793.891625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002667,
+      "category" : "chinese",
+      "expected" : [
+        "這家餐廳的服務很周到。"
+      ],
+      "id" : "chinese-24",
+      "milliseconds" : 723.404958,
+      "raw" : [
+        "這家餐廳的服務很周到。",
+        "[...]"
+      ],
+      "source" : "這家餐廳的服務很周稻。",
+      "status" : "ready",
+      "suggestions" : [
+        "這家餐廳的服務很周到。"
+      ],
+      "totalRequestMilliseconds" : 723.4076249999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002792,
+      "category" : "chinese",
+      "expected" : [
+        "請遵守公共場所的規定。"
+      ],
+      "id" : "chinese-25",
+      "milliseconds" : 905.794708,
+      "raw" : [
+        "請遵守公共場所的規定。",
+        "請遵守公共場所的規範。",
+        "請遵守公共場所的指引。"
+      ],
+      "source" : "請遵守公共場所的歸定。",
+      "status" : "ready",
+      "suggestions" : [
+        "請遵守公共場所的規定。",
+        "請遵守公共場所的規範。",
+        "請遵守公共場所的指引。"
+      ],
+      "totalRequestMilliseconds" : 905.7975
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0035,
+      "category" : "chinese",
+      "expected" : [
+        "新的軟體版本修正了許多錯誤與缺陷。"
+      ],
+      "id" : "chinese-26",
+      "milliseconds" : 1141.115125,
+      "raw" : [
+        "新的軟體版本修正了許多錯誤與缺失。",
+        "新的軟體版本修正了許多錯誤與缺漏。",
+        "新的軟體版本修正了許多錯誤與缺點。"
+      ],
+      "source" : "新的軟體版本修正了許多錯誤與缺現。",
+      "status" : "ready",
+      "suggestions" : [
+        "新的軟體版本修正了許多錯誤與缺失。",
+        "新的軟體版本修正了許多錯誤與缺漏。",
+        "新的軟體版本修正了許多錯誤與缺點。"
+      ],
+      "totalRequestMilliseconds" : 1141.118625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.006416,
+      "category" : "chinese",
+      "expected" : [
+        "這筆交易需要再次確認。"
+      ],
+      "id" : "chinese-27",
+      "milliseconds" : 693.560208,
+      "raw" : [
+        "這筆交易需要再次確認。",
+        "這筆交易需要再次確認。"
+      ],
+      "source" : "這筆交易需要再次確任。",
+      "status" : "ready",
+      "suggestions" : [
+        "這筆交易需要再次確認。"
+      ],
+      "totalRequestMilliseconds" : 693.5666239999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004416,
+      "category" : "chinese",
+      "expected" : [
+        "我們應該尊重不同的觀點。"
+      ],
+      "id" : "chinese-28",
+      "milliseconds" : 870.223042,
+      "raw" : [
+        "我們應該尊重不同的觀點。",
+        "我們應該尊重不同的觀念。",
+        "我們應該尊重不同的看法。"
+      ],
+      "source" : "我們應該尊重不同的觀典。",
+      "status" : "ready",
+      "suggestions" : [
+        "我們應該尊重不同的觀點。",
+        "我們應該尊重不同的觀念。",
+        "我們應該尊重不同的看法。"
+      ],
+      "totalRequestMilliseconds" : 870.227458
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002958,
+      "category" : "chinese",
+      "expected" : [
+        "這項研究的結果相當有趣且值得注意。"
+      ],
+      "id" : "chinese-29",
+      "milliseconds" : 1025.631208,
+      "raw" : [
+        "這項研究的結果相當有趣且直接注意。",
+        "這項研究的結果相當有趣且直接留意。",
+        "這項研究的結果相當有趣且直接留意。"
+      ],
+      "source" : "這項研究的結果相當有趣且直得注意。",
+      "status" : "ready",
+      "suggestions" : [
+        "這項研究的結果相當有趣且直接注意。",
+        "這項研究的結果相當有趣且直接留意。"
+      ],
+      "totalRequestMilliseconds" : 1025.634166
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002833,
+      "category" : "chinese",
+      "expected" : [
+        "請將垃圾做好分類。"
+      ],
+      "id" : "chinese-30",
+      "milliseconds" : 879.249625,
+      "raw" : [
+        "請將垃圾做好分類。",
+        "請將垃圾做好分類處理。",
+        "請將垃圾做好分類處理。"
+      ],
+      "source" : "請將垃圾做好分淚。",
+      "status" : "ready",
+      "suggestions" : [
+        "請將垃圾做好分類。",
+        "請將垃圾做好分類處理。"
+      ],
+      "totalRequestMilliseconds" : 879.252458
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002875,
+      "category" : "chinese",
+      "expected" : [
+        "這場比賽的競爭非常激烈。"
+      ],
+      "id" : "chinese-31",
+      "milliseconds" : 720.811292,
+      "raw" : [
+        "這場比賽的競爭非常激烈。",
+        "[unidentified text]"
+      ],
+      "source" : "這場比賽的競爭非常激列。",
+      "status" : "ready",
+      "suggestions" : [
+        "這場比賽的競爭非常激烈。"
+      ],
+      "totalRequestMilliseconds" : 720.814167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002417,
+      "category" : "chinese",
+      "expected" : [
+        "運動之後記得補充水份與電解質。"
+      ],
+      "id" : "chinese-32",
+      "milliseconds" : 1011.73075,
+      "raw" : [
+        "運動之後記得補充水與電解質。",
+        "運動之後記得補充水與電解質。",
+        "運動之後記得補充水與電解質。"
+      ],
+      "source" : "運動之後記得補充水份與電解直。",
+      "status" : "ready",
+      "suggestions" : [
+        "運動之後記得補充水與電解質。"
+      ],
+      "totalRequestMilliseconds" : 1011.7331670000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00325,
+      "category" : "chinese",
+      "expected" : [
+        "電池的電量已經耗盡。"
+      ],
+      "id" : "chinese-33",
+      "milliseconds" : 674.724417,
+      "raw" : [
+        "電池的電量已經耗盡。",
+        "[...]"
+      ],
+      "source" : "電池的電量已經耗徑。",
+      "status" : "ready",
+      "suggestions" : [
+        "電池的電量已經耗盡。"
+      ],
+      "totalRequestMilliseconds" : 674.727667
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003375,
+      "category" : "chinese",
+      "expected" : [
+        "這個帳號尚未完成驗證。"
+      ],
+      "id" : "chinese-34",
+      "milliseconds" : 1039.6535,
+      "raw" : [
+        "這個帳號尚未完成驗證。",
+        "這個帳號尚未完成驗證完成。",
+        "這個帳號尚未完成驗證完成。"
+      ],
+      "source" : "這個帳號尚未完成驗正。",
+      "status" : "ready",
+      "suggestions" : [
+        "這個帳號尚未完成驗證。",
+        "這個帳號尚未完成驗證完成。"
+      ],
+      "totalRequestMilliseconds" : 1039.656875
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004292,
+      "category" : "chinese",
+      "expected" : [
+        "密碼請妥善保管不要外洩給陌生人。"
+      ],
+      "id" : "chinese-35",
+      "milliseconds" : 1271.670875,
+      "raw" : [
+        "密碼請妥善保管，請勿洩漏給陌生人。",
+        "密碼請妥善保管，請勿洩漏給陌生人。",
+        "密碼請妥善保管，請勿洩漏給陌生人。"
+      ],
+      "source" : "密碼請妥善保管不要外洩給陌生仁。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1271.6751669999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004584,
+      "category" : "chinese",
+      "expected" : [
+        "我的行事曆新增了一個提醒。"
+      ],
+      "id" : "chinese-36",
+      "milliseconds" : 1027.928125,
+      "raw" : [
+        "我的行事曆新增了一個刑警。",
+        "我的行事曆新增了一個警員。",
+        "我的行事曆新增了一個執法人員。"
+      ],
+      "source" : "我的行事曆新增了一個提刑。",
+      "status" : "ready",
+      "suggestions" : [
+        "我的行事曆新增了一個刑警。",
+        "我的行事曆新增了一個警員。",
+        "我的行事曆新增了一個執法人員。"
+      ],
+      "totalRequestMilliseconds" : 1027.932709
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002916,
+      "category" : "chinese",
+      "expected" : [
+        "請問最近的郵局在哪裡可以寄信？"
+      ],
+      "id" : "chinese-37",
+      "milliseconds" : 681.853084,
+      "raw" : [
+        "請問最近的郵局在哪裡可以寄信？"
+      ],
+      "source" : "請問最近的郵局在哪裡可以寄性？",
+      "status" : "ready",
+      "suggestions" : [
+        "請問最近的郵局在哪裡可以寄信？"
+      ],
+      "totalRequestMilliseconds" : 681.856
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003833,
+      "category" : "chinese",
+      "expected" : [
+        "大家一起整理辦公室的環境。"
+      ],
+      "id" : "chinese-38",
+      "milliseconds" : 5187.006708,
+      "raw" : [
+
+      ],
+      "source" : "大家一起整理辦公室的環竟。",
+      "status" : "timedOut",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 5187.010541
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.006958,
+      "category" : "chinese",
+      "expected" : [
+        "這本書的內容相當豐富。"
+      ],
+      "id" : "chinese-39",
+      "milliseconds" : 805.5765,
+      "raw" : [
+        "這本書的內容相當豐富。",
+        "這本書的內容相當豐富。"
+      ],
+      "source" : "這本書的內容相當豐付。",
+      "status" : "ready",
+      "suggestions" : [
+        "這本書的內容相當豐富。"
+      ],
+      "totalRequestMilliseconds" : 805.5834580000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00325,
+      "category" : "chinese",
+      "expected" : [
+        "請勿在圖書館內大聲喧嘩。"
+      ],
+      "id" : "chinese-40",
+      "milliseconds" : 978.783958,
+      "raw" : [
+        "請勿在圖書館內大聲喧嘩。",
+        "請勿在圖書館內大聲喧鬧。",
+        "請勿在圖書館內大聲喧嘩。"
+      ],
+      "source" : "請勿在圖書館內大聲喧華。",
+      "status" : "ready",
+      "suggestions" : [
+        "請勿在圖書館內大聲喧嘩。",
+        "請勿在圖書館內大聲喧鬧。"
+      ],
+      "totalRequestMilliseconds" : 978.787208
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003792,
+      "category" : "chinese",
+      "expected" : [
+        "新的政策將於下個月實施。"
+      ],
+      "id" : "chinese-41",
+      "milliseconds" : 1054.309125,
+      "raw" : [
+        "新的政策將於下個月實施。",
+        "新的政策將於下個月實行。",
+        "新的政策將於下個月實施。"
+      ],
+      "source" : "新的政策將於下個月實十。",
+      "status" : "ready",
+      "suggestions" : [
+        "新的政策將於下個月實施。",
+        "新的政策將於下個月實行。"
+      ],
+      "totalRequestMilliseconds" : 1054.312917
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003875,
+      "category" : "chinese",
+      "expected" : [
+        "他正在準備研究所的口試。"
+      ],
+      "id" : "chinese-42",
+      "milliseconds" : 889.55675,
+      "raw" : [
+        "他正在準備研究所的報告。",
+        "他正在準備研究所的報告是。",
+        "他正在準備研究所的報告，"
+      ],
+      "source" : "他正在準備研究所的口是。",
+      "status" : "ready",
+      "suggestions" : [
+        "他正在準備研究所的報告。",
+        "他正在準備研究所的報告是。"
+      ],
+      "totalRequestMilliseconds" : 889.560625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002875,
+      "category" : "chinese",
+      "expected" : [
+        "這套系統可以自動產生圖表與報告。"
+      ],
+      "id" : "chinese-43",
+      "milliseconds" : 1027.740458,
+      "raw" : [
+        "這套系統可以自動產生圖示與報告。",
+        "這套系統可以自動產生圖標與報告。",
+        "這套系統可以自動產生圖示與報告。"
+      ],
+      "source" : "這套系統可以自動產生圖標與報告。",
+      "status" : "ready",
+      "suggestions" : [
+        "這套系統可以自動產生圖示與報告。"
+      ],
+      "totalRequestMilliseconds" : 1027.7433330000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002542,
+      "category" : "chinese",
+      "expected" : [
+        "訊號受到附近設備的干擾。"
+      ],
+      "id" : "chinese-44",
+      "milliseconds" : 713.864667,
+      "raw" : [
+        "訊號受到附近設備的干擾。",
+        "[...]"
+      ],
+      "source" : "訊號受到附近設備的干饒。",
+      "status" : "ready",
+      "suggestions" : [
+        "訊號受到附近設備的干擾。"
+      ],
+      "totalRequestMilliseconds" : 713.867209
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004125,
+      "category" : "chinese",
+      "expected" : [
+        "工程師正在檢查網路連線。"
+      ],
+      "id" : "chinese-45",
+      "milliseconds" : 1006.884833,
+      "raw" : [
+        "工程師正在檢查網路連線。",
+        "工程師正在檢查網路連線狀況。",
+        "工程師正在檢查網路連線問題。"
+      ],
+      "source" : "工程師正在檢查網路連現。",
+      "status" : "ready",
+      "suggestions" : [
+        "工程師正在檢查網路連線。",
+        "工程師正在檢查網路連線狀況。",
+        "工程師正在檢查網路連線問題。"
+      ],
+      "totalRequestMilliseconds" : 1006.888958
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003916,
+      "category" : "chinese",
+      "expected" : [
+        "請依照步驟完成安裝程序。"
+      ],
+      "id" : "chinese-46",
+      "milliseconds" : 920.745458,
+      "raw" : [
+        "請依照步驟完成安裝程序。",
+        "請依照步驟完成安裝程序續。",
+        "請依照步驟完成安裝程序後。"
+      ],
+      "source" : "請依照步驟完成安裝程續。",
+      "status" : "ready",
+      "suggestions" : [
+        "請依照步驟完成安裝程序。",
+        "請依照步驟完成安裝程序續。",
+        "請依照步驟完成安裝程序後。"
+      ],
+      "totalRequestMilliseconds" : 920.749374
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003417,
+      "category" : "chinese",
+      "expected" : [
+        "這個功能可以提高工作效率。"
+      ],
+      "id" : "chinese-47",
+      "milliseconds" : 689.219416,
+      "raw" : [
+        "這個功能可以提高工作效率。",
+        "這個功能可以提高工作效率。"
+      ],
+      "source" : "這個功能可以提高工作效綠。",
+      "status" : "ready",
+      "suggestions" : [
+        "這個功能可以提高工作效率。"
+      ],
+      "totalRequestMilliseconds" : 689.222833
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004417,
+      "category" : "chinese",
+      "expected" : [
+        "開會之前請先閱讀附件。"
+      ],
+      "id" : "chinese-48",
+      "milliseconds" : 1027.26925,
+      "raw" : [
+        "開會之前請先閱讀附帶鑰匙。",
+        "開會之前請先閱讀附帶鑰匙。",
+        "開會之前請先閱讀附帶鑰匙。"
+      ],
+      "source" : "開會之前請先閱讀附鍵。",
+      "status" : "ready",
+      "suggestions" : [
+        "開會之前請先閱讀附帶鑰匙。"
+      ],
+      "totalRequestMilliseconds" : 1027.273667
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0035,
+      "category" : "chinese",
+      "expected" : [
+        "所有測試案例都已經通過。"
+      ],
+      "id" : "chinese-49",
+      "milliseconds" : 910.677,
+      "raw" : [
+        "所有測試案例都已經通過。",
+        "所有測試案例都已經通過了。",
+        "所有測試案例都已經通過了。"
+      ],
+      "source" : "所有測試案例都已經通果。",
+      "status" : "ready",
+      "suggestions" : [
+        "所有測試案例都已經通過。",
+        "所有測試案例都已經通過了。"
+      ],
+      "totalRequestMilliseconds" : 910.6805
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003833,
+      "category" : "chinese",
+      "expected" : [
+        "請保留原始檔案方便日後追蹤。"
+      ],
+      "id" : "chinese-50",
+      "milliseconds" : 740.567584,
+      "raw" : [
+        "請保留原始檔案方便日後追蹤。",
+        "[...]"
+      ],
+      "source" : "請保留原始檔案方便日後追縱。",
+      "status" : "ready",
+      "suggestions" : [
+        "請保留原始檔案方便日後追蹤。"
+      ],
+      "totalRequestMilliseconds" : 740.571417
+    },
+    {
+      "baseline" : [
+        "Please send the report.",
+        "Please send tea report.",
+        "Please send ten report."
+      ],
+      "baselineMilliseconds" : 58.740208,
+      "category" : "english",
+      "expected" : [
+        "Please send the report."
+      ],
+      "id" : "english-01",
+      "milliseconds" : 549.944,
+      "raw" : [
+        "Please send the report."
+      ],
+      "source" : "Please send teh report.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please send the report.",
+        "Please send tea report.",
+        "Please send ten report."
+      ],
+      "totalRequestMilliseconds" : 608.684208
+    },
+    {
+      "baseline" : [
+        "I will receive the package tomorrow.",
+        "I will relieve the package tomorrow."
+      ],
+      "baselineMilliseconds" : 16.165917,
+      "category" : "english",
+      "expected" : [
+        "I will receive the package tomorrow."
+      ],
+      "id" : "english-02",
+      "milliseconds" : 625.681208,
+      "raw" : [
+        "I will receive the package tomorrow."
+      ],
+      "source" : "I will recieve the package tomorrow.",
+      "status" : "ready",
+      "suggestions" : [
+        "I will receive the package tomorrow.",
+        "I will relieve the package tomorrow."
+      ],
+      "totalRequestMilliseconds" : 641.847125
+    },
+    {
+      "baseline" : [
+        "This is a separate document."
+      ],
+      "baselineMilliseconds" : 13.374834,
+      "category" : "english",
+      "expected" : [
+        "This is a separate document."
+      ],
+      "id" : "english-03",
+      "milliseconds" : 621.908625,
+      "raw" : [
+        "This is a separate document."
+      ],
+      "source" : "This is a seperate document.",
+      "status" : "ready",
+      "suggestions" : [
+        "This is a separate document."
+      ],
+      "totalRequestMilliseconds" : 635.283459
+    },
+    {
+      "baseline" : [
+        "The meeting is definitely confirmed.",
+        "The meeting is defiantly confirmed."
+      ],
+      "baselineMilliseconds" : 23.1715,
+      "category" : "english",
+      "expected" : [
+        "The meeting is definitely confirmed."
+      ],
+      "id" : "english-04",
+      "milliseconds" : 620.228,
+      "raw" : [
+        "The meeting is definitely confirmed."
+      ],
+      "source" : "The meeting is definately confirmed.",
+      "status" : "ready",
+      "suggestions" : [
+        "The meeting is definitely confirmed.",
+        "The meeting is defiantly confirmed."
+      ],
+      "totalRequestMilliseconds" : 643.3995
+    },
+    {
+      "baseline" : [
+        "We need to accommodate more guests."
+      ],
+      "baselineMilliseconds" : 12.241459,
+      "category" : "english",
+      "expected" : [
+        "We need to accommodate more guests."
+      ],
+      "id" : "english-05",
+      "milliseconds" : 626.660458,
+      "raw" : [
+        "We need to accommodate more guests."
+      ],
+      "source" : "We need to accomodate more guests.",
+      "status" : "ready",
+      "suggestions" : [
+        "We need to accommodate more guests."
+      ],
+      "totalRequestMilliseconds" : 638.9019169999999
+    },
+    {
+      "baseline" : [
+        "The address is not available yet."
+      ],
+      "baselineMilliseconds" : 16.52075,
+      "category" : "english",
+      "expected" : [
+        "The address is not available yet."
+      ],
+      "id" : "english-06",
+      "milliseconds" : 632.586959,
+      "raw" : [
+        "The address is not available yet."
+      ],
+      "source" : "The address is not availble yet.",
+      "status" : "ready",
+      "suggestions" : [
+        "The address is not available yet."
+      ],
+      "totalRequestMilliseconds" : 649.107709
+    },
+    {
+      "baseline" : [
+        "Please check the environment settings."
+      ],
+      "baselineMilliseconds" : 13.624083,
+      "category" : "english",
+      "expected" : [
+        "Please check the environment settings."
+      ],
+      "id" : "english-07",
+      "milliseconds" : 620.333167,
+      "raw" : [
+        "Please check the environment settings."
+      ],
+      "source" : "Please check the enviroment settings.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please check the environment settings."
+      ],
+      "totalRequestMilliseconds" : 633.95725
+    },
+    {
+      "baseline" : [
+        "Your subscription was successful."
+      ],
+      "baselineMilliseconds" : 10.415917,
+      "category" : "english",
+      "expected" : [
+        "Your subscription was successful."
+      ],
+      "id" : "english-08",
+      "milliseconds" : 538.350833,
+      "raw" : [
+        "Your subscription was successful."
+      ],
+      "source" : "Your subscription was succesful.",
+      "status" : "ready",
+      "suggestions" : [
+        "Your subscription was successful."
+      ],
+      "totalRequestMilliseconds" : 548.76675
+    },
+    {
+      "baseline" : [
+        "I forgot my password again."
+      ],
+      "baselineMilliseconds" : 9.938625,
+      "category" : "english",
+      "expected" : [
+        "I forgot my password again."
+      ],
+      "id" : "english-09",
+      "milliseconds" : 620.429375,
+      "raw" : [
+        "I forgot my password again."
+      ],
+      "source" : "I forgot my passwrod again.",
+      "status" : "ready",
+      "suggestions" : [
+        "I forgot my password again."
+      ],
+      "totalRequestMilliseconds" : 630.368
+    },
+    {
+      "baseline" : [
+        "This change is necessary for safety."
+      ],
+      "baselineMilliseconds" : 10.264625,
+      "category" : "english",
+      "expected" : [
+        "This change is necessary for safety."
+      ],
+      "id" : "english-10",
+      "milliseconds" : 628.9185,
+      "raw" : [
+        "This change is necessary for safety."
+      ],
+      "source" : "This change is neccessary for safety.",
+      "status" : "ready",
+      "suggestions" : [
+        "This change is necessary for safety."
+      ],
+      "totalRequestMilliseconds" : 639.183125
+    },
+    {
+      "baseline" : [
+        "The library contains useful information."
+      ],
+      "baselineMilliseconds" : 18.454459,
+      "category" : "english",
+      "expected" : [
+        "The library contains useful information."
+      ],
+      "id" : "english-11",
+      "milliseconds" : 656.17075,
+      "raw" : [
+        "The library contains useful information."
+      ],
+      "source" : "The library contains useful informtion.",
+      "status" : "ready",
+      "suggestions" : [
+        "The library contains useful information."
+      ],
+      "totalRequestMilliseconds" : 674.625209
+    },
+    {
+      "baseline" : [
+        "Please update the documentation."
+      ],
+      "baselineMilliseconds" : 12.794292,
+      "category" : "english",
+      "expected" : [
+        "Please update the documentation."
+      ],
+      "id" : "english-12",
+      "milliseconds" : 546.97425,
+      "raw" : [
+        "Please update the documentation."
+      ],
+      "source" : "Please update the documantation.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please update the documentation."
+      ],
+      "totalRequestMilliseconds" : 559.768542
+    },
+    {
+      "baseline" : [
+        "I appreciate your patience."
+      ],
+      "baselineMilliseconds" : 7.554083,
+      "category" : "english",
+      "expected" : [
+        "I appreciate your patience."
+      ],
+      "id" : "english-13",
+      "milliseconds" : 531.168083,
+      "raw" : [
+        "I appreciate your patience."
+      ],
+      "source" : "I appreciate your patiance.",
+      "status" : "ready",
+      "suggestions" : [
+        "I appreciate your patience."
+      ],
+      "totalRequestMilliseconds" : 538.722166
+    },
+    {
+      "baseline" : [
+        "The server is currently offline.",
+        "The server is currency offline."
+      ],
+      "baselineMilliseconds" : 15.938584,
+      "category" : "english",
+      "expected" : [
+        "The server is currently offline."
+      ],
+      "id" : "english-14",
+      "milliseconds" : 655.396167,
+      "raw" : [
+        "The server is currently offline."
+      ],
+      "source" : "The server is currenly offline.",
+      "status" : "ready",
+      "suggestions" : [
+        "The server is currently offline.",
+        "The server is currency offline."
+      ],
+      "totalRequestMilliseconds" : 671.334751
+    },
+    {
+      "baseline" : [
+        "We should discuss this tomorrow."
+      ],
+      "baselineMilliseconds" : 11.806333,
+      "category" : "english",
+      "expected" : [
+        "We should discuss this tomorrow."
+      ],
+      "id" : "english-15",
+      "milliseconds" : 984.19975,
+      "raw" : [
+        "我們應該討論這個明天。",
+        "我們應該討論這個週五。",
+        "我們應該討論這個週六。"
+      ],
+      "source" : "We should discuss this tommorow.",
+      "status" : "ready",
+      "suggestions" : [
+        "We should discuss this tomorrow."
+      ],
+      "totalRequestMilliseconds" : 996.006083
+    },
+    {
+      "baseline" : [
+        "This is an excellent idea."
+      ],
+      "baselineMilliseconds" : 10.249292,
+      "category" : "english",
+      "expected" : [
+        "This is an excellent idea."
+      ],
+      "id" : "english-16",
+      "milliseconds" : 624.397458,
+      "raw" : [
+        "This is an excellent idea."
+      ],
+      "source" : "This is an excelent idea.",
+      "status" : "ready",
+      "suggestions" : [
+        "This is an excellent idea."
+      ],
+      "totalRequestMilliseconds" : 634.64675
+    },
+    {
+      "baseline" : [
+        "Please confirm your attendance."
+      ],
+      "baselineMilliseconds" : 13.051125,
+      "category" : "english",
+      "expected" : [
+        "Please confirm your attendance."
+      ],
+      "id" : "english-17",
+      "milliseconds" : 528.976833,
+      "raw" : [
+        "Please confirm your attendance."
+      ],
+      "source" : "Please confirm your attendence.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please confirm your attendance."
+      ],
+      "totalRequestMilliseconds" : 542.027958
+    },
+    {
+      "baseline" : [
+        "The project has a strict deadline.",
+        "The project has a strict deadlier."
+      ],
+      "baselineMilliseconds" : 23.772958,
+      "category" : "english",
+      "expected" : [
+        "The project has a strict deadline."
+      ],
+      "id" : "english-18",
+      "milliseconds" : 660.566209,
+      "raw" : [
+        "The project has a strict deadline."
+      ],
+      "source" : "The project has a strict deadlien.",
+      "status" : "ready",
+      "suggestions" : [
+        "The project has a strict deadline.",
+        "The project has a strict deadlier."
+      ],
+      "totalRequestMilliseconds" : 684.339167
+    },
+    {
+      "baseline" : [
+        "I am writing a short note.",
+        "I am writhing a short note.",
+        "I am gritting a short note."
+      ],
+      "baselineMilliseconds" : 26.459083,
+      "category" : "english",
+      "expected" : [
+        "I am writing a short note."
+      ],
+      "id" : "english-19",
+      "milliseconds" : 687.726083,
+      "raw" : [
+        "I am writing a short note."
+      ],
+      "source" : "I am writting a short note.",
+      "status" : "ready",
+      "suggestions" : [
+        "I am writing a short note.",
+        "I am writhing a short note.",
+        "I am gritting a short note."
+      ],
+      "totalRequestMilliseconds" : 714.185166
+    },
+    {
+      "baseline" : [
+        "They received our invitation.",
+        "They relieved our invitation."
+      ],
+      "baselineMilliseconds" : 17.178417,
+      "category" : "english",
+      "expected" : [
+        "They received our invitation."
+      ],
+      "id" : "english-20",
+      "milliseconds" : 530.111333,
+      "raw" : [
+        "They received our invitation."
+      ],
+      "source" : "They recieved our invitation.",
+      "status" : "ready",
+      "suggestions" : [
+        "They received our invitation.",
+        "They relieved our invitation."
+      ],
+      "totalRequestMilliseconds" : 547.2897499999999
+    },
+    {
+      "baseline" : [
+        "We need a reliable solution.",
+        "We need a reliable soliton."
+      ],
+      "baselineMilliseconds" : 16.861167,
+      "category" : "english",
+      "expected" : [
+        "We need a reliable solution."
+      ],
+      "id" : "english-21",
+      "milliseconds" : 687.079708,
+      "raw" : [
+        "We need a reliable solution."
+      ],
+      "source" : "We need a reliable soluton.",
+      "status" : "ready",
+      "suggestions" : [
+        "We need a reliable solution.",
+        "We need a reliable soliton."
+      ],
+      "totalRequestMilliseconds" : 703.940875
+    },
+    {
+      "baseline" : [
+        "Please use the correct formatting.",
+        "Please use the correct formatter.",
+        "Please use the correct formatters."
+      ],
+      "baselineMilliseconds" : 7.709917,
+      "category" : "english",
+      "expected" : [
+        "Please use the correct format."
+      ],
+      "id" : "english-22",
+      "milliseconds" : 633.744084,
+      "raw" : [
+        "Please use the correct format."
+      ],
+      "source" : "Please use the correct formatt.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please use the correct format.",
+        "Please use the correct formatting.",
+        "Please use the correct formatter."
+      ],
+      "totalRequestMilliseconds" : 641.4540010000001
+    },
+    {
+      "baseline" : [
+        "The application needs permission."
+      ],
+      "baselineMilliseconds" : 10.994334,
+      "category" : "english",
+      "expected" : [
+        "The application needs permission."
+      ],
+      "id" : "english-23",
+      "milliseconds" : 532.20025,
+      "raw" : [
+        "The application needs permission."
+      ],
+      "source" : "The application needs permision.",
+      "status" : "ready",
+      "suggestions" : [
+        "The application needs permission."
+      ],
+      "totalRequestMilliseconds" : 543.194584
+    },
+    {
+      "baseline" : [
+        "This feature improves accessibility."
+      ],
+      "baselineMilliseconds" : 14.702458,
+      "category" : "english",
+      "expected" : [
+        "This feature improves accessibility."
+      ],
+      "id" : "english-24",
+      "milliseconds" : 524.773125,
+      "raw" : [
+        "This feature improves accessibility."
+      ],
+      "source" : "This feature improves accesibility.",
+      "status" : "ready",
+      "suggestions" : [
+        "This feature improves accessibility."
+      ],
+      "totalRequestMilliseconds" : 539.475583
+    },
+    {
+      "baseline" : [
+        "We found an unexpected exception."
+      ],
+      "baselineMilliseconds" : 10.512625,
+      "category" : "english",
+      "expected" : [
+        "We found an unexpected exception."
+      ],
+      "id" : "english-25",
+      "milliseconds" : 622.642917,
+      "raw" : [
+        "We found an unexpected exception."
+      ],
+      "source" : "We found an unexpected excepetion.",
+      "status" : "ready",
+      "suggestions" : [
+        "We found an unexpected exception."
+      ],
+      "totalRequestMilliseconds" : 633.155542
+    },
+    {
+      "baseline" : [
+        "The connection was interrupted."
+      ],
+      "baselineMilliseconds" : 13.9385,
+      "category" : "english",
+      "expected" : [
+        "The connection was interrupted."
+      ],
+      "id" : "english-26",
+      "milliseconds" : 531.46725,
+      "raw" : [
+        "The connection was interrupted."
+      ],
+      "source" : "The connection was interupted.",
+      "status" : "ready",
+      "suggestions" : [
+        "The connection was interrupted."
+      ],
+      "totalRequestMilliseconds" : 545.40575
+    },
+    {
+      "baseline" : [
+        "Please restart the computer.",
+        "Please restart the compute."
+      ],
+      "baselineMilliseconds" : 15.2535,
+      "category" : "english",
+      "expected" : [
+        "Please restart the computer."
+      ],
+      "id" : "english-27",
+      "milliseconds" : 546.721708,
+      "raw" : [
+        "Please restart the computer."
+      ],
+      "source" : "Please restart the computre.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please restart the computer.",
+        "Please restart the compute."
+      ],
+      "totalRequestMilliseconds" : 561.9752080000001
+    },
+    {
+      "baseline" : [
+        "I have a simple question."
+      ],
+      "baselineMilliseconds" : 12.662791,
+      "category" : "english",
+      "expected" : [
+        "I have a simple question."
+      ],
+      "id" : "english-28",
+      "milliseconds" : 659.262,
+      "raw" : [
+        "I have a simple question."
+      ],
+      "source" : "I have a simple questoin.",
+      "status" : "ready",
+      "suggestions" : [
+        "I have a simple question."
+      ],
+      "totalRequestMilliseconds" : 671.9247909999999
+    },
+    {
+      "baseline" : [
+        "This sample demonstrates the difference."
+      ],
+      "baselineMilliseconds" : 16.039083,
+      "category" : "english",
+      "expected" : [
+        "This sample demonstrates the difference."
+      ],
+      "id" : "english-29",
+      "milliseconds" : 649.955292,
+      "raw" : [
+        "This sample demonstrates the difference."
+      ],
+      "source" : "This sample demonstrates the diffrence.",
+      "status" : "ready",
+      "suggestions" : [
+        "This sample demonstrates the difference."
+      ],
+      "totalRequestMilliseconds" : 665.994375
+    },
+    {
+      "baseline" : [
+        "The new design is more flexible.",
+        "The new design is more flexile."
+      ],
+      "baselineMilliseconds" : 19.43125,
+      "category" : "english",
+      "expected" : [
+        "The new design is more flexible."
+      ],
+      "id" : "english-30",
+      "milliseconds" : 661.546083,
+      "raw" : [
+        "The new design is more flexible."
+      ],
+      "source" : "The new design is more flexble.",
+      "status" : "ready",
+      "suggestions" : [
+        "The new design is more flexible.",
+        "The new design is more flexile."
+      ],
+      "totalRequestMilliseconds" : 680.9773329999999
+    },
+    {
+      "baseline" : [
+        "Please verify the message before sending.",
+        "Please verify the menage before sending."
+      ],
+      "baselineMilliseconds" : 31.037875,
+      "category" : "english",
+      "expected" : [
+        "Please verify the message before sending."
+      ],
+      "id" : "english-31",
+      "milliseconds" : 653.182625,
+      "raw" : [
+        "Please verify the message before sending."
+      ],
+      "source" : "Please verify the mesage before sending.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please verify the message before sending.",
+        "Please verify the menage before sending."
+      ],
+      "totalRequestMilliseconds" : 684.2205
+    },
+    {
+      "baseline" : [
+        "This behavior is inconsistent."
+      ],
+      "baselineMilliseconds" : 14.069375,
+      "category" : "english",
+      "expected" : [
+        "This behavior is inconsistent."
+      ],
+      "id" : "english-32",
+      "milliseconds" : 533.932625,
+      "raw" : [
+        "This behavior is inconsistent."
+      ],
+      "source" : "This behavior is inconsistant.",
+      "status" : "ready",
+      "suggestions" : [
+        "This behavior is inconsistent."
+      ],
+      "totalRequestMilliseconds" : 548.0020000000001
+    },
+    {
+      "baseline" : [
+        "The file contains a duplicate entry."
+      ],
+      "baselineMilliseconds" : 9.0295,
+      "category" : "english",
+      "expected" : [
+        "The file contains a duplicate entry."
+      ],
+      "id" : "english-33",
+      "milliseconds" : 659.870125,
+      "raw" : [
+        "The file contains a duplicate entry."
+      ],
+      "source" : "The file contains a duplciate entry.",
+      "status" : "ready",
+      "suggestions" : [
+        "The file contains a duplicate entry."
+      ],
+      "totalRequestMilliseconds" : 668.899625
+    },
+    {
+      "baseline" : [
+        "We should preserve compatibility.",
+        "We should preserve computability."
+      ],
+      "baselineMilliseconds" : 28.347583,
+      "category" : "english",
+      "expected" : [
+        "We should preserve compatibility."
+      ],
+      "id" : "english-34",
+      "milliseconds" : 532.583916,
+      "raw" : [
+        "We should preserve compatibility."
+      ],
+      "source" : "We should preserve compatiblity.",
+      "status" : "ready",
+      "suggestions" : [
+        "We should preserve compatibility.",
+        "We should preserve computability."
+      ],
+      "totalRequestMilliseconds" : 560.931499
+    },
+    {
+      "baseline" : [
+        "The document includes an introduction."
+      ],
+      "baselineMilliseconds" : 10.20525,
+      "category" : "english",
+      "expected" : [
+        "The document includes an introduction."
+      ],
+      "id" : "english-35",
+      "milliseconds" : 626.168417,
+      "raw" : [
+        "The document includes an introduction."
+      ],
+      "source" : "The document includes an introducton.",
+      "status" : "ready",
+      "suggestions" : [
+        "The document includes an introduction."
+      ],
+      "totalRequestMilliseconds" : 636.373667
+    },
+    {
+      "baseline" : [
+        "Please provide a clear explanation."
+      ],
+      "baselineMilliseconds" : 11.936166,
+      "category" : "english",
+      "expected" : [
+        "Please provide a clear explanation."
+      ],
+      "id" : "english-36",
+      "milliseconds" : 647.442125,
+      "raw" : [
+        "Please provide a clear explanation."
+      ],
+      "source" : "Please provide a clear explanaton.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please provide a clear explanation."
+      ],
+      "totalRequestMilliseconds" : 659.378291
+    },
+    {
+      "baseline" : [
+        "This is a temporary workaround."
+      ],
+      "baselineMilliseconds" : 13.023542,
+      "category" : "english",
+      "expected" : [
+        "This is a temporary workaround."
+      ],
+      "id" : "english-37",
+      "milliseconds" : 682.074916,
+      "raw" : [
+        "This is a temporary workaround."
+      ],
+      "source" : "This is a temporary workarond.",
+      "status" : "ready",
+      "suggestions" : [
+        "This is a temporary workaround."
+      ],
+      "totalRequestMilliseconds" : 695.098458
+    },
+    {
+      "baseline" : [
+        "The process completed automatically."
+      ],
+      "baselineMilliseconds" : 12.496042,
+      "category" : "english",
+      "expected" : [
+        "The process completed automatically."
+      ],
+      "id" : "english-38",
+      "milliseconds" : 530.18125,
+      "raw" : [
+        "The process completed automatically."
+      ],
+      "source" : "The process completed automaticly.",
+      "status" : "ready",
+      "suggestions" : [
+        "The process completed automatically."
+      ],
+      "totalRequestMilliseconds" : 542.677292
+    },
+    {
+      "baseline" : [
+        "We need to measure the latency.",
+        "We need to measure the blatancy."
+      ],
+      "baselineMilliseconds" : 19.511791,
+      "category" : "english",
+      "expected" : [
+        "We need to measure the latency."
+      ],
+      "id" : "english-39",
+      "milliseconds" : 666.318584,
+      "raw" : [
+        "We need to measure the latency."
+      ],
+      "source" : "We need to measure the latancy.",
+      "status" : "ready",
+      "suggestions" : [
+        "We need to measure the latency.",
+        "We need to measure the blatancy."
+      ],
+      "totalRequestMilliseconds" : 685.830375
+    },
+    {
+      "baseline" : [
+        "The results are reproducible."
+      ],
+      "baselineMilliseconds" : 15.097625,
+      "category" : "english",
+      "expected" : [
+        "The results are reproducible."
+      ],
+      "id" : "english-40",
+      "milliseconds" : 503.440959,
+      "raw" : [
+        "The results are reproducible."
+      ],
+      "source" : "The results are reproducable.",
+      "status" : "ready",
+      "suggestions" : [
+        "The results are reproducible."
+      ],
+      "totalRequestMilliseconds" : 518.538584
+    },
+    {
+      "baseline" : [
+        "Please record the temperature.",
+        "Please record the temperate."
+      ],
+      "baselineMilliseconds" : 15.525417,
+      "category" : "english",
+      "expected" : [
+        "Please record the temperature."
+      ],
+      "id" : "english-41",
+      "milliseconds" : 529.914792,
+      "raw" : [
+        "Please record the temperature."
+      ],
+      "source" : "Please record the temperatue.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please record the temperature.",
+        "Please record the temperate."
+      ],
+      "totalRequestMilliseconds" : 545.440209
+    },
+    {
+      "baseline" : [
+        "This experiment requires precision."
+      ],
+      "baselineMilliseconds" : 9.445459,
+      "category" : "english",
+      "expected" : [
+        "This experiment requires precision."
+      ],
+      "id" : "english-42",
+      "milliseconds" : 545.665167,
+      "raw" : [
+        "This experiment requires precision."
+      ],
+      "source" : "This experiment requires precison.",
+      "status" : "ready",
+      "suggestions" : [
+        "This experiment requires precision."
+      ],
+      "totalRequestMilliseconds" : 555.110626
+    },
+    {
+      "baseline" : [
+        "The response arrived immediately."
+      ],
+      "baselineMilliseconds" : 10.457875,
+      "category" : "english",
+      "expected" : [
+        "The response arrived immediately."
+      ],
+      "id" : "english-43",
+      "milliseconds" : 526.144167,
+      "raw" : [
+        "The response arrived immediately."
+      ],
+      "source" : "The response arrived immediatly.",
+      "status" : "ready",
+      "suggestions" : [
+        "The response arrived immediately."
+      ],
+      "totalRequestMilliseconds" : 536.602042
+    },
+    {
+      "baseline" : [
+        "I prefer a concise summary.",
+        "I prefer a concise sugary.",
+        "I prefer a concise summery."
+      ],
+      "baselineMilliseconds" : 19.655833,
+      "category" : "english",
+      "expected" : [
+        "I prefer a concise summary."
+      ],
+      "id" : "english-44",
+      "milliseconds" : 659.561541,
+      "raw" : [
+        "I prefer a concise summary."
+      ],
+      "source" : "I prefer a concise sumary.",
+      "status" : "ready",
+      "suggestions" : [
+        "I prefer a concise summary.",
+        "I prefer a concise sugary.",
+        "I prefer a concise summery."
+      ],
+      "totalRequestMilliseconds" : 679.2173740000001
+    },
+    {
+      "baseline" : [
+        "The team reached an agreement."
+      ],
+      "baselineMilliseconds" : 11.812458,
+      "category" : "english",
+      "expected" : [
+        "The team reached an agreement."
+      ],
+      "id" : "english-45",
+      "milliseconds" : 626.623666,
+      "raw" : [
+        "The team reached an agreement."
+      ],
+      "source" : "The team reached an agrement.",
+      "status" : "ready",
+      "suggestions" : [
+        "The team reached an agreement."
+      ],
+      "totalRequestMilliseconds" : 638.436124
+    },
+    {
+      "baseline" : [
+        "This version includes several improvements."
+      ],
+      "baselineMilliseconds" : 20.527542,
+      "category" : "english",
+      "expected" : [
+        "This version includes several improvements."
+      ],
+      "id" : "english-46",
+      "milliseconds" : 673.174625,
+      "raw" : [
+        "This version includes several improvements."
+      ],
+      "source" : "This version includes several improvments.",
+      "status" : "ready",
+      "suggestions" : [
+        "This version includes several improvements."
+      ],
+      "totalRequestMilliseconds" : 693.702167
+    },
+    {
+      "baseline" : [
+        "Please review the requirements.",
+        "Please review the requibments."
+      ],
+      "baselineMilliseconds" : 21.560458,
+      "category" : "english",
+      "expected" : [
+        "Please review the requirements."
+      ],
+      "id" : "english-47",
+      "milliseconds" : 691.9425,
+      "raw" : [
+        "Please review the requirements.",
+        "Please review the requirements."
+      ],
+      "source" : "Please review the requirments.",
+      "status" : "ready",
+      "suggestions" : [
+        "Please review the requirements.",
+        "Please review the requibments."
+      ],
+      "totalRequestMilliseconds" : 713.502958
+    },
+    {
+      "baseline" : [
+        "The resource is temporarily unavailable."
+      ],
+      "baselineMilliseconds" : 11.672417,
+      "category" : "english",
+      "expected" : [
+        "The resource is temporarily unavailable."
+      ],
+      "id" : "english-48",
+      "milliseconds" : 658.428375,
+      "raw" : [
+        "The resource is temporarily unavailable."
+      ],
+      "source" : "The resource is temporarily unavailble.",
+      "status" : "ready",
+      "suggestions" : [
+        "The resource is temporarily unavailable."
+      ],
+      "totalRequestMilliseconds" : 670.100792
+    },
+    {
+      "baseline" : [
+        "The operation was cancelled intentionally.",
+        "The operation was cancelled intentional."
+      ],
+      "baselineMilliseconds" : 23.668959,
+      "category" : "english",
+      "expected" : [
+        "The operation was cancelled intentionally."
+      ],
+      "id" : "english-49",
+      "milliseconds" : 715.576,
+      "raw" : [
+        "The operation was cancelled intentionally."
+      ],
+      "source" : "The operation was cancelled intentionaly.",
+      "status" : "ready",
+      "suggestions" : [
+        "The operation was cancelled intentionally.",
+        "The operation was cancelled intentional."
+      ],
+      "totalRequestMilliseconds" : 739.244959
+    },
+    {
+      "baseline" : [
+        "We should investigate the root cause.",
+        "We should investigate the root case.",
+        "We should investigate the root curse."
+      ],
+      "baselineMilliseconds" : 18.188709,
+      "category" : "english",
+      "expected" : [
+        "We should investigate the root cause."
+      ],
+      "id" : "english-50",
+      "milliseconds" : 654.98125,
+      "raw" : [
+        "We should investigate the root cause."
+      ],
+      "source" : "We should investigate the root cuase.",
+      "status" : "ready",
+      "suggestions" : [
+        "We should investigate the root cause.",
+        "We should investigate the root case.",
+        "We should investigate the root curse."
+      ],
+      "totalRequestMilliseconds" : 673.1699590000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.41425,
+      "category" : "protected",
+      "expected" : [
+        "Use `teh_value` exactly."
+      ],
+      "id" : "protected-01",
+      "milliseconds" : 681.423458,
+      "raw" : [
+        "Use `the_value` exactly."
+      ],
+      "source" : "Use `teh_value` exactly.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 682.837708
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.45675,
+      "category" : "protected",
+      "expected" : [
+        "Keep `recieve()` in the example."
+      ],
+      "id" : "protected-02",
+      "milliseconds" : 682.670584,
+      "raw" : [
+        "Keep `receive()` in the example."
+      ],
+      "source" : "Keep `recieve()` in the example.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 684.127334
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.403,
+      "category" : "protected",
+      "expected" : [
+        "Open src\/config.json before editing."
+      ],
+      "id" : "protected-03",
+      "milliseconds" : 714.126167,
+      "raw" : [
+        "Open src\/config.json before editing."
+      ],
+      "source" : "Open src\/config.json before editing.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 715.529167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.351458,
+      "category" : "protected",
+      "expected" : [
+        "Visit https:\/\/example.com\/teh for details."
+      ],
+      "id" : "protected-04",
+      "milliseconds" : 779.110625,
+      "raw" : [
+        "Visit https:\/\/example.com\/the for details."
+      ],
+      "source" : "Visit https:\/\/example.com\/teh for details.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 780.462083
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.081875,
+      "category" : "protected",
+      "expected" : [
+        "The variable is qz_module7."
+      ],
+      "id" : "protected-05",
+      "milliseconds" : 703.8315,
+      "raw" : [
+        "The variable is qz_module7."
+      ],
+      "source" : "The variable is qz_module7.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 704.913375
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.434042,
+      "category" : "protected",
+      "expected" : [
+        "Install PySide6 for this project."
+      ],
+      "id" : "protected-06",
+      "milliseconds" : 1223.135,
+      "raw" : [
+        "安裝 PySide6 給這個專案。",
+        "安裝 PySide6 供此專案使用。",
+        "安裝 PySide6 供此專案使用。"
+      ],
+      "source" : "Install PySide6 for this project.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1224.569042
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.92125,
+      "category" : "protected",
+      "expected" : [
+        "Our project uses SystemVerilog."
+      ],
+      "id" : "protected-07",
+      "milliseconds" : 659.3465,
+      "raw" : [
+        "Our project uses SystemVerilog."
+      ],
+      "source" : "Our project uses SystemVerilog.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 661.26775
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 5.265833,
+      "category" : "protected",
+      "expected" : [
+        "Use HTTP for this example."
+      ],
+      "id" : "protected-08",
+      "milliseconds" : 685.881375,
+      "raw" : [
+        "Use HTTPS for this example."
+      ],
+      "source" : "Use HTTP for this example.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 691.1472080000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.445542,
+      "category" : "protected",
+      "expected" : [
+        "Do not change RTX4090."
+      ],
+      "id" : "protected-09",
+      "milliseconds" : 719.203167,
+      "raw" : [
+        "Do not change RTX 4090."
+      ],
+      "source" : "Do not change RTX4090.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 720.648709
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.161584,
+      "category" : "protected",
+      "expected" : [
+        "Run `git checkout feature\/teh` now."
+      ],
+      "id" : "protected-10",
+      "milliseconds" : 749.344917,
+      "raw" : [
+        "Run `git checkout feature\/feature\/teh` now."
+      ],
+      "source" : "Run `git checkout feature\/teh` now.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 750.506501
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.741834,
+      "category" : "protected",
+      "expected" : [
+        "# Project status"
+      ],
+      "id" : "protected-11",
+      "milliseconds" : 551.294417,
+      "raw" : [
+        "# 專案狀態"
+      ],
+      "source" : "# Project status",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 552.036251
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.876541,
+      "category" : "protected",
+      "expected" : [
+        "## Installation steps"
+      ],
+      "id" : "protected-12",
+      "milliseconds" : 589.937583,
+      "raw" : [
+        "## 安裝步驟"
+      ],
+      "source" : "## Installation steps",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 590.814124
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.861583,
+      "category" : "protected",
+      "expected" : [
+        "**Keep this emphasis**"
+      ],
+      "id" : "protected-13",
+      "milliseconds" : 563.799083,
+      "raw" : [
+        "**保持此重點**"
+      ],
+      "source" : "**Keep this emphasis**",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 564.660666
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.811334,
+      "category" : "protected",
+      "expected" : [
+        "*Keep this italic text*"
+      ],
+      "id" : "protected-14",
+      "milliseconds" : 587.902167,
+      "raw" : [
+        "*Keep this italic text*"
+      ],
+      "source" : "*Keep this italic text*",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 588.713501
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.461958,
+      "category" : "protected",
+      "expected" : [
+        "[Read the guide](https:\/\/example.org\/guide)"
+      ],
+      "id" : "protected-15",
+      "milliseconds" : 830.582875,
+      "raw" : [
+        "[Read the guide](https:\/\/example.org\/guide)"
+      ],
+      "source" : "[Read the guide](https:\/\/example.org\/guide)",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 832.0448329999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.308917,
+      "category" : "protected",
+      "expected" : [
+        "![Diagram](images\/diagram.png)"
+      ],
+      "id" : "protected-16",
+      "milliseconds" : 673.677709,
+      "raw" : [
+        "![Diagram](images\/diagram.png)"
+      ],
+      "source" : "![Diagram](images\/diagram.png)",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 674.986626
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.059083,
+      "category" : "protected",
+      "expected" : [
+        "> Keep this quoted sentence."
+      ],
+      "id" : "protected-17",
+      "milliseconds" : 820.569542,
+      "raw" : [
+        "> 保持這個引用的句子。"
+      ],
+      "source" : "> Keep this quoted sentence.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 821.6286249999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.211916,
+      "category" : "protected",
+      "expected" : [
+        "- Keep this list item."
+      ],
+      "id" : "protected-18",
+      "milliseconds" : 618.408666,
+      "raw" : [
+        "- Keep this list item。"
+      ],
+      "source" : "- Keep this list item.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 619.620582
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.006292,
+      "category" : "protected",
+      "expected" : [
+        "1. Keep this numbered item."
+      ],
+      "id" : "protected-19",
+      "milliseconds" : 629.017375,
+      "raw" : [
+        "1. Keep this numbered item."
+      ],
+      "source" : "1. Keep this numbered item.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 630.023667
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.891917,
+      "category" : "protected",
+      "expected" : [
+        "The version is 0.4.0."
+      ],
+      "id" : "protected-20",
+      "milliseconds" : 687.077209,
+      "raw" : [
+        "The version is 0.4.0."
+      ],
+      "source" : "The version is 0.4.0.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 687.9691260000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.932042,
+      "category" : "protected",
+      "expected" : [
+        "The amount is 12.50 dollars."
+      ],
+      "id" : "protected-21",
+      "milliseconds" : 929.631125,
+      "raw" : [
+        "The amount is 12.50 元。",
+        "The amount is 12.50 dollars."
+      ],
+      "source" : "The amount is 12.50 dollars.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 930.563167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.977583,
+      "category" : "protected",
+      "expected" : [
+        "Store it in \/usr\/local\/bin\/tool."
+      ],
+      "id" : "protected-22",
+      "milliseconds" : 726.737167,
+      "raw" : [
+        "Store it in \/usr\/local\/bin\/tool."
+      ],
+      "source" : "Store it in \/usr\/local\/bin\/tool.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 727.71475
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.076417,
+      "category" : "protected",
+      "expected" : [
+        "Use foo.bar as the file name."
+      ],
+      "id" : "protected-23",
+      "milliseconds" : 724.48225,
+      "raw" : [
+        "Use foo.bar as the file name."
+      ],
+      "source" : "Use foo.bar as the file name.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 725.558667
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.254292,
+      "category" : "protected",
+      "expected" : [
+        "The address is team@example.com."
+      ],
+      "id" : "protected-24",
+      "milliseconds" : 685.107708,
+      "raw" : [
+        "The address is team@example.com."
+      ],
+      "source" : "The address is team@example.com.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 686.362
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.259333,
+      "category" : "protected",
+      "expected" : [
+        "Keep the literal `print(\"helllo\")`."
+      ],
+      "id" : "protected-25",
+      "milliseconds" : 798.4855,
+      "raw" : [
+        "Keep the literal `print(\"hello\")`."
+      ],
+      "source" : "Keep the literal `print(\"helllo\")`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 799.744833
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.866375,
+      "category" : "protected",
+      "expected" : [
+        "Use the flag `--no-verify`."
+      ],
+      "id" : "protected-26",
+      "milliseconds" : 758.850292,
+      "raw" : [
+        "Use the flag `--no-verify`."
+      ],
+      "source" : "Use the flag `--no-verify`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 759.7166669999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.20425,
+      "category" : "protected",
+      "expected" : [
+        "Set `MAX_RETRY` to 3."
+      ],
+      "id" : "protected-27",
+      "milliseconds" : 694.529458,
+      "raw" : [
+        "Set `MAX_RETRY` to 3."
+      ],
+      "source" : "Set `MAX_RETRY` to 3.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 695.733708
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.283209,
+      "category" : "protected",
+      "expected" : [
+        "Keep `user_name` unchanged."
+      ],
+      "id" : "protected-28",
+      "milliseconds" : 692.235208,
+      "raw" : [
+        "Keep `user_name` unchanged."
+      ],
+      "source" : "Keep `user_name` unchanged.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 693.518417
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.131459,
+      "category" : "protected",
+      "expected" : [
+        "The type is MyWidgetFactory."
+      ],
+      "id" : "protected-29",
+      "milliseconds" : 967.85425,
+      "raw" : [
+        "The type is MyWidgetFactory.",
+        "The type is MyWidgetFactory.",
+        "The type is MyWidgetFactory."
+      ],
+      "source" : "The type is MyWidgetFactory.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 968.9857089999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.064833,
+      "category" : "protected",
+      "expected" : [
+        "The command is `npm run build`."
+      ],
+      "id" : "protected-30",
+      "milliseconds" : 688.2595,
+      "raw" : [
+        "`npm run build`."
+      ],
+      "source" : "The command is `npm run build`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 689.324333
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.406916,
+      "category" : "protected",
+      "expected" : [
+        "Save the table as report_2026.csv."
+      ],
+      "id" : "protected-31",
+      "milliseconds" : 721.198917,
+      "raw" : [
+        "Save the table as report_2026.csv."
+      ],
+      "source" : "Save the table as report_2026.csv.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 722.6058330000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.835334,
+      "category" : "protected",
+      "expected" : [
+        "Use `a != b` for comparison."
+      ],
+      "id" : "protected-32",
+      "milliseconds" : 714.857916,
+      "raw" : [
+        "Use `!= a, b` for comparison."
+      ],
+      "source" : "Use `a != b` for comparison.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 715.69325
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.923917,
+      "category" : "protected",
+      "expected" : [
+        "Keep the expression `x += 1`."
+      ],
+      "id" : "protected-33",
+      "milliseconds" : 580.686333,
+      "raw" : [
+        "x = x + 1"
+      ],
+      "source" : "Keep the expression `x += 1`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 581.61025
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.232292,
+      "category" : "protected",
+      "expected" : [
+        "The branch is fix\/typo_handler."
+      ],
+      "id" : "protected-34",
+      "milliseconds" : 660.303209,
+      "raw" : [
+        "The branch is fix\/typo_handler."
+      ],
+      "source" : "The branch is fix\/typo_handler.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 661.5355010000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.997084,
+      "category" : "protected",
+      "expected" : [
+        "The path is C:\\work\\teh.txt."
+      ],
+      "id" : "protected-35",
+      "milliseconds" : 732.889417,
+      "raw" : [
+        "The path is C:\\work\\the.txt."
+      ],
+      "source" : "The path is C:\\work\\teh.txt.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 733.886501
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.025125,
+      "category" : "protected",
+      "expected" : [
+        "Open README.md in the editor."
+      ],
+      "id" : "protected-36",
+      "milliseconds" : 671.407416,
+      "raw" : [
+        "Open README.md in the editor."
+      ],
+      "source" : "Open README.md in the editor.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 672.432541
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.119834,
+      "category" : "protected",
+      "expected" : [
+        "The package is tensorflow2."
+      ],
+      "id" : "protected-37",
+      "milliseconds" : 813.874291,
+      "raw" : [
+        "The package is tensorflow 2.",
+        "The package is tensorflow2."
+      ],
+      "source" : "The package is tensorflow2.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 814.9941249999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.012,
+      "category" : "protected",
+      "expected" : [
+        "Run `python -m pytest`."
+      ],
+      "id" : "protected-38",
+      "milliseconds" : 683.425083,
+      "raw" : [
+        "Run `python -m pytest`."
+      ],
+      "source" : "Run `python -m pytest`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 684.4370829999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.03925,
+      "category" : "protected",
+      "expected" : [
+        "Use the key `Ctrl+Shift+P`."
+      ],
+      "id" : "protected-39",
+      "milliseconds" : 718.626875,
+      "raw" : [
+        "Use the key `Cmd+Shift+P`."
+      ],
+      "source" : "Use the key `Ctrl+Shift+P`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 719.6661250000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.071541,
+      "category" : "protected",
+      "expected" : [
+        "Keep the unclosed code `recieve"
+      ],
+      "id" : "protected-40",
+      "milliseconds" : 989.8365,
+      "raw" : [
+        "Keep the unclosed code `receive`",
+        "Keep the unclosed code `receive`",
+        "Keep the unclosed code `receive`"
+      ],
+      "source" : "Keep the unclosed code `recieve",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 990.908041
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.998875,
+      "category" : "protected",
+      "expected" : [
+        "Use the placeholder ${HOME}."
+      ],
+      "id" : "protected-41",
+      "milliseconds" : 744.252459,
+      "raw" : [
+        "Use the placeholder ${HOME.desktop}."
+      ],
+      "source" : "Use the placeholder ${HOME}.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 745.251334
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.021334,
+      "category" : "protected",
+      "expected" : [
+        "Set `timeout_ms=5000`."
+      ],
+      "id" : "protected-42",
+      "milliseconds" : 724.125416,
+      "raw" : [
+        "Set `timeout_ms=5000`."
+      ],
+      "source" : "Set `timeout_ms=5000`.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 725.14675
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.944167,
+      "category" : "protected",
+      "expected" : [
+        "The release tag is v0.5.0."
+      ],
+      "id" : "protected-43",
+      "milliseconds" : 711.821,
+      "raw" : [
+        "The release tag is v0.5.0."
+      ],
+      "source" : "The release tag is v0.5.0.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 712.765167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.866958,
+      "category" : "protected",
+      "expected" : [
+        "Keep the acronym FPGA."
+      ],
+      "id" : "protected-44",
+      "milliseconds" : 529.094209,
+      "raw" : [
+        "Keep the acronym FPGA."
+      ],
+      "source" : "Keep the acronym FPGA.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 529.9611669999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.8005,
+      "category" : "protected",
+      "expected" : [
+        "Use the custom term mybrand."
+      ],
+      "id" : "protected-45",
+      "milliseconds" : 715.637667,
+      "raw" : [
+        "使用品牌名稱 mybrand。"
+      ],
+      "source" : "Use the custom term mybrand.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 717.438167
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 3.622833,
+      "category" : "protected",
+      "expected" : [
+        "The custom word is qzword."
+      ],
+      "id" : "protected-46",
+      "milliseconds" : 949.677208,
+      "raw" : [
+        "The custom word is qzword.",
+        "The custom word is qzword.",
+        "The custom word is qzword."
+      ],
+      "source" : "The custom word is qzword.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 953.300041
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004458,
+      "category" : "protected",
+      "expected" : [
+        "請保留變數 qz_module7。"
+      ],
+      "id" : "protected-47",
+      "milliseconds" : 671.119,
+      "raw" : [
+        "請保留變數 qz_module7。"
+      ],
+      "source" : "請保留變數 qz_module7。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 671.123458
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003625,
+      "category" : "protected",
+      "expected" : [
+        "請安裝 PySide6 套件。"
+      ],
+      "id" : "protected-48",
+      "milliseconds" : 684.738875,
+      "raw" : [
+        "請安裝 PyQt6 套件。"
+      ],
+      "source" : "請安裝 PySide6 套件。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 684.7425000000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003333,
+      "category" : "protected",
+      "expected" : [
+        "路徑是 src\/main.swift。"
+      ],
+      "id" : "protected-49",
+      "milliseconds" : 689.801,
+      "raw" : [
+        "路徑是 src\/main.swift。"
+      ],
+      "source" : "路徑是 src\/main.swift。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 689.804333
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00525,
+      "category" : "protected",
+      "expected" : [
+        "標題是 **測試結果**。"
+      ],
+      "id" : "protected-50",
+      "milliseconds" : 627.055208,
+      "raw" : [
+        "標題是 **測試結果**。"
+      ],
+      "source" : "標題是 **測試結果**。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 627.060458
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.008125,
+      "category" : "correct",
+      "expected" : [
+        "今天下午我們會一起討論專案進度。"
+      ],
+      "id" : "correct-01",
+      "milliseconds" : 1013.420458,
+      "raw" : [
+        "今天下午我們會一起討論專案進度。",
+        "今天下午我們會一起討論專案進度。",
+        "今天下午我們會一起討論專案進度。"
+      ],
+      "source" : "今天下午我們會一起討論專案進度。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1013.428583
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003958,
+      "category" : "correct",
+      "expected" : [
+        "請先備份資料再更新系統。"
+      ],
+      "id" : "correct-02",
+      "milliseconds" : 935.593084,
+      "raw" : [
+        "請先備份資料再更新系統。",
+        "請先備份資料再更新系統。",
+        "請先備份資料再更新系統。"
+      ],
+      "source" : "請先備份資料再更新系統。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 935.597042
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004167,
+      "category" : "correct",
+      "expected" : [
+        "這個功能目前仍在測試中。"
+      ],
+      "id" : "correct-03",
+      "milliseconds" : 891.237458,
+      "raw" : [
+        "這個功能目前仍在測試中。",
+        "這個功能目前仍在測試中。",
+        "這個功能目前仍在測試中。"
+      ],
+      "source" : "這個功能目前仍在測試中。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 891.241625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004,
+      "category" : "correct",
+      "expected" : [
+        "我想在週末去圖書館看書。"
+      ],
+      "id" : "correct-04",
+      "milliseconds" : 929.761125,
+      "raw" : [
+        "我想在週末去圖書館看書。",
+        "我想在週末去圖書館看書。",
+        "我想在週末去圖書館看書。"
+      ],
+      "source" : "我想在週末去圖書館看書。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 929.765125
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0025,
+      "category" : "correct",
+      "expected" : [
+        "請將會議紀錄寄給所有同事。"
+      ],
+      "id" : "correct-05",
+      "milliseconds" : 956.304083,
+      "raw" : [
+        "請將會議紀錄寄給所有同事。",
+        "請將會議紀錄寄給所有同事。",
+        "請將會議紀錄寄給所有同事。"
+      ],
+      "source" : "請將會議紀錄寄給所有同事。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 956.306583
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002917,
+      "category" : "correct",
+      "expected" : [
+        "明天早上九點開始上課。"
+      ],
+      "id" : "correct-06",
+      "milliseconds" : 845.704084,
+      "raw" : [
+        "明天早上九點鐘開始上課。",
+        "明天早上九點開始上課。"
+      ],
+      "source" : "明天早上九點開始上課。",
+      "status" : "ready",
+      "suggestions" : [
+        "明天早上九點鐘開始上課。"
+      ],
+      "totalRequestMilliseconds" : 845.707001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003791,
+      "category" : "correct",
+      "expected" : [
+        "這份報告需要清楚的數據支持。"
+      ],
+      "id" : "correct-07",
+      "milliseconds" : 973.624209,
+      "raw" : [
+        "這份報告需要清楚的數據支持。",
+        "這份報告需要清楚的數據支持。",
+        "這份報告需要清楚的數據支持。"
+      ],
+      "source" : "這份報告需要清楚的數據支持。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 973.6279999999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.005292,
+      "category" : "correct",
+      "expected" : [
+        "運動之後要記得補充水分。"
+      ],
+      "id" : "correct-08",
+      "milliseconds" : 859.50125,
+      "raw" : [
+        "運動之後要記得補充水分。",
+        "運動之後要記得補充水分。",
+        "運動之後要記得補充水分。"
+      ],
+      "source" : "運動之後要記得補充水分。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 859.5065420000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0035,
+      "category" : "correct",
+      "expected" : [
+        "請尊重每個人的不同意見。"
+      ],
+      "id" : "correct-09",
+      "milliseconds" : 848.857916,
+      "raw" : [
+        "請尊重每個人的不同意見。",
+        "請尊重每個人的不同意見。",
+        "請尊重每個人的不同意見。"
+      ],
+      "source" : "請尊重每個人的不同意見。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 848.8614160000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00275,
+      "category" : "correct",
+      "expected" : [
+        "我們已經完成第一階段的工作。"
+      ],
+      "id" : "correct-10",
+      "milliseconds" : 882.864125,
+      "raw" : [
+        "我們已經完成第一階段的工作。",
+        "我們已經完成第一階段的工作。",
+        "我們已經完成第一階段的工作。"
+      ],
+      "source" : "我們已經完成第一階段的工作。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 882.8668749999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003166,
+      "category" : "correct",
+      "expected" : [
+        "這家咖啡店的環境很安靜。"
+      ],
+      "id" : "correct-11",
+      "milliseconds" : 993.180542,
+      "raw" : [
+        "這家咖啡店的環境很安靜。",
+        "這家咖啡店的環境很安靜。",
+        "這家咖啡店的環境很安靜。"
+      ],
+      "source" : "這家咖啡店的環境很安靜。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 993.1837079999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.007334,
+      "category" : "correct",
+      "expected" : [
+        "請在離開之前確認門窗關好。"
+      ],
+      "id" : "correct-12",
+      "milliseconds" : 1155.774625,
+      "raw" : [
+        "請在離開之前確認門窗關好。",
+        "請在離開之前確認門窗鎖好。",
+        "請在離開之前確認門窗安全關閉。"
+      ],
+      "source" : "請在離開之前確認門窗關好。",
+      "status" : "ready",
+      "suggestions" : [
+        "請在離開之前確認門窗鎖好。",
+        "請在離開之前確認門窗安全關閉。"
+      ],
+      "totalRequestMilliseconds" : 1155.781959
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002958,
+      "category" : "correct",
+      "expected" : [
+        "新的方法可以節省不少時間。"
+      ],
+      "id" : "correct-13",
+      "milliseconds" : 930.995291,
+      "raw" : [
+        "新的方法可以節省不少時間。",
+        "新的方法可以節省不少時間。",
+        "新的方法可以節省不少時間。"
+      ],
+      "source" : "新的方法可以節省不少時間。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 930.998249
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003125,
+      "category" : "correct",
+      "expected" : [
+        "這個例子有助於理解問題。"
+      ],
+      "id" : "correct-14",
+      "milliseconds" : 762.706375,
+      "raw" : [
+        "這個例子有助於理解問題。",
+        "[unidentified text]"
+      ],
+      "source" : "這個例子有助於理解問題。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 762.7094999999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003042,
+      "category" : "correct",
+      "expected" : [
+        "我正在學習如何使用這套工具。"
+      ],
+      "id" : "correct-15",
+      "milliseconds" : 720.333916,
+      "raw" : [
+        "我正在學習如何使用這套工具。",
+        "[unidentified text]"
+      ],
+      "source" : "我正在學習如何使用這套工具。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 720.3369580000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003125,
+      "category" : "correct",
+      "expected" : [
+        "如果遇到問題可以查看說明文件。"
+      ],
+      "id" : "correct-16",
+      "milliseconds" : 923.769917,
+      "raw" : [
+        "如果遇到問題可以查看說明文件。",
+        "如果遇到問題可以查看說明文件。",
+        "如果遇到問題可以查看說明文件。"
+      ],
+      "source" : "如果遇到問題可以查看說明文件。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 923.7730419999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002625,
+      "category" : "correct",
+      "expected" : [
+        "謝謝您提供詳細的回覆。"
+      ],
+      "id" : "correct-17",
+      "milliseconds" : 841.299333,
+      "raw" : [
+        "謝謝您提供詳細的回覆。",
+        "謝謝您提供詳細的回覆。",
+        "謝謝您提供詳細的回覆。"
+      ],
+      "source" : "謝謝您提供詳細的回覆。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 841.301958
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00425,
+      "category" : "correct",
+      "expected" : [
+        "這項決定需要更多討論。"
+      ],
+      "id" : "correct-18",
+      "milliseconds" : 880.661458,
+      "raw" : [
+        "這項決定需要更多討論。",
+        "這項決定需要更多討論。",
+        "這項決定需要更多討論。"
+      ],
+      "source" : "這項決定需要更多討論。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 880.665708
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002875,
+      "category" : "correct",
+      "expected" : [
+        "請保留原始文字以便比較。"
+      ],
+      "id" : "correct-19",
+      "milliseconds" : 883.713542,
+      "raw" : [
+        "請保留原始文字以便比較。",
+        "請保留原始文字以便比較。",
+        "請保留原始文字以便比較。"
+      ],
+      "source" : "請保留原始文字以便比較。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 883.716417
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003791,
+      "category" : "correct",
+      "expected" : [
+        "我們希望輸入時能保持流暢。"
+      ],
+      "id" : "correct-20",
+      "milliseconds" : 621.047208,
+      "raw" : [
+        "我們希望輸入時能保持流暢。"
+      ],
+      "source" : "我們希望輸入時能保持流暢。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 621.0509989999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003834,
+      "category" : "correct",
+      "expected" : [
+        "修改完成後請重新執行測試。"
+      ],
+      "id" : "correct-21",
+      "milliseconds" : 830.582,
+      "raw" : [
+        "修改完成後，請重新執行測試。",
+        "修改完成後，請重新執行測試。"
+      ],
+      "source" : "修改完成後請重新執行測試。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 830.585834
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003458,
+      "category" : "correct",
+      "expected" : [
+        "這些資料只會保存在本機。"
+      ],
+      "id" : "correct-22",
+      "milliseconds" : 940.3155,
+      "raw" : [
+        "這些資料只會保存在本機。",
+        "這些資料只會保存在本機。",
+        "這些資料只會保存在本機。"
+      ],
+      "source" : "這些資料只會保存在本機。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 940.3189580000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0025,
+      "category" : "correct",
+      "expected" : [
+        "他對新技術充滿好奇。"
+      ],
+      "id" : "correct-23",
+      "milliseconds" : 890.384917,
+      "raw" : [
+        "他對新技術充滿好奇。",
+        "他對新技術充滿興趣。",
+        "他對新技術充滿熱情。"
+      ],
+      "source" : "他對新技術充滿好奇。",
+      "status" : "ready",
+      "suggestions" : [
+        "他對新技術充滿興趣。",
+        "他對新技術充滿熱情。"
+      ],
+      "totalRequestMilliseconds" : 890.387417
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002333,
+      "category" : "correct",
+      "expected" : [
+        "這個句子沒有需要修正的錯字。"
+      ],
+      "id" : "correct-24",
+      "milliseconds" : 661.842041,
+      "raw" : [
+        "這個句子沒有需要修正的錯字。",
+        ""
+      ],
+      "source" : "這個句子沒有需要修正的錯字。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 661.844374
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002792,
+      "category" : "correct",
+      "expected" : [
+        "我們下次會議再確認結果。"
+      ],
+      "id" : "correct-25",
+      "milliseconds" : 596.260708,
+      "raw" : [
+        "我們下次會議再確認結果。"
+      ],
+      "source" : "我們下次會議再確認結果。",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 596.2635
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.199834,
+      "category" : "correct",
+      "expected" : [
+        "Please keep the original text."
+      ],
+      "id" : "correct-26",
+      "milliseconds" : 870.898583,
+      "raw" : [
+        "請保持原始文字。",
+        "請保持原始文字。",
+        "請保持原始文字。"
+      ],
+      "source" : "Please keep the original text.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 872.098417
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.182417,
+      "category" : "correct",
+      "expected" : [
+        "The meeting starts at noon."
+      ],
+      "id" : "correct-27",
+      "milliseconds" : 631.831292,
+      "raw" : [
+        "The meeting starts at noon."
+      ],
+      "source" : "The meeting starts at noon.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 633.013709
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.403041,
+      "category" : "correct",
+      "expected" : [
+        "I would like to learn more about this topic."
+      ],
+      "id" : "correct-28",
+      "milliseconds" : 702.664875,
+      "raw" : [
+        "I would like to learn more about this subject."
+      ],
+      "source" : "I would like to learn more about this topic.",
+      "status" : "ready",
+      "suggestions" : [
+        "I would like to learn more about this subject."
+      ],
+      "totalRequestMilliseconds" : 704.0679160000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.107541,
+      "category" : "correct",
+      "expected" : [
+        "This feature is still being tested."
+      ],
+      "id" : "correct-29",
+      "milliseconds" : 644.462083,
+      "raw" : [
+        "This feature is still being tested."
+      ],
+      "source" : "This feature is still being tested.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 645.569624
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.257208,
+      "category" : "correct",
+      "expected" : [
+        "We need more evidence before deciding."
+      ],
+      "id" : "correct-30",
+      "milliseconds" : 652.237333,
+      "raw" : [
+        "We need more evidence before deciding."
+      ],
+      "source" : "We need more evidence before deciding.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 653.494541
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.246,
+      "category" : "correct",
+      "expected" : [
+        "Thank you for your careful review."
+      ],
+      "id" : "correct-31",
+      "milliseconds" : 595.793666,
+      "raw" : [
+        "Thank you for your careful review."
+      ],
+      "source" : "Thank you for your careful review.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 597.039666
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.976792,
+      "category" : "correct",
+      "expected" : [
+        "Please back up your files first."
+      ],
+      "id" : "correct-32",
+      "milliseconds" : 645.285042,
+      "raw" : [
+        "Please back up your files first."
+      ],
+      "source" : "Please back up your files first.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 646.261834
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.258583,
+      "category" : "correct",
+      "expected" : [
+        "The application works without a network connection."
+      ],
+      "id" : "correct-33",
+      "milliseconds" : 678.905375,
+      "raw" : [
+        "The application works without a network connection."
+      ],
+      "source" : "The application works without a network connection.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 680.1639580000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.147083,
+      "category" : "correct",
+      "expected" : [
+        "I prefer short and clear explanations."
+      ],
+      "id" : "correct-34",
+      "milliseconds" : 1081.238958,
+      "raw" : [
+        "我偏好簡潔且明確的說明。",
+        "我喜歡簡潔且清晰的說明。",
+        "我更喜歡簡潔且清楚的說明。"
+      ],
+      "source" : "I prefer short and clear explanations.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1082.386041
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.032667,
+      "category" : "correct",
+      "expected" : [
+        "We can discuss the details tomorrow."
+      ],
+      "id" : "correct-35",
+      "milliseconds" : 1034.139125,
+      "raw" : [
+        "我們明天可以討論細節。",
+        "我們明天可以討論明天細節。",
+        "我們明天可以討論細節。"
+      ],
+      "source" : "We can discuss the details tomorrow.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1035.1717919999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.989458,
+      "category" : "correct",
+      "expected" : [
+        "The results look consistent so far."
+      ],
+      "id" : "correct-36",
+      "milliseconds" : 626.200166,
+      "raw" : [
+        "The results look consistent so far."
+      ],
+      "source" : "The results look consistent so far.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 627.189624
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.273291,
+      "category" : "correct",
+      "expected" : [
+        "Please do not change the variable names."
+      ],
+      "id" : "correct-37",
+      "milliseconds" : 911.785833,
+      "raw" : [
+        "請勿更改變數名稱。",
+        "請勿更改變數名稱。",
+        "請勿更改變數名稱。"
+      ],
+      "source" : "Please do not change the variable names.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 913.059124
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.978875,
+      "category" : "correct",
+      "expected" : [
+        "This example explains the basic idea."
+      ],
+      "id" : "correct-38",
+      "milliseconds" : 624.494417,
+      "raw" : [
+        "This example explains the basic idea."
+      ],
+      "source" : "This example explains the basic idea.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 625.473292
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.264583,
+      "category" : "correct",
+      "expected" : [
+        "We should test the failure cases as well."
+      ],
+      "id" : "correct-39",
+      "milliseconds" : 661.631208,
+      "raw" : [
+        "We should test the failure cases as well."
+      ],
+      "source" : "We should test the failure cases as well.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 662.895791
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.162375,
+      "category" : "correct",
+      "expected" : [
+        "The document is ready for review."
+      ],
+      "id" : "correct-40",
+      "milliseconds" : 621.865333,
+      "raw" : [
+        "The document is ready for review."
+      ],
+      "source" : "The document is ready for review.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 623.027708
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.222083,
+      "category" : "correct",
+      "expected" : [
+        "I am looking forward to your reply."
+      ],
+      "id" : "correct-41",
+      "milliseconds" : 649.286208,
+      "raw" : [
+        "I am looking forward to your reply."
+      ],
+      "source" : "I am looking forward to your reply.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 650.508291
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.918125,
+      "category" : "correct",
+      "expected" : [
+        "Please select a suggestion before accepting it."
+      ],
+      "id" : "correct-42",
+      "milliseconds" : 1023.436958,
+      "raw" : [
+        "請先選擇一個建議再接受。",
+        "請先選擇建議再接受。",
+        "請先選擇一個建議再接受它。"
+      ],
+      "source" : "Please select a suggestion before accepting it.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1024.355083
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.020958,
+      "category" : "correct",
+      "expected" : [
+        "The original order should remain unchanged."
+      ],
+      "id" : "correct-43",
+      "milliseconds" : 692.702083,
+      "raw" : [
+        "The original order should stay unchanged."
+      ],
+      "source" : "The original order should remain unchanged.",
+      "status" : "ready",
+      "suggestions" : [
+        "The original order should stay unchanged."
+      ],
+      "totalRequestMilliseconds" : 693.723041
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.210125,
+      "category" : "correct",
+      "expected" : [
+        "This approach protects user privacy."
+      ],
+      "id" : "correct-44",
+      "milliseconds" : 630.9605,
+      "raw" : [
+        "This approach safeguards user privacy."
+      ],
+      "source" : "This approach protects user privacy.",
+      "status" : "ready",
+      "suggestions" : [
+        "This approach safeguards user privacy."
+      ],
+      "totalRequestMilliseconds" : 632.170625
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.225833,
+      "category" : "correct",
+      "expected" : [
+        "We will measure performance separately."
+      ],
+      "id" : "correct-45",
+      "milliseconds" : 592.589459,
+      "raw" : [
+        "We will measure performance separately."
+      ],
+      "source" : "We will measure performance separately.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 593.815292
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.188209,
+      "category" : "correct",
+      "expected" : [
+        "The current version supports both languages."
+      ],
+      "id" : "correct-46",
+      "milliseconds" : 625.493375,
+      "raw" : [
+        "The current version supports both languages."
+      ],
+      "source" : "The current version supports both languages.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 626.681584
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.055417,
+      "category" : "correct",
+      "expected" : [
+        "Please use the existing configuration."
+      ],
+      "id" : "correct-47",
+      "milliseconds" : 845.752417,
+      "raw" : [
+        "請使用現有的設定。",
+        "請使用現有的設定。",
+        "請使用現有的設定。"
+      ],
+      "source" : "Please use the existing configuration.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 846.8078340000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.047459,
+      "category" : "correct",
+      "expected" : [
+        "This sentence does not contain a spelling error."
+      ],
+      "id" : "correct-48",
+      "milliseconds" : 671.553833,
+      "raw" : [
+        "This sentence does not contain a spelling error."
+      ],
+      "source" : "This sentence does not contain a spelling error.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 672.6012920000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 1.042292,
+      "category" : "correct",
+      "expected" : [
+        "The task can continue in the background."
+      ],
+      "id" : "correct-49",
+      "milliseconds" : 684.833959,
+      "raw" : [
+        "The task can continue in the background."
+      ],
+      "source" : "The task can continue in the background.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 685.876251
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.923333,
+      "category" : "correct",
+      "expected" : [
+        "We should verify the result before publishing."
+      ],
+      "id" : "correct-50",
+      "milliseconds" : 684.426583,
+      "raw" : [
+        "We should verify the result before publishing."
+      ],
+      "source" : "We should verify the result before publishing.",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 685.349916
+    }
+  ]
+}

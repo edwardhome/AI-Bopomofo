@@ -57,6 +57,7 @@ class McBopomofoInputMethodController: IMKInputController {
     var currentClient: Any?
     var keyHandler: KeyHandler = KeyHandler()
     var state: InputState = InputState.Empty()
+    let textAssistant = TextAssistant()
     private var fHoldGesture = FHoldGesture()
     private var fHoldTimer: Timer?
     private var pendingFEvent: NSEvent?
@@ -74,6 +75,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
     override func menu() -> NSMenu! {
         let menu = NSMenu(title: "Input Method Menu")
+        menu.autoenablesItems = false
 
         menu.addItem(
             withTitle: NSLocalizedString("English / ASCII", comment: ""),
@@ -82,6 +84,12 @@ class McBopomofoInputMethodController: IMKInputController {
             withTitle: NSLocalizedString("Shift + Letter Starts English", comment: ""),
             action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
         mixedItem.state = Preferences.mixedEnglishEnabled.state
+        let checkItem = menu.addItem(withTitle: NSLocalizedString("Check Spelling / Chinese Typos", comment: ""),
+                                    action: #selector(checkTextAssistance(_:)), keyEquivalent: "")
+        checkItem.isEnabled = keyHandler.canBeginAssistance(with: state)
+        let predictionItem = menu.addItem(withTitle: NSLocalizedString("English Prediction (Tab to Accept)", comment: ""),
+                                         action: #selector(toggleEnglishPrediction(_:)), keyEquivalent: "")
+        predictionItem.state = Preferences.englishPredictionEnabled.state
 
         menu.addItem(withTitle: NSLocalizedString("Quick Numbers / Symbols", comment: ""),
                      action: #selector(beginQuickSymbols(_:)), keyEquivalent: "")
@@ -200,6 +208,7 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        textAssistant.cancel()
         cancelFHold(client: client)
         symbolKeysDown.removeAll()
         UserDefaults.standard.synchronize()
@@ -217,6 +226,8 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        if let assistance = state as? InputState.Assistance { state = assistance.original }
+        textAssistant.cancel()
         if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
         cancelFHold(client: client)
         symbolKeysDown.removeAll()
@@ -226,6 +237,10 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func setValue(_ value: Any!, forTag tag: Int, client: Any!) {
+        if let assistance = state as? InputState.Assistance {
+            handle(state: assistance.original, client: client)
+        }
+        textAssistant.cancel()
         cancelFHold(client: client)
         let newInputMode = InputMode(rawValue: value as? String ?? InputMode.bopomofo.rawValue)
         LanguageModelManager.loadDataModel(newInputMode)
@@ -247,6 +262,8 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKServerInput protocol methods
 
     override func commitComposition(_ client: Any!) {
+        if let assistance = state as? InputState.Assistance { state = assistance.original }
+        textAssistant.cancel()
         if fHoldGesture.phase == .pending {
             _ = applyFHold(.otherKey, client: client)
         }
@@ -395,6 +412,10 @@ class McBopomofoInputMethodController: IMKInputController {
         case .passThrough: return false
         case .text: break
         case .modifiers:
+            textAssistant.cancel()
+            if let assistance = state as? InputState.Assistance, assistance.isChecking {
+                handle(state: assistance.selecting(assistance.selectedIndex), client: client)
+            }
             if Preferences.switchInputSourceUponCommandKeyPressEnabled,
                (event.keyCode == UInt16(kVK_Command) || event.keyCode == UInt16(kVK_RightCommand)),
                event.modifierFlags.contains(.command) {
@@ -418,6 +439,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     private func handleTextEvent(_ event: NSEvent, client: Any?) -> Bool {
+        textAssistant.cancel()
         var textFrame = NSRect.zero
         let attributes: [AnyHashable: Any]? = (client as? IMKTextInput)?.attributes(
             forCharacterIndex: 0, lineHeightRectangle: &textFrame)
@@ -552,10 +574,19 @@ class McBopomofoInputMethodController: IMKInputController {
 extension McBopomofoInputMethodController {
 
     func handle(state newState: InputState, client: Any?) {
+        textAssistant.cancel()
         let previous = state
         state = newState
 
         switch newState {
+        case let assistance as InputState.Assistance:
+            gCurrentCandidateController?.visible = false
+            hideTooltip()
+            (client as? IMKTextInput)?.setMarkedText(assistance.original.attributedString,
+                selectionRange: NSRange(location: Int(assistance.original.cursorIndex), length: 0),
+                replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+            show(candidateWindowWith: assistance, client: client)
+            gCurrentCandidateController?.selectedCandidateIndex = UInt(assistance.selectedIndex)
         case let newState as InputState.Deactivated:
             handle(state: newState, previous: previous, client: client)
             state = .Empty()
@@ -602,6 +633,7 @@ extension McBopomofoInputMethodController {
         default:
             break
         }
+        textAssistant.schedulePrediction(state: state, controller: self)
     }
 
     private func commit(text: String, client: Any!) {
@@ -967,6 +999,7 @@ extension McBopomofoInputMethodController {
                 useVerticalMode = state.useVerticalMode
                 candidates = state.candidates
             case is InputState.SelectingFeature,
+                is InputState.Assistance,
                 is InputState.QuickSymbols,
                 is InputState.SelectingDateMacro,
                 is InputState.SelectingDictionary,
@@ -1005,6 +1038,10 @@ extension McBopomofoInputMethodController {
 
         gCurrentCandidateController?.tooltip =
             switch state {
+            case let assistance as InputState.Assistance:
+                assistance.message
+            case let ascii as InputState.ASCII where ascii.prediction != nil:
+                NSLocalizedString("Tab accepts prediction; Esc dismisses", comment: "")
             case let symbols as InputState.QuickSymbols:
                 NSLocalizedString(symbols.held ? "Release F to return; Esc cancels" : "Press a mapped key; Esc returns", comment: "")
             case let state as InputState.SelectingDictionary:
