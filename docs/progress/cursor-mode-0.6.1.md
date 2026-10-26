@@ -26,4 +26,10 @@
 
 ## 交付狀態
 
-候選版本為 0.6.1／build 601。安裝與套件核對完成後另記錄結果；不推送或公開發布。更新 ad-hoc app 後須重新確認 F 輸入監控授權是否符合新版本，必要時只透過系統設定重新加入。
+候選版本為 0.6.1／build 601，程式來源提交 `bbc5d32`。arm64／x86_64 Release 建置成功；最終來源的 Debug build-for-testing 亦成功。切換建置組態時再次遇到相同預編譯標頭過期錯誤，清理同一個 PrecompiledHeaders 後通過。證據位於 `artifacts/cursor-mode-headless.log`、`artifacts/cursor-mode-test-build-final-retry.log`、`artifacts/cursor-mode-release.log`。
+
+套件保存在 `dist/0.6.1-alpha/`，pkg／zip 校驗、bundle 資源與簽章核對通過；pkg 解包後 77 個檔案與候選 app 一致。封裝與驗證記錄：`artifacts/cursor-mode-package.log`、`artifacts/cursor-mode-verify.log`。
+
+安裝前已將現有 0.6.0 app 與偏好備份至 `artifacts/install-0.6.1/`，77 個備份檔案逐一核對一致。為避免外接磁碟權限問題，將 pkg 複製到獨立 `/private/tmp/` 目錄，確認 SHA-256 相同後交由系統 Installer 開啟。當前仍等待使用者在 macOS 驗證視窗核准；最後唯讀確認已安裝版本仍為 0.6.0，尚未執行重啟或宣稱提示已生效。
+
+完成安裝後須核對安裝檔案、版本及偏好，並重新確認 F 輸入監控授權是否符合新版本，必要時只透過系統設定重新加入；再重啟目標輸入法並由使用者驗收。沒有推送或公開發布。
