@@ -4,3 +4,5 @@ NSHumanReadableCopyright = "Copyright © 2011-2026 Mengjuei Hsieh et al.\nAll Ri
 "org.aibopomofo.inputmethod.AIBopomofo.Bopomofo" = "AI注音輸入法";
 "org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo" = "AI注音輸入法 Plain";
 
+
+"org.aibopomofo.inputmethod.AIBopomofo.English" = "AI注音輸入法 英文";

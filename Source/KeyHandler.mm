@@ -327,7 +327,7 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 
 - (BOOL)canBeginQuickSymbolsWithState:(InputState *)state
 {
-    return _bpmfReadingBuffer->isEmpty() && ![state isKindOfClass:[InputStateASCII class]] &&
+    return _bpmfReadingBuffer->isEmpty() &&
         ([state isKindOfClass:[InputStateEmpty class]] ||
          [state isKindOfClass:[InputStateEmptyIgnoringPreviousState class]] ||
          [state isKindOfClass:[InputStateInputting class]]);
@@ -370,6 +370,10 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 - (BOOL)beginQuickSymbolsWithState:(InputState *)state held:(BOOL)held stateCallback:(void (^)(InputState *))stateCallback
 {
     if (![self canBeginQuickSymbolsWithState:state]) { return NO; }
+    if ([state isKindOfClass:[InputStateASCII class]]) {
+        stateCallback([[InputStateQuickSymbols alloc] initWithHeld:held originalASCII:(InputStateASCII *)state]);
+        return YES;
+    }
     [self clear];
     stateCallback([[InputStateEmpty alloc] init]);
     stateCallback([[InputStateQuickSymbols alloc] initWithHeld:held]);
@@ -379,7 +383,7 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 - (void)endQuickSymbolsWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
 {
     if ([state isKindOfClass:[InputStateQuickSymbols class]]) {
-        stateCallback([[InputStateEmptyIgnoringPreviousState alloc] init]);
+        [QuickSymbolHandler endWithState:(InputStateQuickSymbols *)state stateCallback:stateCallback];
     }
 }
 

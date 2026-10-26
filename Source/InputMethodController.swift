@@ -59,6 +59,9 @@ class McBopomofoInputMethodController: IMKInputController {
     var keyHandler: KeyHandler = KeyHandler()
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
+    private var shiftGesture = DoubleShiftGesture()
+    private var directEnglish = false
+    private var englishInputSource = false
     private var fHoldGesture = FHoldGesture()
     private let fReleaseMonitor = FReleaseMonitor()
     private static var didRequestFMonitoring = false
@@ -79,6 +82,9 @@ class McBopomofoInputMethodController: IMKInputController {
     override func menu() -> NSMenu! {
         let menu = NSMenu(title: "Input Method Menu")
         menu.autoenablesItems = false
+        let directItem = menu.addItem(withTitle: NSLocalizedString("Direct English (Double Shift)", comment: ""),
+                                      action: #selector(toggleDirectEnglish(_:)), keyEquivalent: "")
+        directItem.state = directEnglish.state
 
         menu.addItem(
             withTitle: NSLocalizedString("English / ASCII", comment: ""),
@@ -215,6 +221,8 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        shiftGesture.reset()
+        directEnglish = englishInputSource
         textAssistant.cancel()
         cancelFHold(client: client)
         symbolKeysDown.removeAll()
@@ -238,6 +246,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
         if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
@@ -254,7 +263,16 @@ class McBopomofoInputMethodController: IMKInputController {
         }
         textAssistant.cancel()
         cancelFHold(client: client)
-        let newInputMode = InputMode(rawValue: value as? String ?? InputMode.bopomofo.rawValue)
+        let rawMode = value as? String ?? InputMode.bopomofo.rawValue
+        englishInputSource = rawMode == "org.aibopomofo.inputmethod.AIBopomofo.English"
+        if directEnglish != englishInputSource {
+            commitComposition(client)
+            keyHandler.clear()
+            handle(state: .EmptyIgnoringPreviousState(), client: client)
+        }
+        directEnglish = englishInputSource
+        shiftGesture.reset()
+        let newInputMode = InputMode(rawValue: englishInputSource ? InputMode.bopomofo.rawValue : rawMode)
         LanguageModelManager.loadDataModel(newInputMode)
         // Restore the client layout even when the internal input mode is unchanged.
         (client as? IMKTextInput)?.overrideKeyboard(
@@ -282,7 +300,7 @@ class McBopomofoInputMethodController: IMKInputController {
         cancelFHold(client: client)
         if state is InputState.QuickSymbols {
             keyHandler.endQuickSymbols(with: state) { self.handle(state: $0, client: client) }
-            return
+            if !(state is InputState.ASCII) { return }
         }
         if let ascii = state as? InputState.ASCII {
             keyHandler.clear()
@@ -300,7 +318,17 @@ class McBopomofoInputMethodController: IMKInputController {
         return Int(events.rawValue)
     }
 
+    @objc private func toggleDirectEnglish(_ sender: Any?) {
+        guard !IsSecureEventInputEnabled() else { return }
+        commitComposition(currentClient)
+        keyHandler.clear()
+        handle(state: .EmptyIgnoringPreviousState(), client: currentClient)
+        directEnglish.toggle()
+        shiftGesture.reset()
+    }
+
     @objc private func beginASCII(_ sender: Any?) {
+        directEnglish = false
         keyHandler.beginASCII(with: state, stateCallback: { newState in
             self.handle(state: newState, client: self.currentClient)
         }, errorCallback: {
@@ -383,13 +411,27 @@ class McBopomofoInputMethodController: IMKInputController {
             case .replayTap:
                 if let pending = pendingFEvent {
                     pendingFEvent = nil
-                    _ = handleTextEvent(pending, client: client)
+                    if directEnglish {
+                        handle(state: .Committing(poppedText: pending.characters ?? "f"), client: client)
+                        handle(state: .Empty(), client: client)
+                    } else {
+                        _ = handleTextEvent(pending, client: client)
+                    }
                 }
             case .beginLayer:
+                if !directEnglish, pendingFEvent?.modifierFlags.contains(.shift) == true,
+                   !(state is InputState.ASCII) {
+                    keyHandler.beginASCII(with: state, stateCallback: { self.handle(state: $0, client: client) }, errorCallback: {})
+                }
                 let began = keyHandler.beginQuickSymbols(with: state, held: true) {
                     self.handle(state: $0, client: client)
                 }
-                if !began, let pending = pendingFEvent { _ = handleTextEvent(pending, client: client) }
+                if !began, let pending = pendingFEvent {
+                    if directEnglish {
+                        handle(state: .Committing(poppedText: pending.characters ?? "f"), client: client)
+                        handle(state: .Empty(), client: client)
+                    } else { _ = handleTextEvent(pending, client: client) }
+                }
                 pendingFEvent = nil
             case .endLayer:
                 if let symbols = state as? InputState.QuickSymbols, symbols.held {
@@ -416,6 +458,16 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
+        if IsSecureEventInputEnabled() { shiftGesture.reset() }
+        else if event.type == .flagsChanged {
+            let isShift = event.keyCode == UInt16(kVK_Shift) || event.keyCode == UInt16(kVK_RightShift)
+            let other = !event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty
+            if shiftGesture.update(isShift: isShift, isDown: event.modifierFlags.contains(.shift),
+                                   otherModifiers: other, time: event.timestamp) {
+                toggleDirectEnglish(nil)
+                return false
+            }
+        } else if event.type == .keyDown { shiftGesture.reset() }
         // Keep ownership until key-up even when F was released before a symbol key.
         if event.type == .keyUp, symbolKeysDown.remove(event.keyCode) != nil { return true }
         if event.type == .keyDown, event.isARepeat, symbolKeysDown.contains(event.keyCode),
@@ -428,7 +480,7 @@ class McBopomofoInputMethodController: IMKInputController {
         if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
             if applyFHold(.release, client: client) { return true }
         } else if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyDown {
-            let forbidden: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
+            let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
             let eligible = Preferences.fHoldSymbolsEnabled
                 && CGPreflightListenEventAccess() && !IsSecureEventInputEnabled()
                 && event.modifierFlags.intersection(forbidden).isEmpty
@@ -437,9 +489,13 @@ class McBopomofoInputMethodController: IMKInputController {
                 pendingFEvent = event
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
-        } else if event.type == .keyDown || event.type == .flagsChanged {
+        } else if event.type == .keyDown || (event.type == .flagsChanged
+                    && event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift)) {
             _ = applyFHold(.otherKey, client: client)
         }
+
+        // Preserve F's momentary layer in direct English; other keys pass through literally.
+        if directEnglish && !(state is InputState.QuickSymbols) { return false }
 
         let kind: InputEventKind
         switch event.type {
@@ -621,7 +677,7 @@ extension McBopomofoInputMethodController {
         let previous = state
         state = newState
         if let symbols = previous as? InputState.QuickSymbols, symbols.held,
-           newState is InputState.Empty || newState is InputState.EmptyIgnoringPreviousState {
+           !(newState is InputState.QuickSymbols) && !(newState is InputState.Committing) {
             cancelFHold(client: client)
         }
 
@@ -666,8 +722,8 @@ extension McBopomofoInputMethodController {
                 gCurrentCandidateController?.visible = false
                 hideTooltip()
                 // A held layer maps physical keys without presenting a selection UI.
-                (client as? IMKTextInput)?.setMarkedText("",
-                    selectionRange: NSRange(location: 0, length: 0),
+                (client as? IMKTextInput)?.setMarkedText(newState.originalASCII?.attributedString ?? NSAttributedString(string: ""),
+                    selectionRange: NSRange(location: Int(newState.originalASCII?.cursorIndex ?? 0), length: 0),
                     replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
             } else {
                 handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)

@@ -142,7 +142,7 @@ struct MixedInputTests {
         #expect(s.committed == "teh")
     }
 
-    @Test func symbolLayerDoesNotStealUnfinishedReadingsOrEnglish() {
+    @Test func symbolLayerPreservesReadingsAndSupportsEnglish() {
         let s = Session()
         s.key("j")
         #expect(!s.handler.canBeginQuickSymbols(with: s.state))
@@ -151,7 +151,29 @@ struct MixedInputTests {
         #expect((s.state as? InputState.Inputting)?.composingBuffer == text)
         let ascii = Session()
         ascii.begin(); ascii.type("Markdown")
-        #expect(!ascii.handler.canBeginQuickSymbols(with: ascii.state))
+        #expect(ascii.handler.canBeginQuickSymbols(with: ascii.state))
+    }
+
+    @Test func englishCompositionSurvivesHeldFSymbols() {
+        let s = Session()
+        s.begin(); s.type("Hello")
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("R", code: 15, flags: .shift); s.key("r", code: 15)
+        #expect(s.committed.isEmpty)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "Hello++")
+        s.type("world"); s.key("\r")
+        #expect(s.committed == "Hello++world")
+    }
+
+    @Test func englishSymbolLayerEscRestoresCursorWithoutCommitting() {
+        let s = Session()
+        s.state = InputState.ASCII(text: "abc", cursor: 1)
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("r", code: 15); s.key("\u{1B}")
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "a+bc")
+        #expect((s.state as? InputState.ASCII)?.cursorIndex == 2)
+        #expect(s.committed.isEmpty)
     }
 
     @Test func backtickIsLiteralAndBig5RemainsAvailable() {

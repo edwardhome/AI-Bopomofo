@@ -1,3 +1,9 @@
+# 0.6.0-alpha Vim 與 Shift 英文模式
+
+新增雙擊 Shift 切換全英文直接輸入／混打；保留 Shift＋字母的大寫英文組詞及修飾鍵快捷操作。F 長按分層支援全英文與英文組詞，Shift＋F 以短按輸入 F、長按進入分層；組詞中的符號留在原組字，不提前送出。
+
+新增本專案英文輸入來源，以及本機 Vim／Neovim／VSCodeVim 模式整合，Normal 用英文、Insert 用混打，兩者保留 F 分層。操作、安裝與 Esc 組字限制詳見 [Vim 與 Shift 說明](vim-input.md)。
+
 # 0.5.4-alpha F 放開事件監聽
 
 依使用者授權新增輸入監控權限入口。F 手勢使用 session listen-only key-up 監聽，不再依賴按鍵狀態輪詢；超過 100 毫秒才啟用，放開退出，長按期間不顯示選單。未授權或監聽失效時回復普通輸入。詳見 [F 操作與權限](quick-symbols.md) 及 [隱私說明](privacy.md)。

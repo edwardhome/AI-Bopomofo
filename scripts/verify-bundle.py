@@ -22,7 +22,7 @@ for locale in ("Base", "en", "zh-Hant"):
     assert localized["CFBundleDisplayName"] == "AI注音輸入法"
     assert localized[identifier + ".Bopomofo"] == "AI注音輸入法"
 assert set(info["ComponentInputModeDict"]["tsInputModeListKey"]) == {
-    identifier + ".Bopomofo", identifier + ".PlainBopomofo"
+    identifier + ".Bopomofo", identifier + ".PlainBopomofo", identifier + ".English"
 }
 assert "UpdateInfoEndpoint" not in info
 assert (app / "Contents/MacOS" / info["CFBundleExecutable"]).is_file()

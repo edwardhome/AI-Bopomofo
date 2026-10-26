@@ -9,6 +9,7 @@ swift test --package-path Packages/MixedInputCore
 swift test --package-path Packages/CandidateRanking
 python3 -m unittest discover -s research/apple-fm -p 'test_corpus.py'
 python3 -m unittest discover -s research/text-assistance -p 'test_*.py'
+python3 integrations/vim/test-integration.py
 make -C Source/Data check
 xcodebuild -project McBopomofo.xcodeproj -scheme McBopomofo -configuration Debug \
   -derivedDataPath build/DerivedData -onlyUsePackageVersionsFromResolvedFile \

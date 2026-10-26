@@ -18,7 +18,11 @@ extension InputState {
     @objc(InputStateQuickSymbols)
     class QuickSymbols: InputState, CandidateProvider {
         @objc let held: Bool
-        @objc init(held: Bool) { self.held = held; super.init() }
+        @objc let originalASCII: InputState.ASCII?
+        @objc init(held: Bool) { self.held = held; originalASCII = nil; super.init() }
+        @objc init(held: Bool, originalASCII: InputState.ASCII) {
+            self.held = held; self.originalASCII = originalASCII; super.init()
+        }
         var candidateCount: Int { QuickSymbolLayer.entries.count }
         func candidate(at index: Int) -> String {
             guard QuickSymbolLayer.entries.indices.contains(index) else { return "" }
@@ -62,28 +66,40 @@ extension InputState {
 }
 
 @objc class QuickSymbolHandler: NSObject {
+    @objc static func end(state: InputState.QuickSymbols, stateCallback: (InputState) -> Void) {
+        stateCallback(state.originalASCII ?? InputState.EmptyIgnoringPreviousState())
+    }
+    private static func insert(_ text: String, state: InputState.QuickSymbols,
+                               stateCallback: (InputState) -> Void) {
+        if let original = state.originalASCII {
+            if case .updated(let composition) = original.composition.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
+                stateCallback(InputState.QuickSymbols(held: state.held,
+                    originalASCII: InputState.ASCII(composition: composition, predictionSuppressed: true)))
+            }
+        } else {
+            stateCallback(InputState.Committing(poppedText: text))
+            stateCallback(InputState.QuickSymbols(held: state.held))
+        }
+    }
     @objc static func select(index: Int, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) {
         guard QuickSymbolLayer.entries.indices.contains(index) else { return }
-        stateCallback(InputState.Committing(poppedText: QuickSymbolLayer.entries[index].output))
-        stateCallback(InputState.QuickSymbols(held: state.held))
+        insert(QuickSymbolLayer.entries[index].output, state: state, stateCallback: stateCallback)
     }
-
     @objc static func handle(input: KeyHandlerInput, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) -> Bool {
         if input.isCommandHold || input.isOptionHold || input.isControlHold {
+            if let original = state.originalASCII { stateCallback(InputState.Committing(poppedText: original.composingBuffer)) }
             stateCallback(InputState.EmptyIgnoringPreviousState())
             return false
         }
         if input.charCode == 27 || input.charCode == 13 || input.isEnter {
-            stateCallback(InputState.EmptyIgnoringPreviousState())
+            end(state: state, stateCallback: stateCallback)
             return true
         }
         if let value = QuickSymbolLayer.output(for: UInt16(input.keyCode)) {
-            stateCallback(InputState.Committing(poppedText: value))
-            stateCallback(InputState.QuickSymbols(held: state.held))
+            insert(value, state: state, stateCallback: stateCallback)
         }
-        // Unassigned keys never leak into the phonetic buffer while the layer is active.
         return true
     }
 }
