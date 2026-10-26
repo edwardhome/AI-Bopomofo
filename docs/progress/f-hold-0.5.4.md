@@ -9,3 +9,11 @@
 參考：[Apple 被動事件監聽](https://developer.apple.com/documentation/coregraphics/cgeventtapoptions/listenonly)。
 
 更新時間：2026-10-26T22:10:16+08:00
+
+## 安裝與權限確認
+
+來源 Commit：682229f。Release 建置成功，包裝核對通過。先備份舊 app 與偏好至 artifacts/install-0.5.4/，再透過系統 installer 安裝；77 個已安裝檔案與候選 app 完全一致，識別碼、資源與簽章驗證成功。
+
+系統設定「輸入監控」可見 AI-Bopomofo.app 開關由 off 變為 on（操作期間使用者變更設定，重新讀取確認為 on）。確認後重新啟動，PID：35073，TIS 啟用／選取回傳 0，已切回 AI注音輸入法。沒有改動 Kanata、其他程式權限或詞庫。實際 F 按住與放開仍待使用者驗收，沒有執行自動 GUI 按鍵測試。
+
+確認時間：2026-10-26T22:12:39+08:00
