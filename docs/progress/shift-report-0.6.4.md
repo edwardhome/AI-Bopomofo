@@ -8,4 +8,8 @@
 
 無介面測試 196 項通過、2 項上游案例跳過：C++ 122／2 跳過、MixedInputCore 28、CandidateRanking 28、Python 14＋4。詞庫檢查與 Debug build-for-testing 成功；重建前僅清除已確認過期的預編譯標頭快取。沒有 hosted／GUI 測試、模擬打字或音訊。記錄：artifacts/shift-report-headless.log、artifacts/shift-report-debug-retry.log。
 
-已備份目前 0.6.3 app 與偏好至 artifacts/install-0.6.4/，77 檔案核對一致；預設使用者資料目錄未存在。Release、套件及安裝待完成。此版並非雙 Shift 修復完成。
+已備份目前 0.6.3 app 與偏好至 artifacts/install-0.6.4/，77 檔案核對一致；預設使用者資料目錄未存在。Release、套件及安裝核對成功，77 個檔案一致；程式來源 f125313。此版並非雙 Shift 修復完成。
+
+## 安裝核對
+
+2026-10-27T00:31:55+08:00：已安裝 0.6.4／604 至原路徑，使用者完成系統驗證。F 輸入監控已重新加入並核對符合新版簽章，重啟 PID 52045，來源為 AI注音混打。偏好差異鍵：無；使用者資料狀態未變。摘要 artifacts/install-0.6.4/verification.json。尚待人工操作診斷；沒有推送遠端。
