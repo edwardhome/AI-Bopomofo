@@ -1,0 +1,1102 @@
+[
+  {
+    "id": "general-001",
+    "category": "general",
+    "context": "小朋友吃完飯後要記得",
+    "answer": "刷牙",
+    "distractors": [
+      "刷芽",
+      "刷崖"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-002",
+    "category": "general",
+    "context": "旅客準備前往機場搭乘",
+    "answer": "飛機",
+    "distractors": [
+      "飛雞",
+      "非機"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-003",
+    "category": "general",
+    "context": "書讀完以後請放回",
+    "answer": "書架",
+    "distractors": [
+      "輸價",
+      "梳架"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-004",
+    "category": "general",
+    "context": "下雨出門時記得攜帶",
+    "answer": "雨傘",
+    "distractors": [
+      "語散",
+      "羽散"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-005",
+    "category": "general",
+    "context": "我們買了車票搭乘",
+    "answer": "火車",
+    "distractors": [
+      "火扯",
+      "伙車"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-006",
+    "category": "general",
+    "context": "口渴時可以喝一杯",
+    "answer": "開水",
+    "distractors": [
+      "開睡",
+      "開稅"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-007",
+    "category": "general",
+    "context": "媽媽到菜市場購買新鮮的",
+    "answer": "蔬菜",
+    "distractors": [
+      "輸菜",
+      "書菜"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-008",
+    "category": "general",
+    "context": "球員在球場努力練習",
+    "answer": "投籃",
+    "distractors": [
+      "投藍",
+      "頭籃"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-009",
+    "category": "general",
+    "context": "進入安靜的圖書館請降低",
+    "answer": "音量",
+    "distractors": [
+      "因量",
+      "陰量"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-010",
+    "category": "general",
+    "context": "完成作業之後可以出去",
+    "answer": "散步",
+    "distractors": [
+      "散布",
+      "善步"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-011",
+    "category": "general",
+    "context": "用餐之前要先清洗",
+    "answer": "雙手",
+    "distractors": [
+      "雙守",
+      "霜手"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-012",
+    "category": "general",
+    "context": "睡覺之前請關掉房間的",
+    "answer": "電燈",
+    "distractors": [
+      "店燈",
+      "墊燈"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-013",
+    "category": "general",
+    "context": "我們在海邊看見白色的",
+    "answer": "浪花",
+    "distractors": [
+      "浪華",
+      "狼花"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-014",
+    "category": "general",
+    "context": "遠方的山頂覆蓋著白色的",
+    "answer": "積雪",
+    "distractors": [
+      "基雪",
+      "機雪"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-015",
+    "category": "general",
+    "context": "冬天很冷，出門要穿上",
+    "answer": "外套",
+    "distractors": [
+      "外滔",
+      "外濤"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-016",
+    "category": "general",
+    "context": "醫生建議每天保持充足的",
+    "answer": "睡眠",
+    "distractors": [
+      "稅棉",
+      "睡綿"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-017",
+    "category": "general",
+    "context": "老師請學生舉手回答",
+    "answer": "問題",
+    "distractors": [
+      "文題",
+      "吻題"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-018",
+    "category": "general",
+    "context": "他打開窗戶，讓空氣保持",
+    "answer": "流通",
+    "distractors": [
+      "留通",
+      "劉通"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-019",
+    "category": "general",
+    "context": "收到朋友的幫助要表達",
+    "answer": "感謝",
+    "distractors": [
+      "敢謝",
+      "趕謝"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "general-020",
+    "category": "general",
+    "context": "他把生日寫在桌上的",
+    "answer": "日曆",
+    "distractors": [
+      "日歷",
+      "日厲"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-001",
+    "category": "homophone",
+    "context": "報告內容有錯誤，請先",
+    "answer": "修正",
+    "distractors": [
+      "修證",
+      "休政"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-002",
+    "category": "homophone",
+    "context": "文章印刷前需要進行文字",
+    "answer": "校對",
+    "distractors": [
+      "校隊",
+      "效對"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-003",
+    "category": "homophone",
+    "context": "請問這班列車的出發",
+    "answer": "時刻",
+    "distractors": [
+      "石刻",
+      "食客"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-004",
+    "category": "homophone",
+    "context": "表格第一欄請填寫真實",
+    "answer": "姓名",
+    "distractors": [
+      "姓明",
+      "性名"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-005",
+    "category": "homophone",
+    "context": "這位作家剛出版一本長篇",
+    "answer": "小說",
+    "distractors": [
+      "曉說",
+      "筱說"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-006",
+    "category": "homophone",
+    "context": "團隊的工作分配已達成",
+    "answer": "共識",
+    "distractors": [
+      "共事",
+      "共市"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-007",
+    "category": "homophone",
+    "context": "這是水庫的即時蓄水",
+    "answer": "容量",
+    "distractors": [
+      "容亮",
+      "溶量"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-008",
+    "category": "homophone",
+    "context": "裝修完成後要確認房屋的",
+    "answer": "品質",
+    "distractors": [
+      "品值",
+      "品直"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-009",
+    "category": "homophone",
+    "context": "新產品上市前需要通過安全",
+    "answer": "檢驗",
+    "distractors": [
+      "簡驗",
+      "檢厭"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-010",
+    "category": "homophone",
+    "context": "這次活動的詳細安排寫在",
+    "answer": "計畫",
+    "distractors": [
+      "記話",
+      "計劃"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-011",
+    "category": "homophone",
+    "context": "法律條文的解釋需要清楚",
+    "answer": "說明",
+    "distractors": [
+      "說名",
+      "說銘"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-012",
+    "category": "homophone",
+    "context": "考試前應該認真複習課堂",
+    "answer": "筆記",
+    "distractors": [
+      "比記",
+      "筆際"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-013",
+    "category": "homophone",
+    "context": "雨下得太大，戶外活動決定",
+    "answer": "延期",
+    "distractors": [
+      "延旗",
+      "研期"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-014",
+    "category": "homophone",
+    "context": "救難人員在災區進行緊急",
+    "answer": "救援",
+    "distractors": [
+      "舊園",
+      "就源"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-015",
+    "category": "homophone",
+    "context": "所有參加者都必須遵守比賽",
+    "answer": "規則",
+    "distractors": [
+      "歸責",
+      "龜則"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-016",
+    "category": "homophone",
+    "context": "科學家正在分析實驗的",
+    "answer": "結果",
+    "distractors": [
+      "結裹",
+      "節果"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-017",
+    "category": "homophone",
+    "context": "在路口過馬路之前先確認交通",
+    "answer": "號誌",
+    "distractors": [
+      "耗智",
+      "號制"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-018",
+    "category": "homophone",
+    "context": "我們會保護每一位使用者的個人",
+    "answer": "隱私",
+    "distractors": [
+      "隱思",
+      "飲思"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-019",
+    "category": "homophone",
+    "context": "工程師正在改善系統的執行",
+    "answer": "效率",
+    "distractors": [
+      "效慮",
+      "校率"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "homophone-020",
+    "category": "homophone",
+    "context": "寄出信件前請確認收件人的",
+    "answer": "地址",
+    "distractors": [
+      "地紙",
+      "地止"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-001",
+    "category": "mixed",
+    "context": "請使用 Python 讀取 JSON",
+    "answer": "檔案",
+    "distractors": [
+      "擋案",
+      "答案"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-002",
+    "category": "mixed",
+    "context": "這個 GitHub issue 已經完成",
+    "answer": "修正",
+    "distractors": [
+      "休證",
+      "修政"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-003",
+    "category": "mixed",
+    "context": "MacBook 的電池電量不足，需要",
+    "answer": "充電",
+    "distractors": [
+      "衝店",
+      "沖墊"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-004",
+    "category": "mixed",
+    "context": "Flask 的服務準備進行正式",
+    "answer": "部署",
+    "distractors": [
+      "部屬",
+      "步數"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-005",
+    "category": "mixed",
+    "context": "在 Git 建立新的 branch 進行",
+    "answer": "開發",
+    "distractors": [
+      "開罰",
+      "開髮"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-006",
+    "category": "mixed",
+    "context": "請用 VS Code 編輯專案的",
+    "answer": "程式",
+    "distractors": [
+      "城市",
+      "成事"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-007",
+    "category": "mixed",
+    "context": "PySide6 提供建立視窗的",
+    "answer": "元件",
+    "distractors": [
+      "原見",
+      "圓件"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-008",
+    "category": "mixed",
+    "context": "RTX 4090 的驅動程式需要",
+    "answer": "更新",
+    "distractors": [
+      "更心",
+      "耕新"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-009",
+    "category": "mixed",
+    "context": "用 Swift 撰寫的 App 正在進行",
+    "answer": "測試",
+    "distractors": [
+      "側試",
+      "測事"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-010",
+    "category": "mixed",
+    "context": "Xcode 顯示 build 已經",
+    "answer": "成功",
+    "distractors": [
+      "成攻",
+      "乘工"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-011",
+    "category": "mixed",
+    "context": "請用 Terminal 開啟專案",
+    "answer": "目錄",
+    "distractors": [
+      "目錄錄",
+      "木錄"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-012",
+    "category": "mixed",
+    "context": "將 Markdown 文件轉成 PDF",
+    "answer": "格式",
+    "distractors": [
+      "隔世",
+      "格事"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-013",
+    "category": "mixed",
+    "context": "我們透過 USB 傳輸大量",
+    "answer": "資料",
+    "distractors": [
+      "資廖",
+      "姿料"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-014",
+    "category": "mixed",
+    "context": "在 Docker container 裡啟動",
+    "answer": "服務",
+    "distractors": [
+      "服物",
+      "福務"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-015",
+    "category": "mixed",
+    "context": "HTTP request 已經收到伺服器的",
+    "answer": "回應",
+    "distractors": [
+      "回映",
+      "回印"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-016",
+    "category": "mixed",
+    "context": "請確認 CSS 的字型與版面",
+    "answer": "設定",
+    "distractors": [
+      "設訂",
+      "社定"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-017",
+    "category": "mixed",
+    "context": "把 SQL 查詢結果寫入",
+    "answer": "資料庫",
+    "distractors": [
+      "資廖庫",
+      "姿料庫"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-018",
+    "category": "mixed",
+    "context": "在 Safari 開啟公司的",
+    "answer": "網站",
+    "distractors": [
+      "網戰",
+      "往站"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-019",
+    "category": "mixed",
+    "context": "用 Wi-Fi 連接家裡的無線",
+    "answer": "網路",
+    "distractors": [
+      "往路",
+      "網陸"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "mixed-020",
+    "category": "mixed",
+    "context": "README 需要補上安裝",
+    "answer": "說明",
+    "distractors": [
+      "說名",
+      "縮明"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-001",
+    "category": "engineering",
+    "context": "這個 FPGA 設計需要重新",
+    "answer": "編譯",
+    "distractors": [
+      "編意",
+      "邊翼"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-002",
+    "category": "engineering",
+    "context": "Vivado 顯示時序分析尚未",
+    "answer": "收斂",
+    "distractors": [
+      "收練",
+      "收殮"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-003",
+    "category": "engineering",
+    "context": "請檢查電路板的供電",
+    "answer": "電壓",
+    "distractors": [
+      "店鴨",
+      "墊壓"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-004",
+    "category": "engineering",
+    "context": "示波器正在量測輸出訊號的",
+    "answer": "波形",
+    "distractors": [
+      "波型",
+      "撥形"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-005",
+    "category": "engineering",
+    "context": "計算電流時需要知道元件的",
+    "answer": "電阻",
+    "distractors": [
+      "店主",
+      "電組"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-006",
+    "category": "engineering",
+    "context": "這個 module 的輸入與輸出都有明確的",
+    "answer": "介面",
+    "distractors": [
+      "借面",
+      "界麵"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-007",
+    "category": "engineering",
+    "context": "設計中的 clock domain crossing 需要使用",
+    "answer": "同步器",
+    "distractors": [
+      "同步氣",
+      "同部器"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-008",
+    "category": "engineering",
+    "context": "我們用 SystemVerilog 建立完整的",
+    "answer": "測試平台",
+    "distractors": [
+      "側試平台",
+      "測事平台"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-009",
+    "category": "engineering",
+    "context": "在提交程式之前先進行靜態",
+    "answer": "分析",
+    "distractors": [
+      "分吸",
+      "芬析"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-010",
+    "category": "engineering",
+    "context": "這個演算法需要降低運算",
+    "answer": "複雜度",
+    "distractors": [
+      "負雜度",
+      "復雜渡"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-011",
+    "category": "engineering",
+    "context": "快取的目的是降低記憶體存取",
+    "answer": "延遲",
+    "distractors": [
+      "延池",
+      "言遲"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-012",
+    "category": "engineering",
+    "context": "這個執行緒正在等待互斥鎖的",
+    "answer": "釋放",
+    "distractors": [
+      "釋訪",
+      "是放"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-013",
+    "category": "engineering",
+    "context": "將原始碼轉成機器碼的工具是",
+    "answer": "編譯器",
+    "distractors": [
+      "編意器",
+      "邊翼器"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-014",
+    "category": "engineering",
+    "context": "資料傳輸協定需要驗證封包的",
+    "answer": "完整性",
+    "distractors": [
+      "完正性",
+      "丸整性"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-015",
+    "category": "engineering",
+    "context": "測試報告必須包含失敗案例的",
+    "answer": "重現步驟",
+    "distractors": [
+      "重現部驟",
+      "重限步驟"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-016",
+    "category": "engineering",
+    "context": "呼叫非同步函式時不能阻塞使用者",
+    "answer": "介面",
+    "distractors": [
+      "借面",
+      "界麵"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-017",
+    "category": "engineering",
+    "context": "處理舊版本回應時需要確認請求的",
+    "answer": "版本",
+    "distractors": [
+      "板本",
+      "版笨"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-018",
+    "category": "engineering",
+    "context": "系統負載過高時應該限制同時執行的",
+    "answer": "工作數量",
+    "distractors": [
+      "工做數量",
+      "工作樹量"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-019",
+    "category": "engineering",
+    "context": "備份完成以後要檢查檔案的",
+    "answer": "雜湊值",
+    "distractors": [
+      "雜湊直",
+      "雜奏值"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "engineering-020",
+    "category": "engineering",
+    "context": "為了避免資料競爭，這個物件的狀態必須",
+    "answer": "不可變",
+    "distractors": [
+      "不可辨",
+      "不可辯"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-001",
+    "category": "preserve",
+    "context": "來源識別字是 qz_module7，請原樣保留",
+    "answer": "qz_module7",
+    "distractors": [
+      "qzModule7",
+      "module7"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-002",
+    "category": "preserve",
+    "context": "套件名稱是 PySide6，請原樣保留",
+    "answer": "PySide6",
+    "distractors": [
+      "PySide",
+      "Python"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-003",
+    "category": "preserve",
+    "context": "來源路徑是 foo.bar，請原樣保留",
+    "answer": "foo.bar",
+    "distractors": [
+      "foobar",
+      "foo_bar"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-004",
+    "category": "preserve",
+    "context": "設備型號是 RTX 4090，請原樣保留",
+    "answer": "RTX 4090",
+    "distractors": [
+      "RTX 4080",
+      "RTX"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-005",
+    "category": "preserve",
+    "context": "變數名稱是 module_name，請原樣保留",
+    "answer": "module_name",
+    "distractors": [
+      "moduleName",
+      "modulename"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-006",
+    "category": "preserve",
+    "context": "來源拼字是 SystemVerilog，請原樣保留",
+    "answer": "SystemVerilog",
+    "distractors": [
+      "Systemverilog",
+      "Verilog"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-007",
+    "category": "preserve",
+    "context": "工具名稱是 Vivado，請原樣保留",
+    "answer": "Vivado",
+    "distractors": [
+      "Vivaldi",
+      "vivado"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-008",
+    "category": "preserve",
+    "context": "來源路徑是 path/to/file，請原樣保留",
+    "answer": "path/to/file",
+    "distractors": [
+      "path_to_file",
+      "path/to/files"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-009",
+    "category": "preserve",
+    "context": "套件版本是 Python3，請原樣保留",
+    "answer": "Python3",
+    "distractors": [
+      "Python",
+      "python3"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-010",
+    "category": "preserve",
+    "context": "識別字是 HTTPServer2，請原樣保留",
+    "answer": "HTTPServer2",
+    "distractors": [
+      "HttpServer2",
+      "HTTPServer"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-011",
+    "category": "preserve",
+    "context": "公司代碼是 ZQX17，請原樣保留",
+    "answer": "ZQX17",
+    "distractors": [
+      "ZQX71",
+      "Zqx17"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-012",
+    "category": "preserve",
+    "context": "來源檔名是 README.md，請原樣保留",
+    "answer": "README.md",
+    "distractors": [
+      "readme.md",
+      "README"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-013",
+    "category": "preserve",
+    "context": "命令選項是 --dry-run，請原樣保留",
+    "answer": "--dry-run",
+    "distractors": [
+      "--dryrun",
+      "-dry-run"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-014",
+    "category": "preserve",
+    "context": "版本標籤是 v0.1.0-alpha，請原樣保留",
+    "answer": "v0.1.0-alpha",
+    "distractors": [
+      "v0.1.0",
+      "v1.0.0-alpha"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-015",
+    "category": "preserve",
+    "context": "變數名稱是 foo_0x2A，請原樣保留",
+    "answer": "foo_0x2A",
+    "distractors": [
+      "foo_0x2a",
+      "foo0x2A"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-016",
+    "category": "preserve",
+    "context": "原始縮寫是 VHDL，請原樣保留",
+    "answer": "VHDL",
+    "distractors": [
+      "Vhdl",
+      "HDL"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-017",
+    "category": "preserve",
+    "context": "來源檔名是 test_case.mm，請原樣保留",
+    "answer": "test_case.mm",
+    "distractors": [
+      "testCase.mm",
+      "test_case.m"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-018",
+    "category": "preserve",
+    "context": "專案名稱是 McBopomofo，請原樣保留",
+    "answer": "McBopomofo",
+    "distractors": [
+      "Mcbopomofo",
+      "Bopomofo"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-019",
+    "category": "preserve",
+    "context": "API 名稱是 InputMethodKit，請原樣保留",
+    "answer": "InputMethodKit",
+    "distractors": [
+      "InputmethodKit",
+      "InputMethod"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  },
+  {
+    "id": "preserve-020",
+    "category": "preserve",
+    "context": "來源字串是 x7_rQ9，請原樣保留",
+    "answer": "x7_rQ9",
+    "distractors": [
+      "x7_rq9",
+      "x7rQ9"
+    ],
+    "provenance": "project-authored synthetic seed; not user input; human review pending"
+  }
+]
