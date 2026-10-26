@@ -90,6 +90,6 @@ scripts/verify-package.sh dist/0.6.6-dev.1
 
 > MIT License — Copyright (c) 2011-2026 Mengjuei Hsieh et al.
 
-完整授權原文見 [LICENSE.txt](LICENSE.txt)，上游 README 見 [README.markdown](README.markdown)。散布時須保留授權及著作權聲明；本軟體依 MIT 條款按現狀提供，不附保證。本分支新增程式碼亦以 MIT 授權提供，檔案中的個別著作權聲明保持有效。
+完整授權原文見 [LICENSE.txt](LICENSE.txt)，上游 README 見 [上游 README](docs/README-upstream.markdown)。散布時須保留授權及著作權聲明；本軟體依 MIT 條款按現狀提供，不附保證。本分支新增程式碼亦以 MIT 授權提供，檔案中的個別著作權聲明保持有效。
 
 第三方元件仍依各自授權：請參閱 [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) 與 [licenses/](licenses/)。安裝包附帶對應授權文件；其中注音字型相關資料另採 Apache License 2.0，並非將所有第三方素材重新授權為 MIT。
