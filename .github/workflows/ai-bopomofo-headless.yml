@@ -20,5 +20,5 @@ jobs:
         run: scripts/build.sh Release
       - name: Package and validate
         run: |
-          scripts/package.sh 0.3.0-alpha Release
-          scripts/verify-package.sh dist/0.3.0-alpha
+          scripts/package.sh 0.3.1-alpha Release
+          scripts/verify-package.sh dist/0.3.1-alpha

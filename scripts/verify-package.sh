@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-out="${1:-dist/0.3.0-alpha}"
+out="${1:-dist/0.3.1-alpha}"
 [[ -d "$out" ]] || exit 1
 (cd "$out" && shasum -a 256 -c checksums.txt)
 temp="$(mktemp -d "$PWD/build/verify-package.XXXXXX")"

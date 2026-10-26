@@ -1,5 +1,9 @@
 # 變更紀錄
 
+## 0.3.1-alpha 本地候選修正版（未建立正式tag）
+
+修正上游重複flagsChanged判斷，使keyUp不進入組字；保留keyDown自動重複與修飾鍵切換配置。新增純事件序列測試，共8項通過，Release重建成功。
+
 ## 0.3.0-alpha 本地候選版（未建立正式tag）
 
 技術詞候選、Tab／方向鍵明確選擇、Esc原文還原、Shift字母意圖開關、既有詞庫匯入／匯出；純邏輯測試與Release universal build。Apple FM 500筆合成評估完成但未啟用AI。

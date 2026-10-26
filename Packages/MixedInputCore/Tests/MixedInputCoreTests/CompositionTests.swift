@@ -80,4 +80,25 @@ struct CompositionTests {
         if case .passThrough(let value) = selected.applying(.shortcut) { #expect(value == selected.display) }
         else { Issue.record("Shortcut must pass through") }
     }
+
+    @Test func downUpSequenceInsertsExactlyOnce() {
+        var state = ASCIIComposition()
+        for letter in "Python3_[]" {
+            for kind in [InputEventKind.keyDown, .keyUp, .modifiers, .other] {
+                if case .text = InputEventRouting.route(kind, hasComposition: true) {
+                    state = apply(state, .insert(String(letter)))
+                }
+            }
+        }
+        #expect(state.raw == "Python3_[]")
+        // Real auto-repeat arrives as repeated key-downs and must not be filtered out.
+        for _ in 0..<3 {
+            if case .text = InputEventRouting.route(.keyDown, hasComposition: true) {
+                state = apply(state, .insert("x"))
+            }
+        }
+        #expect(state.raw == "Python3_[]xxx")
+        #expect(InputEventRouting.route(.keyUp, hasComposition: false) == .passThrough)
+        #expect(InputEventRouting.route(.modifiers, hasComposition: true) == .modifiers)
+    }
 }

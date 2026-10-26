@@ -8,7 +8,7 @@
 
 效能：`swift run --package-path Packages/MixedInputCore -c release MixedInputBenchmark`。模型研究為獨立明確操作，見docs/ai-reranker.md，不能放入一般鍵盤事件。
 
-打包前先完成一般build，避免攜帶hosted test產物；執行`scripts/package.sh 0.3.0-alpha Release`及`scripts/verify-package.sh dist/0.3.0-alpha`。既有版本資料夾存在時拒絕覆寫，改用新的本地候選版本並同步Info.plist。使用者安裝需另外執行安裝腳本或開啟pkg。
+打包前先完成一般build，避免攜帶hosted test產物；執行`scripts/package.sh 0.3.1-alpha Release`及`scripts/verify-package.sh dist/0.3.1-alpha`。既有版本資料夾存在時拒絕覆寫，改用新的本地候選版本並同步Info.plist。使用者安裝需另外執行安裝腳本或開啟pkg。
 
 目前以feature/technical-terms作整合分支，main/develop保留上游基準。所有變更先測試、Conventional Commit、本地保存。upstream push URL已停用；不要自行建立或推送遠端。
 

@@ -23,6 +23,7 @@
 
 import CandidateUI
 import Carbon
+import MixedInputCore
 import Cocoa
 import InputMethodKit
 import InputSourceHelper
@@ -266,7 +267,20 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
-        if event.type == .flagsChanged {
+        let kind: InputEventKind
+        switch event.type {
+        case .keyDown: kind = .keyDown
+        case .keyUp: kind = .keyUp
+        case .flagsChanged: kind = .modifiers
+        default: kind = .other
+        }
+        let hasComposition = !(state is InputState.Empty || state is InputState.EmptyIgnoringPreviousState
+            || state is InputState.Committing || state is InputState.Deactivated)
+        switch InputEventRouting.route(kind, hasComposition: hasComposition) {
+        case .consume: return true
+        case .passThrough: return false
+        case .text: break
+        case .modifiers:
             if Preferences.switchInputSourceUponCommandKeyPressEnabled,
                (event.keyCode == UInt16(kVK_Command) || event.keyCode == UInt16(kVK_RightCommand)),
                event.modifierFlags.contains(.command) {
@@ -274,37 +288,15 @@ class McBopomofoInputMethodController: IMKInputController {
                 handle(state: InputState.SwitchingInputSource(sourceID: Preferences.switchInputSourceUponCommandKeyPressInputSourceID), client: client)
                 return false
             }
-
-            if state is InputState.Empty {
-                return false
-            }
-            // Handle key up events during active input state.
-            //
-            // This prevents double-space from affecting the current input.
-            // While macOS may normally insert a period on double space, this
-            // should be suppressed when there is an active composing buffer or
-            // candidate window.
-            return true
-        }
-
-        if event.type == .flagsChanged {
-            let functionKeyKeyboardLayoutID = Preferences.functionKeyboardLayout
-            let basisKeyboardLayoutID = Preferences.basisKeyboardLayout
-
-            if functionKeyKeyboardLayoutID == basisKeyboardLayoutID {
-                return false
-            }
-
-            let includeShift = Preferences.functionKeyKeyboardLayoutOverrideIncludeShiftKey
-            let notShift = NSEvent.ModifierFlags(rawValue: ~(NSEvent.ModifierFlags.shift.rawValue))
-            if event.modifierFlags.contains(notShift)
-                || (event.modifierFlags.contains(.shift) && includeShift)
-            {
-                (client as? IMKTextInput)?.overrideKeyboard(
-                    withKeyboardNamed: functionKeyKeyboardLayoutID)
-                return false
-            }
-            (client as? IMKTextInput)?.overrideKeyboard(withKeyboardNamed: basisKeyboardLayoutID)
+            let functionLayout = Preferences.functionKeyboardLayout
+            let basisLayout = Preferences.basisKeyboardLayout
+            guard functionLayout != basisLayout else { return false }
+            let functionModifiers: NSEvent.ModifierFlags = [.command, .control, .option, .function]
+            let useFunctionLayout = !event.modifierFlags.intersection(functionModifiers).isEmpty
+                || (event.modifierFlags.contains(.shift)
+                    && Preferences.functionKeyKeyboardLayoutOverrideIncludeShiftKey)
+            (client as? IMKTextInput)?.overrideKeyboard(
+                withKeyboardNamed: useFunctionLayout ? functionLayout : basisLayout)
             return false
         }
 
