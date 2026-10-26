@@ -15,3 +15,10 @@ MixedInputCore 20 項測試通過，其中新增全程 false 不取消長按、�
 更新時間：2026-10-26T21:52:48+08:00
 
 Debug build-for-testing 與 Release 建置成功。工作分支為 fix/f-hold-unreliable-key-state。新版本尚未自動安裝；保留目前系統版本。
+
+來源 Commit：a917941。候選產物位於 dist/0.5.2-alpha/；arm64／x86_64、識別碼、資源及簽章驗證通過。pkg 解包 77 檔與 app 一致，pkg／zip 校驗成功。app 為 ad-hoc 簽章，pkg 未簽署／公證。
+
+```
+865bda707608dca2d241bb31c1b78ef4ee2d4a24ef80cc3fae1c05f47d41eab1  ./AI-Bopomofo-0.5.2-alpha.pkg
+fb5e8a993633dfbee5f5206c7d3e74bfce4091989e9a9a9eedd9c294b54bdc92  ./AI-Bopomofo-0.5.2-alpha.zip
+```
