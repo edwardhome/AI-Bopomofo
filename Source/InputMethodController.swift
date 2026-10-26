@@ -23,6 +23,7 @@
 
 import CandidateUI
 import Carbon
+import CoreGraphics
 import MixedInputCore
 import Cocoa
 import InputMethodKit
@@ -329,9 +330,18 @@ class McBopomofoInputMethodController: IMKInputController {
             switch effect {
             case .schedule:
                 fHoldTimer?.invalidate()
-                let timer = Timer(timeInterval: FHoldGesture.delay, repeats: false) { [weak self] _ in
-                    guard let self else { return }
-                    self.applyFHold(.timeout, client: self.currentClient)
+                let started = ProcessInfo.processInfo.systemUptime
+                // IMK clients may omit key-up. Read only F while this local gesture is active;
+                // no event tap, global monitor, synthetic key event or input history.
+                let timer = Timer(timeInterval: 0.01, repeats: true) { [weak self] timer in
+                    guard let self else { timer.invalidate(); return }
+                    guard !IsSecureEventInputEnabled(), self.currentClient != nil else {
+                        self.cancelFHold(client: self.currentClient)
+                        return
+                    }
+                    self.applyFHold(.poll(elapsed: ProcessInfo.processInfo.systemUptime - started,
+                        isPressed: CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(kVK_ANSI_F))),
+                        client: self.currentClient)
                 }
                 fHoldTimer = timer
                 RunLoop.main.add(timer, forMode: .common)
@@ -577,6 +587,10 @@ extension McBopomofoInputMethodController {
         textAssistant.cancel()
         let previous = state
         state = newState
+        if let symbols = previous as? InputState.QuickSymbols, symbols.held,
+           newState is InputState.Empty || newState is InputState.EmptyIgnoringPreviousState {
+            cancelFHold(client: client)
+        }
 
         switch newState {
         case let assistance as InputState.Assistance:

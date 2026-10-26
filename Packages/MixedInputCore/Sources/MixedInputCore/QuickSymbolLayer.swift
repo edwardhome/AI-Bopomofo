@@ -63,9 +63,12 @@ public enum QuickSymbolLayer {
 
 /// A local input-method gesture. The adapter owns the timer and original key event.
 public struct FHoldGesture {
-    public static let delay: Double = 0.2
+    public static let delay: Double = 0.1
     public enum Phase: Equatable { case idle, pending, held }
-    public enum Event { case press(eligible: Bool, repeating: Bool), release, otherKey, timeout, cancel }
+    public enum Event {
+        case press(eligible: Bool, repeating: Bool), release, otherKey, timeout, cancel
+        case poll(elapsed: Double, isPressed: Bool)
+    }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
     public private(set) var phase: Phase = .idle
     public init() {}
@@ -82,13 +85,18 @@ public struct FHoldGesture {
             phase = .idle
             switch previous {
             case .pending: return [.invalidate, .replayTap, .consume]
-            case .held: return [.endLayer, .consume]
+            case .held: return [.invalidate, .endLayer, .consume]
             case .idle: return []
             }
         case .otherKey:
             guard phase == .pending else { return [] }
             phase = .idle
             return [.invalidate, .replayTap]
+        case .poll(let elapsed, let isPressed):
+            guard phase != .idle else { return [] }
+            if !isPressed { return handle(.release) }
+            if phase == .pending && elapsed >= Self.delay { return handle(.timeout) }
+            return []
         case .timeout:
             guard phase == .pending else { return [] }
             phase = .held
