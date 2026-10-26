@@ -71,59 +71,44 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.cancel) == [.invalidate, .endLayer])
         #expect(gesture.phase == .idle)
     }
-    @Test func thresholdAndMissingReleaseRecovery() {
+    @Test func thresholdAndMonitorRelease() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
-        #expect(gesture.handle(.poll(elapsed: 0.099, isPressed: true)).isEmpty)
-        #expect(gesture.phase == .pending)
-        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: true)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: true)) == [.beginLayer])
-        #expect(gesture.handle(.poll(elapsed: 0.150, isPressed: true)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.160, isPressed: false)) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.elapsed(0.099)).isEmpty)
+        #expect(gesture.handle(.elapsed(0.100)).isEmpty)
+        #expect(gesture.handle(.elapsed(0.101)) == [.beginLayer])
+        #expect(gesture.handle(.elapsed(0.150)).isEmpty)
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.release).isEmpty)
+        #expect(gesture.handle(.elapsed(0.200)).isEmpty)
+    }
+
+    @Test func monitorReleaseBeforeDeadlineReplaysOnlyOnce() {
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.elapsed(0.050)).isEmpty)
+        #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
+        #expect(gesture.handle(.elapsed(0.110)).isEmpty)
+        #expect(gesture.handle(.release).isEmpty)
+    }
+
+    @Test func monitorFailureReleasesPendingAndHeldGestures() {
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        _ = gesture.handle(.elapsed(0.101))
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
         #expect(gesture.phase == .idle)
-        #expect(gesture.handle(.release).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
     }
 
-    @Test func missingShortTapReleaseReplaysOnceAndCannotOpenLayerLater() {
+    @Test func cancelAndLateTimerCannotReenter() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
-        _ = gesture.handle(.poll(elapsed: 0.010, isPressed: true))
-        #expect(gesture.handle(.poll(elapsed: 0.050, isPressed: false)) == [.invalidate, .replayTap, .consume])
-        #expect(gesture.handle(.poll(elapsed: 0.110, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.release).isEmpty)
-    }
-
-    @Test func cancelledGestureIgnoresPollingUntilNextPress() {
-        var gesture = FHoldGesture()
-        _ = gesture.handle(.press(eligible: true, repeating: false))
-        _ = gesture.handle(.poll(elapsed: 0.101, isPressed: true))
+        _ = gesture.handle(.elapsed(0.101))
         _ = gesture.handle(.cancel)
-        #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: true)).isEmpty)
+        #expect(gesture.handle(.elapsed(0.200)).isEmpty)
         #expect(gesture.handle(.release).isEmpty)
         #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
     }
-
-    @Test func unavailableSamplerReplaysFInsteadOfLatchingLayer() {
-        var gesture = FHoldGesture()
-        _ = gesture.handle(.press(eligible: true, repeating: false))
-        #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: false)) == [.invalidate, .replayTap, .consume])
-        #expect(gesture.phase == .idle)
-        #expect(gesture.handle(.release).isEmpty)
-    }
-
-    @Test func samplerTrustDoesNotLeakAcrossGestures() {
-        var gesture = FHoldGesture()
-        _ = gesture.handle(.press(eligible: true, repeating: false))
-        _ = gesture.handle(.poll(elapsed: 0.010, isPressed: true))
-        _ = gesture.handle(.release)
-        _ = gesture.handle(.press(eligible: true, repeating: false))
-        #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: false)) == [.invalidate, .replayTap, .consume])
-        #expect(gesture.handle(.release).isEmpty)
-    }
-
 }

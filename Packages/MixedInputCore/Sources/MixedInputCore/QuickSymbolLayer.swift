@@ -67,11 +67,10 @@ public struct FHoldGesture {
     public enum Phase: Equatable { case idle, pending, held }
     public enum Event {
         case press(eligible: Bool, repeating: Bool), release, otherKey, timeout, cancel
-        case poll(elapsed: Double, isPressed: Bool)
+        case elapsed(Double)
     }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
     public private(set) var phase: Phase = .idle
-    private var observedPressed = false
     public init() {}
 
     public mutating func handle(_ event: Event) -> [Effect] {
@@ -79,7 +78,6 @@ public struct FHoldGesture {
         case .press(let eligible, let repeating):
             if phase != .idle { return [.consume] }
             guard eligible && !repeating else { return [] }
-            observedPressed = false
             phase = .pending
             return [.schedule, .consume]
         case .release:
@@ -94,16 +92,9 @@ public struct FHoldGesture {
             guard phase == .pending else { return [] }
             phase = .idle
             return [.invalidate, .replayTap]
-        case .poll(let elapsed, let isPressed):
-            guard phase != .idle else { return [] }
-            // Only enter a momentary layer with a confirmed physical key state.
-            // Missing key-up plus an unavailable sampler must never latch the layer.
-            if isPressed { observedPressed = true }
-            else if observedPressed { return handle(.release) }
-            if phase == .pending && elapsed > Self.delay {
-                return observedPressed ? handle(.timeout) : handle(.release)
-            }
-            return []
+        case .elapsed(let seconds):
+            guard phase == .pending, seconds > Self.delay else { return [] }
+            return handle(.timeout)
         case .timeout:
             guard phase == .pending else { return [] }
             phase = .held

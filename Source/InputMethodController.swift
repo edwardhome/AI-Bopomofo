@@ -60,6 +60,8 @@ class McBopomofoInputMethodController: IMKInputController {
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
     private var fHoldGesture = FHoldGesture()
+    private let fReleaseMonitor = FReleaseMonitor()
+    private static var didRequestFMonitoring = false
     private var fHoldTimer: Timer?
     private var pendingFEvent: NSEvent?
     private var symbolKeysDown: Set<UInt16> = []
@@ -97,6 +99,10 @@ class McBopomofoInputMethodController: IMKInputController {
         let holdItem = menu.addItem(withTitle: NSLocalizedString("Hold F for Numbers / Symbols", comment: ""),
                                     action: #selector(toggleFHoldSymbols(_:)), keyEquivalent: "")
         holdItem.state = Preferences.fHoldSymbolsEnabled.state
+        let permissionTitle = CGPreflightListenEventAccess()
+            ? "F Layer Input Monitoring: Allowed" : "Allow Input Monitoring for F Layer"
+        menu.addItem(withTitle: NSLocalizedString(permissionTitle, comment: ""),
+                     action: #selector(requestFMonitoring(_:)), keyEquivalent: "")
 
         let advanced = NSMenu(title: NSLocalizedString("Advanced Tools", comment: ""))
         let advancedItem = menu.addItem(withTitle: advanced.title, action: nil, keyEquivalent: "")
@@ -219,6 +225,11 @@ class McBopomofoInputMethodController: IMKInputController {
             withKeyboardNamed: Preferences.basisKeyboardLayout)
         // reset the state
         currentClient = client
+        if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess(),
+           !Self.didRequestFMonitoring {
+            Self.didRequestFMonitoring = true
+            _ = CGRequestListenEventAccess()
+        }
 
         keyHandler.clear()
         keyHandler.syncWithPreferences()
@@ -312,10 +323,21 @@ class McBopomofoInputMethodController: IMKInputController {
         }
     }
 
+    @objc private func requestFMonitoring(_ sender: Any?) {
+        Self.didRequestFMonitoring = true
+        if !CGPreflightListenEventAccess() { _ = CGRequestListenEventAccess() }
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
     @objc private func toggleFHoldSymbols(_ sender: Any?) {
         if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: currentClient) }
         cancelFHold(client: currentClient)
         Preferences.fHoldSymbolsEnabled.toggle()
+        if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess() {
+            requestFMonitoring(sender)
+        }
     }
 
     private func cancelFHold(client: Any?) {
@@ -331,21 +353,31 @@ class McBopomofoInputMethodController: IMKInputController {
             case .schedule:
                 fHoldTimer?.invalidate()
                 let started = ProcessInfo.processInfo.systemUptime
-                // IMK clients may omit key-up. Read only F while this local gesture is active;
-                // no event tap, global monitor, synthetic key event or input history.
+                guard fReleaseMonitor.start(onRelease: { [weak self] in
+                    guard let self else { return }
+                    self.applyFHold(.release, client: self.currentClient)
+                }) else {
+                    // Permission denial or tap failure must never swallow the original F.
+                    _ = applyFHold(.release, client: client)
+                    continue
+                }
                 let timer = Timer(timeInterval: 0.01, repeats: true) { [weak self] timer in
                     guard let self else { timer.invalidate(); return }
                     guard !IsSecureEventInputEnabled(), self.currentClient != nil else {
                         self.cancelFHold(client: self.currentClient)
                         return
                     }
-                    self.applyFHold(.poll(elapsed: ProcessInfo.processInfo.systemUptime - started,
-                        isPressed: CGEventSource.keyState(.hidSystemState, key: CGKeyCode(kVK_ANSI_F))),
-                        client: self.currentClient)
+                    guard self.fReleaseMonitor.isEnabled, CGPreflightListenEventAccess() else {
+                        self.applyFHold(.release, client: self.currentClient)
+                        return
+                    }
+                    self.applyFHold(.elapsed(ProcessInfo.processInfo.systemUptime - started),
+                                    client: self.currentClient)
                 }
                 fHoldTimer = timer
                 RunLoop.main.add(timer, forMode: .common)
             case .invalidate:
+                fReleaseMonitor.stop()
                 fHoldTimer?.invalidate()
                 fHoldTimer = nil
             case .replayTap:
@@ -398,6 +430,7 @@ class McBopomofoInputMethodController: IMKInputController {
         } else if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyDown {
             let forbidden: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
             let eligible = Preferences.fHoldSymbolsEnabled
+                && CGPreflightListenEventAccess() && !IsSecureEventInputEnabled()
                 && event.modifierFlags.intersection(forbidden).isEmpty
                 && keyHandler.canBeginQuickSymbols(with: state)
             if fHoldGesture.phase == .idle && eligible && !event.isARepeat {
@@ -1199,4 +1232,51 @@ extension McBopomofoInputMethodController {
             }
         }
     }
+}
+
+// Only alive during an IMK-originated F gesture. The system delivers key-up codes;
+// the callback immediately discards every code except F and never reads text.
+// Passive listening neither modifies nor suppresses events from other apps.
+private final class FReleaseMonitor {
+    private var tap: CFMachPort?
+    private var source: CFRunLoopSource?
+    private var onRelease: (() -> Void)?
+    var isEnabled: Bool { tap.map { CGEvent.tapIsEnabled(tap: $0) } ?? false }
+
+    func start(onRelease: @escaping () -> Void) -> Bool {
+        stop()
+        guard CGPreflightListenEventAccess(), !IsSecureEventInputEnabled() else { return false }
+        self.onRelease = onRelease
+        let mask = CGEventMask(1) << CGEventType.keyUp.rawValue
+        guard let tap = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap,
+            options: .listenOnly, eventsOfInterest: mask, callback: { _, type, event, info in
+                guard let info else { return Unmanaged.passUnretained(event) }
+                let monitor = Unmanaged<FReleaseMonitor>.fromOpaque(info).takeUnretainedValue()
+                if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+                    monitor.onRelease?()
+                } else if type == .keyUp,
+                          event.getIntegerValueField(.keyboardEventKeycode) == Int64(kVK_ANSI_F) {
+                    monitor.onRelease?()
+                }
+                return Unmanaged.passUnretained(event)
+            }, userInfo: Unmanaged.passUnretained(self).toOpaque()) else {
+            self.onRelease = nil
+            return false
+        }
+        guard let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0) else {
+            CFMachPortInvalidate(tap); self.onRelease = nil; return false
+        }
+        self.tap = tap; self.source = source
+        CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
+        CGEvent.tapEnable(tap: tap, enable: true)
+        return isEnabled
+    }
+
+    func stop() {
+        onRelease = nil
+        if let source { CFRunLoopRemoveSource(CFRunLoopGetMain(), source, .commonModes) }
+        if let tap { CFMachPortInvalidate(tap) }
+        source = nil; tap = nil
+    }
+    deinit { stop() }
 }

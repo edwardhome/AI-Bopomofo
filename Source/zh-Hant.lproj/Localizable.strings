@@ -291,3 +291,7 @@
 "Apple AI is busy; showing original or system spelling" = "Apple AI 忙碌中，保留原文或系統拼字建議";
 "Prediction: Tab accepts; Esc dismisses; Enter sends only your text" = "預測：Tab 接受、Esc 隱藏；Enter 只送出已輸入文字";
 "Tab accepts prediction; Esc dismisses" = "Tab 接受預測；Esc 隱藏";
+
+"F Layer Input Monitoring: Allowed" = "F 分層輸入監控：已允許";
+
+"Allow Input Monitoring for F Layer" = "允許 F 分層使用輸入監控";
