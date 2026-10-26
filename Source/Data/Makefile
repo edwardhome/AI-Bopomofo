@@ -46,13 +46,10 @@ PhraseFreq.txt: curation/builders/frequency_builder.py phrase.occ exclusion.txt
 clean:
 	rm -f data.txt data-raw.txt data-plain-bpmf.txt phrase.list
 
-# FOR INTERNAL USE
-_install: tidy sort check all
-	@cp -a data.txt data-plain-bpmf.txt $(HOME)/Library/Input\ Methods/McBopomofo.app/Contents/Resources/
-	@pkill -HUP -f McBopomofo || echo McBopomofo is not running
-_deploy: _install
-	@rsync -avx data.txt data-plain-bpmf.txt $(RHOST):"Library/Input\ Methods/McBopomofo.app/Contents/Resources/"
-	@test "$(RHOST)" && ssh $(RHOST) "pkill -HUP -f McBopomofo || echo McBopomofo is not running" || true
+# Fork safety: never install into or signal the upstream input method.
+_install _deploy:
+	@echo "Use scripts/install-debug.sh for AI-Bopomofo; remote deployment is disabled."
+	@exit 1
 
 sort: SHELL:=/bin/bash
 sort: export LC_ALL=C

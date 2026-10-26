@@ -17,3 +17,12 @@ xcuserdata
 __pycache__
 codecov_comment.md
 DerivedData
+# Local builds, private input data and unpublished packages
+/dist/
+/artifacts/
+/private/
+*.kbd
+user-phrases*.txt
+
+# Xcode SDK stat cache
+/*-*/Xcode/

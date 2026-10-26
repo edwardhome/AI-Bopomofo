@@ -45,8 +45,8 @@
 @import RomanNumbers;
 @import BopomofoBraille;
 
-InputMode InputModeBopomofo = @"org.openvanilla.inputmethod.McBopomofo.Bopomofo";
-InputMode InputModePlainBopomofo = @"org.openvanilla.inputmethod.McBopomofo.PlainBopomofo";
+InputMode InputModeBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Bopomofo";
+InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo";
 
 @implementation KeyHandler {
     std::shared_ptr<Formosa::Gramambular2::LanguageModel> _emptySharedPtr;

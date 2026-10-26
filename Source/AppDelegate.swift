@@ -69,6 +69,7 @@ struct VersionUpdateApi {
             let updateInfoURLString = infoDict[kUpdateInfoEndpointKey] as? String,
             let updateInfoURL = URL(string: (updateInfoURLString + (forced ? "?manual=yes" : "")))
         else {
+            callback(.success(.ignored))
             return nil
         }
 

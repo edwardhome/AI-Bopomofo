@@ -1,3 +1,14 @@
+# AI-Bopomofo fork rules
+
+- Work only on isolated `feature/*`, `research/*`, `fix/*` or `release/*` branches.
+- Do not push, publish, sign with private credentials, change Kanata, or install automatically.
+- Keep upstream copyright, source history, and traditional input behavior.
+- Product identity: `org.aibopomofo.inputmethod.AIBopomofo`; internal module/target remains `McBopomofo`.
+- Local builds: `scripts/build.sh`; packaging: `scripts/package.sh`; private artifacts stay ignored.
+- Report actual test counts in Traditional Chinese; GUI verification is separate from automated checks.
+- Development baseline is Xcode 26+ and macOS 26+; runtime target is macOS 13.
+- The upstream guidance below is preserved; its older environment and C++17 descriptions are historical. Current project uses C++20.
+
 # AGENTS.md
 
 This file provides guidance to AI coding assistants when working with code in this repository.

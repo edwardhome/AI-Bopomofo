@@ -15,16 +15,16 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.1</string>
+	<string>0.1.0</string>
 	<key>CFBundleSignature</key>
 	<string>BPMF</string>
 	<key>CFBundleVersion</key>
-	<string>2510</string>
+	<string>100</string>
 	<key>ComponentInputModeDict</key>
 	<dict>
 		<key>tsInputModeListKey</key>
 		<dict>
-			<key>org.openvanilla.inputmethod.McBopomofo.Bopomofo</key>
+			<key>org.aibopomofo.inputmethod.AIBopomofo.Bopomofo</key>
 			<dict>
 				<key>TISDoubleSpaceSubstitution</key>
 				<string>。</string>
@@ -52,7 +52,7 @@
 				<key>tsInputModeScriptKey</key>
 				<string>smTradChinese</string>
 			</dict>
-			<key>org.openvanilla.inputmethod.McBopomofo.PlainBopomofo</key>
+			<key>org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo</key>
 			<dict>
 				<key>TISDoubleSpaceSubstitution</key>
 				<string>。</string>
@@ -83,12 +83,12 @@
 		</dict>
 		<key>tsVisibleInputModeOrderedArrayKey</key>
 		<array>
-			<string>org.openvanilla.inputmethod.McBopomofo.Bopomofo</string>
-			<string>org.openvanilla.inputmethod.McBopomofo.PlainBopomofo</string>
+			<string>org.aibopomofo.inputmethod.AIBopomofo.Bopomofo</string>
+			<string>org.aibopomofo.inputmethod.AIBopomofo.PlainBopomofo</string>
 		</array>
 	</dict>
 	<key>InputMethodConnectionName</key>
-	<string>McBopomofo_1_Connection</string>
+	<string>AIBopomofo_1_Connection</string>
 	<key>InputMethodServerControllerClass</key>
 	<string>McBopomofoInputMethodController</string>
 	<key>InputMethodServerDelegateClass</key>
@@ -320,15 +320,11 @@
 	<key>TICapsLockLanguageSwitchCapable</key>
 	<true/>
 	<key>TISInputSourceID</key>
-	<string>org.openvanilla.inputmethod.McBopomofo</string>
+	<string>org.aibopomofo.inputmethod.AIBopomofo</string>
 	<key>TISIntendedLanguage</key>
 	<string>zh-Hant</string>
 	<key>TISParticipatesInTouchBar</key>
 	<false/>
-	<key>UpdateInfoEndpoint</key>
-	<string>https://mcbopomofo.openvanilla.org/updates/Info.plist</string>
-	<key>UpdateInfoSite</key>
-	<string>https://mcbopomofo.openvanilla.org/</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Hant</string>
