@@ -11,6 +11,8 @@ if [[ -e "$out" ]]; then
 fi
 app="build/DerivedData/Build/Products/$configuration/AI-Bopomofo.app"
 python3 scripts/verify-bundle.py "$app"
+bundle_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
+[[ "$bundle_version" == "${version%%-*}" ]] || { echo 'Package and bundle versions differ.' >&2; exit 1; }
 mkdir -p "$out"
 ditto "$app" "$out/AI-Bopomofo.app"
 licenses="$out/AI-Bopomofo.app/Contents/Resources/Licenses"

@@ -1,0 +1,8 @@
+{
+  "custom_terms" : 5000,
+  "p50_ms" : 0.13208400000000001,
+  "p95_ms" : 0.16925000000000001,
+  "p99_ms" : 0.22570799999999999,
+  "samples" : 20000,
+  "scope" : "pure composition only; excludes IMK, UI, Chinese engine and cold start"
+}

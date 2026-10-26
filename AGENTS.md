@@ -5,6 +5,7 @@
 - Keep upstream copyright, source history, and traditional input behavior.
 - Product identity: `org.aibopomofo.inputmethod.AIBopomofo`; internal module/target remains `McBopomofo`.
 - Local builds: `scripts/build.sh`; packaging: `scripts/package.sh`; private artifacts stay ignored.
+- After the reported sound incident, use `scripts/test-headless.sh` by default. Do not launch hosted IME tests, GUI tests, audio, or change volume without resolving that restriction with the user.
 - Report actual test counts in Traditional Chinese; GUI verification is separate from automated checks.
 - Development baseline is Xcode 26+ and macOS 26+; runtime target is macOS 13.
 - The upstream guidance below is preserved; its older environment and C++17 descriptions are historical. Current project uses C++20.

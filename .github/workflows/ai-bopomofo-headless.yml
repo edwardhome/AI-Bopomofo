@@ -1,0 +1,24 @@
+name: AI-Bopomofo headless validation
+on:
+  workflow_dispatch:
+  push:
+    branches: ['feature/**', 'fix/**', 'develop', 'main']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Test pure logic and compile hosted tests without launching an IME
+        run: scripts/test-headless.sh
+      - name: Build local unsigned release
+        run: scripts/build.sh Release
+      - name: Package and validate
+        run: |
+          scripts/package.sh 0.3.0-alpha Release
+          scripts/verify-package.sh dist/0.3.0-alpha

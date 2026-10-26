@@ -2,7 +2,7 @@
 
 目前為未經 Developer ID 簽署／公證的本地開發版；app 使用 ad-hoc 簽章，pkg 未簽署。不要關閉整體 Gatekeeper 或 SIP。本次開發不會自動安裝、切換輸入法或終止現有輸入法。
 
-建議先用使用者層安裝：在專案目錄執行 `scripts/install-debug.sh dist/0.1.0-alpha/AI-Bopomofo.app`（換成欲測版本路徑）。安裝到 `~/Library/Input Methods/AI-Bopomofo.app`，不需管理員權限；既有版本存在時拒絕覆寫。
+建議先用使用者層安裝：在專案目錄執行 `scripts/install-debug.sh dist/0.3.0-alpha/AI-Bopomofo.app`（換成欲測版本路徑）。安裝到 `~/Library/Input Methods/AI-Bopomofo.app`，不需管理員權限；既有版本存在時拒絕覆寫。
 
 另一選項為開啟 dist 內的 pkg，由使用者自行授權，安裝到 `/Library/Input Methods/AI-Bopomofo.app`。這兩種方式擇一，不能同時安裝兩份。若系統因未公證而拒絕 pkg，使用本機自行建置的 bundle 與上述腳本。
 
@@ -14,4 +14,4 @@
 
 校驗：在版本目錄執行 `shasum -a 256 -c checksums.txt`。`scripts/verify-bundle.py <app路徑>` 檢查識別碼、詞庫、連線及簽章，不等於實際輸入操作驗證。
 
-更新時間：2026-10-26T16:13:42+08:00
+更新時間：2026-10-26T16:51:18+08:00

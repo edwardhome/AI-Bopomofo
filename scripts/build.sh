@@ -5,4 +5,5 @@ configuration="${1:-Debug}"
 mkdir -p artifacts
 xcodebuild -project McBopomofo.xcodeproj -scheme McBopomofo \
   -configuration "$configuration" -derivedDataPath build/DerivedData \
+  -onlyUsePackageVersionsFromResolvedFile \
   CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= build
