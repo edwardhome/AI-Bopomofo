@@ -14,4 +14,8 @@
 
 無介面測試 196 項通過、2 項上游案例跳過：C++ 122／2 跳過、MixedInputCore 28、CandidateRanking 28、Python 14＋4；詞庫檢查成功。Debug build-for-testing 首次遇到已知預編譯標頭快取過期，僅清除該快取後重建成功。沒有執行 hosted 測試、模擬打字、音訊或修改 Kanata。記錄 artifacts/menu-command-headless.log 與 artifacts/menu-command-debug-retry.log。
 
-安裝前已備份 0.6.4 app、偏好與使用者資料狀態至 artifacts/install-0.6.5/，77 個備份檔案一致。Release、套件與安裝待完成；雙 Shift 尚未解決。
+安裝前已備份 0.6.4 app、偏好與使用者資料狀態至 artifacts/install-0.6.5/，77 個備份檔案一致。Release 與套件核對成功，77 個套件及已安裝檔案一致；使用者完成安裝驗證，系統目前為 0.6.5／605。程式來源 dda1f03。F 授權簽章更新已完成；雙 Shift 尚未解決。
+
+更新時間：2026-10-27T00:54:15+08:00。選單與標點實機驗證尚未完成。
+
+2026-10-27T00:55:52+08:00：F 輸入監控允許且符合 0.6.5 簽章；重啟 PID 54428，明確切至已啟用 US 再切回 AI注音，以重新建立輸入連線。偏好差異鍵：無；使用者資料未變。半形標點偏好維持 false。摘要 artifacts/install-0.6.5/verification.json，尚待使用者確認第一層診斷提示與標點；沒有推送遠端。
