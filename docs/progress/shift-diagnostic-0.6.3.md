@@ -16,4 +16,10 @@
 
 無介面測試 196 項通過、2 項上游案例跳過：C++ 122／2 跳過、MixedInputCore 28、CandidateRanking 28、Python 14＋4。詞庫檢查通過；首次 Debug build-for-testing 遇到既有預編譯標頭快取過期，僅移除該快取再重建後成功。未執行 hosted／GUI 測試、模擬打字或音訊操作。
 
-紀錄：artifacts/shift-diagnostic-headless.log、artifacts/shift-diagnostic-debug-retry.log。Release、套件核對與安裝仍待完成。
+紀錄：artifacts/shift-diagnostic-headless.log、artifacts/shift-diagnostic-debug-retry.log。Release 與套件核對成功，arm64／x86_64 通用執行檔；77 個套件與安裝檔案完全一致。
+
+## 安裝與待測
+
+驗證時間：2026-10-27T00:20:03+08:00。程式來源提交 7c45c8c，產物 dist/0.6.3-alpha/。安裝前備份至 artifacts/install-0.6.3/，包含 0.6.2 app、偏好與使用者資料狀態；預設詞庫目錄未存在。使用者完成系統安裝及授權驗證，透過系統設定重新加入目前 app，唯讀核對 F 輸入監控允許且簽章需求符合 0.6.3。
+
+已重啟為 PID 50195，目前為已啟用的 AI注音混打來源。偏好沒有差異，使用者資料狀態未變。驗證摘要 artifacts/install-0.6.3/verification.json。尚待使用者開啟限時診斷並手動按 Shift，沒有宣稱雙擊已修復，沒有推送遠端。
