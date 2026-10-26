@@ -119,28 +119,31 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(withTitle: NSLocalizedString(permissionTitle, comment: ""),
                      action: #selector(requestFMonitoring(_:)), keyEquivalent: "")
 
-        let advanced = NSMenu(title: NSLocalizedString("Advanced Tools", comment: ""))
-        let advancedItem = menu.addItem(withTitle: advanced.title, action: nil, keyEquivalent: "")
-        advancedItem.submenu = advanced
-        advanced.addItem(
+        // Keep these IMK commands at the root of the input menu.
+        // Nested commands were visible but did not invoke their actions on the user's system.
+        menu.addItem(NSMenuItem.separator())
+        let advancedHeading = menu.addItem(
+            withTitle: NSLocalizedString("Advanced Tools", comment: ""), action: nil, keyEquivalent: "")
+        advancedHeading.isEnabled = false
+        menu.addItem(
             withTitle: NSLocalizedString("Diagnose Double Shift (20 Seconds)", comment: ""),
             action: #selector(startShiftDiagnostic(_:)), keyEquivalent: "")
-        let legacyItem = advanced.addItem(withTitle: NSLocalizedString("Backtick Opens Punctuation List", comment: ""),
+        let legacyItem = menu.addItem(withTitle: NSLocalizedString("Backtick Opens Punctuation List", comment: ""),
                                           action: #selector(toggleBacktickMenu(_:)), keyEquivalent: "")
         legacyItem.state = Preferences.backtickOpensPunctuationList.state
 
-        let chineseConversionItem = advanced.addItem(
+        let chineseConversionItem = menu.addItem(
             withTitle: NSLocalizedString("Convert to Simplified Chinese", comment: ""),
             action: #selector(toggleChineseConverter(_:)), keyEquivalent: "g")
         chineseConversionItem.keyEquivalentModifierMask = [.command, .control]
         chineseConversionItem.state = Preferences.chineseConversionEnabled.state
 
-        let halfWidthPunctuationItem = advanced.addItem(
+        let halfWidthPunctuationItem = menu.addItem(
             withTitle: NSLocalizedString("Use Half-Width Punctuations", comment: ""),
             action: #selector(toggleHalfWidthPunctuation(_:)), keyEquivalent: "h")
         halfWidthPunctuationItem.keyEquivalentModifierMask = [.command, .control]
         halfWidthPunctuationItem.state = Preferences.halfWidthPunctuationEnabled.state
-        let associatedPhrasesItem = advanced.addItem(
+        let associatedPhrasesItem = menu.addItem(
             withTitle: NSLocalizedString("Associated Phrases", comment: ""),
             action: #selector(toggleAssociatedPhrasesEnabled(_:)), keyEquivalent: "")
         associatedPhrasesItem.state = Preferences.associatedPhrasesEnabled.state
@@ -154,7 +157,7 @@ class McBopomofoInputMethodController: IMKInputController {
             && (Preferences.showBopomofoFontAnnotationSupportItemInInputMenu
                 || Preferences.bopomofoFontAnnotationSupportEnabled)
         {
-            let bopomofoFontAnnotationSupportItem = advanced.addItem(
+            let bopomofoFontAnnotationSupportItem = menu.addItem(
                 withTitle: NSLocalizedString("Bopomofo Font Annotation Support", comment: ""),
                 action: #selector(toggleBopomofoFontAnnotationSupport(_:)), keyEquivalent: "")
             bopomofoFontAnnotationSupportItem.state =
@@ -163,47 +166,47 @@ class McBopomofoInputMethodController: IMKInputController {
 
         let optionKeyPressed = NSEvent.modifierFlags.contains(.option)
         if inputMode == .bopomofo && optionKeyPressed {
-            let phaseReplacementItem = advanced.addItem(
+            let phaseReplacementItem = menu.addItem(
                 withTitle: NSLocalizedString("Use Phrase Replacement", comment: ""),
                 action: #selector(togglePhraseReplacement(_:)), keyEquivalent: "")
             phaseReplacementItem.state = Preferences.phraseReplacementEnabled.state
         }
 
-        advanced.addItem(NSMenuItem.separator())
-        advanced.addItem(
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(
             withTitle: NSLocalizedString("User Phrases", comment: ""), action: nil,
             keyEquivalent: "")
 
         if inputMode == .plainBopomofo {
             if Preferences.enableUserPhrasesInPlainBopomofo {
-                advanced.addItem(
+                menu.addItem(
                     withTitle: NSLocalizedString("Edit User Phrases", comment: ""),
                     action: #selector(openUserPhrasesPlainBopomofo(_:)), keyEquivalent: "")
             }
-            advanced.addItem(
+            menu.addItem(
                 withTitle: NSLocalizedString("Edit Excluded Phrases", comment: ""),
                 action: #selector(openExcludedPhrasesPlainBopomofo(_:)), keyEquivalent: "")
         } else {
-            advanced.addItem(
+            menu.addItem(
                 withTitle: NSLocalizedString("Edit User Phrases", comment: ""),
                 action: #selector(openUserPhrases(_:)), keyEquivalent: "")
-            advanced.addItem(
+            menu.addItem(
                 withTitle: NSLocalizedString("Edit Excluded Phrases", comment: ""),
                 action: #selector(openExcludedPhrasesMcBopomofo(_:)), keyEquivalent: "")
             if optionKeyPressed {
-                advanced.addItem(
+                menu.addItem(
                     withTitle: NSLocalizedString("Edit Phrase Replacement Table", comment: ""),
                     action: #selector(openPhraseReplacementMcBopomofo(_:)), keyEquivalent: "")
             }
         }
 
-        advanced.addItem(
+        menu.addItem(
             withTitle: NSLocalizedString("Reload User Phrases", comment: ""),
             action: #selector(reloadUserPhrases(_:)), keyEquivalent: "")
-        advanced.addItem(
+        menu.addItem(
             withTitle: NSLocalizedString("Import Technical Terms…", comment: ""),
             action: #selector(importTechnicalTerms(_:)), keyEquivalent: "")
-        advanced.addItem(
+        menu.addItem(
             withTitle: NSLocalizedString("Export Technical Terms…", comment: ""),
             action: #selector(exportTechnicalTerms(_:)), keyEquivalent: "")
 
@@ -213,7 +216,7 @@ class McBopomofoInputMethodController: IMKInputController {
             let menuItem = NSMenuItem(
                 title: NSLocalizedString("Show Issues in User Files ⚠️", comment: ""),
                 action: #selector(showUserFileIssues(_:)), keyEquivalent: "")
-            advanced.addItem(menuItem)
+            menu.addItem(menuItem)
         }
 
         menu.addItem(NSMenuItem.separator())
@@ -221,7 +224,7 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(
             withTitle: NSLocalizedString("McBopomofo Preferences", comment: ""),
             action: #selector(showPreferences(_:)), keyEquivalent: "")
-        advanced.addItem(
+        menu.addItem(
             withTitle: NSLocalizedString("Check for Updates…", comment: ""),
             action: #selector(checkForUpdate(_:)), keyEquivalent: "")
         menu.addItem(
@@ -339,11 +342,17 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     @objc private func startShiftDiagnostic(_ sender: Any?) {
-        guard !IsSecureEventInputEnabled() else { return }
+        guard !IsSecureEventInputEnabled() else {
+            NotifierController.notify(message: NSLocalizedString("Shift Diagnostic Unavailable During Secure Input", comment: ""))
+            return
+        }
         Self.shiftDiagnosticLines.removeAll()
         Self.shiftDiagnosticDeadline = ProcessInfo.processInfo.systemUptime + 20
         Self.shiftDiagnosticRemaining = 80
         recordShiftDiagnostic(.start)
+        let message = Self.shiftDiagnosticDeadline > 0
+            ? "Shift Diagnostic Started (20 Seconds)" : "Could Not Create Shift Diagnostic Report"
+        NotifierController.notify(message: NSLocalizedString(message, comment: ""))
     }
 
     private func recordShiftDiagnostic(_ event: ShiftDiagnosticEvent, flags: UInt = 0) {

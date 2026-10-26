@@ -302,3 +302,9 @@
 "Input Mode: Bopomofo" = "注音";
 
 "Diagnose Double Shift (20 Seconds)" = "診斷雙擊 Shift（20 秒）";
+
+"Shift Diagnostic Unavailable During Secure Input" = "安全輸入啟用中，無法開始診斷";
+
+"Shift Diagnostic Started (20 Seconds)" = "雙擊 Shift 診斷已開始（20 秒）";
+
+"Could Not Create Shift Diagnostic Report" = "無法建立雙擊 Shift 診斷檔";

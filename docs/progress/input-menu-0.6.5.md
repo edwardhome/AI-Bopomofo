@@ -1,0 +1,17 @@
+# 0.6.5 輸入選單指令恢復
+
+更新時間：2026-10-27T00:49:52+08:00
+
+## 證據與修改
+
+使用者提供已展開的「進階工具」截圖，診斷項目確實存在，並進一步回報半形標點、匯入、編輯使用者資料等子選單指令全部沒有作用。第一層的直接英文切換先前確認可用。這支持共同子選單命令路徑故障的判斷；沒有宣稱已找到系統內部原因。
+
+移除巢狀子選單，把原指令放回第一層，用停用標題與分隔線分組，保留原動作與快捷鍵。診斷成功建立 start 記錄後顯示 20 秒開始提示；Secure Input 或寫檔失敗有明確回饋。不新增監聽，不變更雙 Shift 手勢、F、文字協助或詞庫。
+
+## 標點偏好
+
+使用者希望 Shift＋逗號輸出中文逗號。既有 KeyHandler 在半形偏好關閉時即對應「，」，普通逗號鍵仍屬原注音鍵位，不改成直接半形字元。於 2026-10-27T00:47:35+08:00 先匯出偏好至 artifacts/punctuation-preference/before-20261027T004735.plist，再將 HalfWidthPunctuationEnable 設為 false，切出再切回既有已啟用來源，讀回為 0；未改寫其他偏好或鍵位。標點輸出仍待使用者實機確認。
+
+無介面測試 196 項通過、2 項上游案例跳過：C++ 122／2 跳過、MixedInputCore 28、CandidateRanking 28、Python 14＋4；詞庫檢查成功。Debug build-for-testing 首次遇到已知預編譯標頭快取過期，僅清除該快取後重建成功。沒有執行 hosted 測試、模擬打字、音訊或修改 Kanata。記錄 artifacts/menu-command-headless.log 與 artifacts/menu-command-debug-retry.log。
+
+安裝前已備份 0.6.4 app、偏好與使用者資料狀態至 artifacts/install-0.6.5/，77 個備份檔案一致。Release、套件與安裝待完成；雙 Shift 尚未解決。

@@ -302,3 +302,9 @@
 "Input Mode: Bopomofo" = "Bopomofo";
 
 "Diagnose Double Shift (20 Seconds)" = "Diagnose Double Shift (20 Seconds)";
+
+"Shift Diagnostic Unavailable During Secure Input" = "Shift Diagnostic Unavailable During Secure Input";
+
+"Shift Diagnostic Started (20 Seconds)" = "Shift Diagnostic Started (20 Seconds)";
+
+"Could Not Create Shift Diagnostic Report" = "Could Not Create Shift Diagnostic Report";
