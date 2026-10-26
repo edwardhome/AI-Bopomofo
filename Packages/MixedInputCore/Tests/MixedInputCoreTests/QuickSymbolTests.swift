@@ -88,6 +88,7 @@ struct QuickSymbolTests {
     @Test func missingShortTapReleaseReplaysOnceAndCannotOpenLayerLater() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
+        _ = gesture.handle(.poll(elapsed: 0.010, isPressed: true))
         #expect(gesture.handle(.poll(elapsed: 0.050, isPressed: false)) == [.invalidate, .replayTap, .consume])
         #expect(gesture.handle(.poll(elapsed: 0.110, isPressed: false)).isEmpty)
         #expect(gesture.handle(.release).isEmpty)
@@ -101,6 +102,30 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: true)).isEmpty)
         #expect(gesture.handle(.release).isEmpty)
         #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
+    }
+
+    @Test func unavailableSamplerCannotCancelHoldAndFreshFExits() {
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
+        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)) == [.beginLayer])
+        #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: false)).isEmpty)
+        #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
+        #expect(gesture.phase == .held)
+        #expect(gesture.handle(.press(eligible: false, repeating: false)) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.phase == .idle)
+        #expect(gesture.handle(.release).isEmpty)
+    }
+
+    @Test func samplerTrustDoesNotLeakAcrossGestures() {
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        _ = gesture.handle(.poll(elapsed: 0.010, isPressed: true))
+        _ = gesture.handle(.release)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
+        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)) == [.beginLayer])
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
     }
 
 }

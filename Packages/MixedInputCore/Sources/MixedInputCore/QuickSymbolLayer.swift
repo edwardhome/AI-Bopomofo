@@ -71,13 +71,16 @@ public struct FHoldGesture {
     }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
     public private(set) var phase: Phase = .idle
+    private var observedPressed = false
     public init() {}
 
     public mutating func handle(_ event: Event) -> [Effect] {
         switch event {
         case .press(let eligible, let repeating):
+            if phase == .held && !repeating { return handle(.release) }
             if phase != .idle { return [.consume] }
             guard eligible && !repeating else { return [] }
+            observedPressed = false
             phase = .pending
             return [.schedule, .consume]
         case .release:
@@ -94,7 +97,11 @@ public struct FHoldGesture {
             return [.invalidate, .replayTap]
         case .poll(let elapsed, let isPressed):
             guard phase != .idle else { return [] }
-            if !isPressed { return handle(.release) }
+            // A false-only system sample is not evidence of release: some IMK
+            // environments do not expose this state. Trust key-down and the timer
+            // until the sampler has observed an actual down-to-up transition.
+            if isPressed { observedPressed = true }
+            else if observedPressed { return handle(.release) }
             if phase == .pending && elapsed >= Self.delay { return handle(.timeout) }
             return []
         case .timeout:
