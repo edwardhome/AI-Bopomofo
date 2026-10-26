@@ -77,7 +77,6 @@ public struct FHoldGesture {
     public mutating func handle(_ event: Event) -> [Effect] {
         switch event {
         case .press(let eligible, let repeating):
-            if phase == .held && !repeating { return handle(.release) }
             if phase != .idle { return [.consume] }
             guard eligible && !repeating else { return [] }
             observedPressed = false
@@ -97,12 +96,13 @@ public struct FHoldGesture {
             return [.invalidate, .replayTap]
         case .poll(let elapsed, let isPressed):
             guard phase != .idle else { return [] }
-            // A false-only system sample is not evidence of release: some IMK
-            // environments do not expose this state. Trust key-down and the timer
-            // until the sampler has observed an actual down-to-up transition.
+            // Only enter a momentary layer with a confirmed physical key state.
+            // Missing key-up plus an unavailable sampler must never latch the layer.
             if isPressed { observedPressed = true }
             else if observedPressed { return handle(.release) }
-            if phase == .pending && elapsed >= Self.delay { return handle(.timeout) }
+            if phase == .pending && elapsed > Self.delay {
+                return observedPressed ? handle(.timeout) : handle(.release)
+            }
             return []
         case .timeout:
             guard phase == .pending else { return [] }

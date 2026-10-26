@@ -340,7 +340,7 @@ class McBopomofoInputMethodController: IMKInputController {
                         return
                     }
                     self.applyFHold(.poll(elapsed: ProcessInfo.processInfo.systemUptime - started,
-                        isPressed: CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(kVK_ANSI_F))),
+                        isPressed: CGEventSource.keyState(.hidSystemState, key: CGKeyCode(kVK_ANSI_F))),
                         client: self.currentClient)
                 }
                 fHoldTimer = timer
@@ -629,7 +629,16 @@ extension McBopomofoInputMethodController {
         case let newState as InputState.SelectingFeature:
             handle(state: newState, previous: previous, client: client)
         case let newState as InputState.QuickSymbols:
-            handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)
+            if newState.held {
+                gCurrentCandidateController?.visible = false
+                hideTooltip()
+                // A held layer maps physical keys without presenting a selection UI.
+                (client as? IMKTextInput)?.setMarkedText("",
+                    selectionRange: NSRange(location: 0, length: 0),
+                    replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+            } else {
+                handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)
+            }
         case let newState as InputState.SelectingDateMacro:
             handle(state: newState, previous: previous, client: client)
         case let newState as InputState.Number:

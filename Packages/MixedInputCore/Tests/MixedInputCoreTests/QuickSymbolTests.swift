@@ -76,7 +76,8 @@ struct QuickSymbolTests {
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.poll(elapsed: 0.099, isPressed: true)).isEmpty)
         #expect(gesture.phase == .pending)
-        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: true)) == [.beginLayer])
+        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: true)).isEmpty)
+        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: true)) == [.beginLayer])
         #expect(gesture.handle(.poll(elapsed: 0.150, isPressed: true)).isEmpty)
         #expect(gesture.handle(.poll(elapsed: 0.160, isPressed: false)) == [.invalidate, .endLayer, .consume])
         #expect(gesture.phase == .idle)
@@ -97,22 +98,19 @@ struct QuickSymbolTests {
     @Test func cancelledGestureIgnoresPollingUntilNextPress() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
-        _ = gesture.handle(.poll(elapsed: 0.100, isPressed: true))
+        _ = gesture.handle(.poll(elapsed: 0.101, isPressed: true))
         _ = gesture.handle(.cancel)
         #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: true)).isEmpty)
         #expect(gesture.handle(.release).isEmpty)
         #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
     }
 
-    @Test func unavailableSamplerCannotCancelHoldAndFreshFExits() {
+    @Test func unavailableSamplerReplaysFInsteadOfLatchingLayer() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)) == [.beginLayer])
-        #expect(gesture.handle(.poll(elapsed: 0.200, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
-        #expect(gesture.phase == .held)
-        #expect(gesture.handle(.press(eligible: false, repeating: false)) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)).isEmpty)
+        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: false)) == [.invalidate, .replayTap, .consume])
         #expect(gesture.phase == .idle)
         #expect(gesture.handle(.release).isEmpty)
     }
@@ -124,8 +122,8 @@ struct QuickSymbolTests {
         _ = gesture.handle(.release)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.poll(elapsed: 0.010, isPressed: false)).isEmpty)
-        #expect(gesture.handle(.poll(elapsed: 0.100, isPressed: false)) == [.beginLayer])
-        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.poll(elapsed: 0.101, isPressed: false)) == [.invalidate, .replayTap, .consume])
+        #expect(gesture.handle(.release).isEmpty)
     }
 
 }
