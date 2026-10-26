@@ -96,7 +96,7 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
                         },
                         errorCallback: {
                             if Preferences.beepUponInputError {
-                                NSSound.beep()
+                                InputFeedback.beep()
                             }
                         }, autoTriggered: true, maxCandidateCount: 0)
                 }

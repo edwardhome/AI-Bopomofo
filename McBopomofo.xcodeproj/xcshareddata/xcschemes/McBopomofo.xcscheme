@@ -28,6 +28,9 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       codeCoverageEnabled = "YES">
+      <EnvironmentVariables>
+         <EnvironmentVariable key="AI_BOPOMOFO_SILENT_TESTS" value="1" isEnabled="YES"/>
+      </EnvironmentVariables>
       <Testables>
          <TestableReference
             skipped = "NO">

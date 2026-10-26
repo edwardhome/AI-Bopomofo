@@ -325,11 +325,29 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     return layout;
 }
 
+- (BOOL)beginASCIIWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback errorCallback:(void (^)(void))errorCallback
+{
+    if ((!_bpmfReadingBuffer->isEmpty()) ||
+        !([state isKindOfClass:[InputStateEmpty class]] || [state isKindOfClass:[InputStateInputting class]])) {
+        errorCallback();
+        return NO;
+    }
+    [self clear];
+    // Empty commits the preceding Chinese composition through the existing controller.
+    stateCallback([[InputStateEmpty alloc] init]);
+    stateCallback([[InputStateASCII alloc] initWithText:@"" cursor:0]);
+    return YES;
+}
+
 - (BOOL)handleInput:(KeyHandlerInput *)input state:(InputState *)inState stateCallback:(void (^)(InputState *))stateCallback errorCallback:(void (^)(void))errorCallback
 {
     InputState *state = inState;
     UniChar charCode = input.charCode;
     McBopomofoEmacsKey emacsKey = input.emacsKey;
+
+    if ([state isKindOfClass:[InputStateASCII class]]) {
+        return [MixedInputHandler handleWithInput:input state:(InputStateASCII *)state stateCallback:stateCallback errorCallback:errorCallback];
+    }
 
     // MARK: Handle Selecting Feature
     if ([state isKindOfClass:[InputStateSelectingFeature class]] ||

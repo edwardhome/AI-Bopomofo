@@ -260,3 +260,6 @@
 "You can run a script to use git to backup your phrases. The script will run in the folder of your user phrases folder." = "You can run a script to use git to backup your phrases. The script will run in the folder of your user phrases folder.";
 
 "Quick Text Transform" = "Quick Text Transform";
+
+"English / ASCII" = "English / ASCII";
+"ASCII: Enter to commit, Esc to cancel" = "ASCII: Enter to commit, Esc to cancel";

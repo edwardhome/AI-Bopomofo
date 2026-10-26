@@ -146,6 +146,7 @@ class InputState: NSObject {
                     .IcuTransform(string: "", candidates: [])
                 }
             ),
+            (NSLocalizedString("English / ASCII", comment: ""), { .ASCII(text: "", cursor: 0) }),
         ]
 
         override var description: String {

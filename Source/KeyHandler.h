@@ -78,6 +78,10 @@ extern InputMode InputModePlainBopomofo;
                          associatedPhraseValue:(NSString *)phraseValue;
 - (void)clear;
 
+- (BOOL)beginASCIIWithState:(InputState *)state
+             stateCallback:(void (^)(InputState *))stateCallback
+             errorCallback:(void (^)(void))errorCallback;
+
 - (void)handleForceCommitWithStateCallback:(void (^)(InputState *))stateCallback
     NS_SWIFT_NAME(handleForceCommit(stateCallback:));
 

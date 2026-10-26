@@ -70,6 +70,10 @@ class McBopomofoInputMethodController: IMKInputController {
     override func menu() -> NSMenu! {
         let menu = NSMenu(title: "Input Method Menu")
 
+        menu.addItem(
+            withTitle: NSLocalizedString("English / ASCII", comment: ""),
+            action: #selector(beginASCII(_:)), keyEquivalent: "")
+
         let chineseConversionItem = menu.addItem(
             withTitle: NSLocalizedString("Convert to Simplified Chinese", comment: ""),
             action: #selector(toggleChineseConverter(_:)), keyEquivalent: "g")
@@ -209,6 +213,12 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKServerInput protocol methods
 
     override func commitComposition(_ client: Any!) {
+        if let ascii = state as? InputState.ASCII {
+            keyHandler.clear()
+            handle(state: .Committing(poppedText: ascii.composingBuffer), client: client)
+            handle(state: .Empty(), client: client)
+            return
+        }
         keyHandler.handleForceCommit(stateCallback: { newState in
             self.handle(state: newState, client: client)
         })
@@ -217,6 +227,14 @@ class McBopomofoInputMethodController: IMKInputController {
     override func recognizedEvents(_ sender: Any!) -> Int {
         let events: NSEvent.EventTypeMask = [.keyDown, .keyUp, .flagsChanged]
         return Int(events.rawValue)
+    }
+
+    @objc private func beginASCII(_ sender: Any?) {
+        keyHandler.beginASCII(with: state, stateCallback: { newState in
+            self.handle(state: newState, client: self.currentClient)
+        }, errorCallback: {
+            if Preferences.beepUponInputError { InputFeedback.beep() }
+        })
     }
 
     override func handle(_ maybeEvent: NSEvent!, client: Any!) -> Bool {
@@ -279,7 +297,7 @@ class McBopomofoInputMethodController: IMKInputController {
             self.handle(state: newState, client: client)
         } errorCallback: {
             if Preferences.beepUponInputError {
-                NSSound.beep()
+                InputFeedback.beep()
             }
         }
         return result
