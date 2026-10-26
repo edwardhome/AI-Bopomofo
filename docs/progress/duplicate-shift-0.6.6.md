@@ -15,3 +15,9 @@
 新增實機時序與重複按下不得縮短長按的兩項案例；把原錯誤重疊假設改成連續狀態單次計數及焦點重設案例。無介面測試 198 項通過、2 項上游案例跳過：C++ 122／2 跳過、MixedInputCore 30、CandidateRanking 28、Python 14＋4。詞庫、Debug build-for-testing 與 Release 成功；Debug 僅在已知快取過期錯誤後清除預編譯標頭再重建。記錄 artifacts/duplicate-shift-headless.log、artifacts/duplicate-shift-debug-retry.log、artifacts/duplicate-shift-release.log。沒有 hosted／GUI 自動打字測試、音訊或 Kanata 變更。
 
 已備份目前 0.6.5 至 artifacts/install-0.6.6/，77 檔案核對一致，含偏好與使用者資料狀態。套件及安裝待完成，雙 Shift 實機尚待驗收。
+
+## 安裝與驗收完成
+
+2026-10-27T01:12:56+08:00：0.6.6／606 已安裝至原系統位置，77 檔案與套件一致。使用者完成安裝並自行更新輸入監控；唯讀核對允許且符合目前簽章。程序 PID 56116，切至既有 US 再選回 AI注音以重建連線。偏好差異鍵：NSNavPanelExpandedSizeForOpenMode, NSOSPLastRootDirectory，使用者資料未變，半形標點保持 false。摘要 artifacts/install-0.6.6/verification.json。
+
+使用者明確確認雙擊 Shift 已能順利在英文與注音間切換。0.6.5 已確認中文逗號與診斷啟動；尚未對全部 macOS 版本、應用與詞庫匯入／匯出完成實機矩陣。程式來源 b0ba814，純測試 198 通過／2 跳過，GUI 人工驗收與自動測試分開記錄。

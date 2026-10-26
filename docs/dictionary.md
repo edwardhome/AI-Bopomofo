@@ -1,13 +1,50 @@
-# 專業詞庫
+# 專業詞彙匯入、候選與匯出
 
-內建 FPGA、Vivado、SystemVerilog、Verilog、VHDL、Python、Flask、PySide6、GitHub、Git、Codex、McBopomofo、InputMethodKit、CoreML、Swift、Xcode、MacBook、Apple、RTX，另含 branch、module。
+此功能提供**英文／ASCII 技術詞彙的前綴補全**，不是中文詞庫批次匯入，也不是 AI 生成詞彙。沿用小麥注音既有使用者詞庫，不建立第二套資料庫。
 
-不另外建立使用者詞庫資料庫。選單「編輯使用者詞庫」開啟既有 data.txt，可新增例如 `MyFPGA _english_myfpga`。`_english_` 是英文候選專用 reading 命名空間；不影響注音讀音。保留詞彙大小寫。詞庫監視器重載時更新記憶體快取，按鍵路徑不讀取檔案。
+## 匯入檔案
 
-匯入：選「匯入專業詞彙」，UTF-8 純文字每行一詞，最多 1 MiB／5000 詞，每詞最多 64 ASCII 字元且至少包含英文字母，不含空白；以 # 開頭視為註解。匯入前備份現有 data.txt 到同資料夾的 data.txt.backup-UUID，經 LanguageModelManager 逐項新增，既有詞彙略過。若中途失敗，可能部分新增，重試不重複寫入；備份不自動覆蓋回原檔。
+可直接使用 [technical-terms-example.txt](../examples/technical-terms-example.txt)。用純文字編輯器儲存為 UTF-8，每行一詞：
 
-匯出：選「匯出專業詞彙」，只匯出 `_english_` 自訂詞，每行一詞；不匯出私人中文詞庫。可用既有編輯使用者詞庫功能刪除／修改條目。預設目錄由 Preferences 決定，為 ~/Library/Application Support/AI-Bopomofo；也尊重使用者自訂位置。
+```text
+# 以井字號開頭的行會忽略
+SystemVerilog
+PySide6
+OpenOCD
+STM32
+C++
+```
 
-載入上限為 5000 個自訂詞與 4 MiB 詞庫檔案，候選最多原文加 8 個補全。超過檔案上限僅用內建英文詞；中文引擎仍依上游規則處理。候選排序是決定性前綴比對，不是 AI。
+格式限制：
 
-檔案只保存在本機，真實詞庫與其備份不得納入 Git。本次未讀取或匯入任何私人詞彙。
+- 檔案最多 1 MiB，最多 5000 行有效詞彙；空白行及以 `#` 開頭的註解略過。
+- 每詞 1–64 個可列印 ASCII 字元，至少含一個 A–Z／a–z，詞中不能有空白；行首尾空白會去除。
+- 大小寫保留。數字及 ASCII 符號可與字母混用，例如 `STM32`、`C++`。
+- 不是 CSV，不加標題欄、逗號分隔欄位、引號或 `_english_` 讀音欄。
+- 中文詞、含空白的英文片語及純數字不適用此匯入器；中文請使用原有「編輯使用者詞庫」及上游詞庫格式。
+
+在 AI注音**第一層選單**點「匯入專業詞彙…」，選取檔案。0.6.5 起已移除會顯示卻不執行指令的進階子選單。匯入檔有任何不合規的詞時，先修正檔案再重試。
+
+## 使用候選
+
+1. 選「英文／ASCII 組字」，或啟用「Shift＋字母開始英文組字」後以 Shift＋字母進入。
+2. 輸入至少兩個字元的詞首，例如 `op`；`OpenOCD` 會與其他符合前綴的詞一起列出。
+3. 原字串保持第一候選。Tab／Shift＋Tab 或上下鍵選取，Enter 送出；未知詞不會被自動替換。
+
+雙擊 Shift 進入的「全英文直接輸入」會把按鍵交給應用程式，**不顯示技術詞候選**。需要補全時請使用英文／ASCII 組字模式。英文上下文預測若同時出現，Tab 優先接受該預測；可先在選單關閉「英文上下文預測（Tab 接受）」以專心測試詞庫候選。
+
+內建詞包含 FPGA、Vivado、SystemVerilog、Verilog、VHDL、Python、Flask、PySide6、GitHub、Git、Codex、McBopomofo、InputMethodKit、CoreML、Swift、Xcode、MacBook、Apple、RTX、branch、module。
+
+## 備份、重複詞與失敗處理
+
+匯入前，若現有使用者 `data.txt` 存在且確有新詞，會複製成同資料夾的 `data.txt.backup-UUID`。既有自訂詞略過；不同大小寫保留為不同詞。透過 LanguageModelManager 逐項寫入既有詞庫，監視器重載時更新記憶體快取，按鍵路徑不讀詞庫檔。
+
+若寫入中途失敗，可能已有部分新增；先檢查詞庫再重試，已存在的相同詞不會重複新增。備份不會自動覆寫回原檔。預設資料位置為 `~/Library/Application Support/AI-Bopomofo`，也尊重偏好設定中的自訂位置。
+
+## 匯出與手動編輯
+
+選「匯出專業詞彙…」儲存為 UTF-8 純文字，每行一詞，可在另一部 Mac 匯入。只匯出使用者 `_english_` 詞條，不匯出內建英文詞或私人中文詞庫。
+
+「編輯使用者詞庫」開啟的是完整上游格式。例如 `MyFPGA _english_myfpga` 為英文候選詞條；請保留該檔既有中文讀音格式，不要把匯入用的一詞一行格式直接貼進完整詞庫。
+
+自訂載入上限為 5000 詞及 4 MiB 詞庫檔；超過檔案上限時，英文候選回退至內建詞。候選最多為原文加 8 個補全。私人的詞庫與備份不要附到公開 Issue，回報時請使用本頁的公開範例。

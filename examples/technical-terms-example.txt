@@ -1,0 +1,27 @@
+# AI-Bopomofo technical terms example. UTF-8; one ASCII term per line.
+# These are generic examples, not a personal dictionary.
+SystemVerilog
+PySide6
+OpenOCD
+STM32
+FreeRTOS
+ESP32
+KiCad
+LTspice
+NumPy
+SciPy
+Matplotlib
+Pandas
+FastAPI
+PostgreSQL
+SQLite
+Docker
+Kubernetes
+Homebrew
+I2C
+UART
+SPI
+JTAG
+PCIe
+CMake
+C++
