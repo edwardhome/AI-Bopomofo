@@ -575,6 +575,7 @@ class McBopomofoInputMethodController: IMKInputController {
                 && event.modifierFlags.intersection(forbidden).isEmpty
                 && keyHandler.canBeginQuickSymbols(with: state)
             if fHoldGesture.phase == .idle && eligible && !event.isARepeat {
+                fHoldGesture = FHoldGesture(delayMilliseconds: Preferences.fHoldDelayMilliseconds)
                 pendingFEvent = event
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }

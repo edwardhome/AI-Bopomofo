@@ -6,6 +6,8 @@
 
 [下載 0.6.6](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.6) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
 
+本分支另提供 **0.6.7 本機候選版**：在「偏好設定 → 進階」調整 F 長按等待時間（100～1000 毫秒、每格 50 毫秒），初始值保留 100 毫秒。詳見 [0.6.7 安裝與驗收](docs/installation-0.6.7.md)；GitHub 公開下載目前仍為 0.6.6。
+
 ## 這個版本的特色
 
 | 功能 | 使用方式與範圍 |

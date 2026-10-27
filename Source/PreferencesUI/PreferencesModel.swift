@@ -36,6 +36,14 @@ final class PreferencesViewModel: NSObject, ObservableObject {
     private var defaultsObserver: NSObjectProtocol?
     @Published private(set) var basisKeyboardLayoutOptions: [KeyboardLayoutOption] = []
 
+    var fHoldDelayMilliseconds: Int {
+        get { Preferences.fHoldDelayMilliseconds }
+        set {
+            objectWillChange.send()
+            Preferences.fHoldDelayMilliseconds = newValue
+        }
+    }
+
     var keyboardLayout: KeyboardLayout {
         get { Preferences.keyboardLayout }
         set {

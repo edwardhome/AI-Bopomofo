@@ -22,6 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import SwiftUI
+import MixedInputCore
 
 let preferencesWindowWidth: CGFloat = 480
 
@@ -617,6 +618,27 @@ private struct AdvancedPreferencesView: View {
 
     var body: some View {
         FormBody {
+            PreferenceRow(localized("F Hold Delay:")) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Picker(localized("F Hold Delay:"), selection: $preferences.fHoldDelayMilliseconds) {
+                        ForEach(Array(stride(
+                            from: FHoldGesture.delayRangeMilliseconds.lowerBound,
+                            through: FHoldGesture.delayRangeMilliseconds.upperBound,
+                            by: 50)), id: \.self) { milliseconds in
+                            Text(String(format: localized("%d ms"), milliseconds)).tag(milliseconds)
+                        }
+                    }
+                    .labelsHidden()
+                    .fixedSize()
+                    Text(localized("Increase the delay if F triggers symbols while typing Bopomofo. Default: 100 ms."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Divider().padding(.vertical, 5)
+
             PreferenceRow(localized("Chinese Conversion Style:")) {
                 Picker("", selection: $preferences.chineseConversionStyle) {
                     Text(localized("Convert output")).tag(ChineseConversionStyle.output)

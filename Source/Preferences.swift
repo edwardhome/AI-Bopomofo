@@ -22,6 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Cocoa
+import MixedInputCore
 
 private let kKeyboardLayoutPreferenceKey = "KeyboardLayout"
 /// alphanumeric ("ASCII") input basic keyboard layout.
@@ -221,12 +222,21 @@ class Preferences: NSObject {
     @UserDefault(key: "FHoldSymbolsEnabled", defaultValue: false)
     @objc static var fHoldSymbolsEnabled: Bool
 
+    @UserDefault(key: "FHoldDelayMilliseconds", defaultValue: FHoldGesture.defaultDelayMilliseconds)
+    private static var storedFHoldDelayMilliseconds: Int
+
+    @objc static var fHoldDelayMilliseconds: Int {
+        get { FHoldGesture.clampedDelayMilliseconds(storedFHoldDelayMilliseconds) }
+        set { storedFHoldDelayMilliseconds = FHoldGesture.clampedDelayMilliseconds(newValue) }
+    }
+
     @UserDefault(key: "MixedEnglishEnabled", defaultValue: false)
     @objc static var mixedEnglishEnabled: Bool
 
     static var allKeys: [String] {
         [
             "FHoldSymbolsEnabled",
+            "FHoldDelayMilliseconds",
             "EnglishPredictionEnabled",
             "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",

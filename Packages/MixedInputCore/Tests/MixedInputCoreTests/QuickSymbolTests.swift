@@ -4,6 +4,42 @@ import Testing
 
 @Suite("Independent F symbol layer")
 struct QuickSymbolTests {
+    @Test func longerDelayPreservesAnOrdinaryPress() {
+        var gesture = FHoldGesture(delayMilliseconds: 400)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.elapsed(0.150)).isEmpty)
+        #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume])
+        #expect(gesture.handle(.elapsed(0.250)).isEmpty)
+        #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
+        #expect(gesture.handle(.release).isEmpty)
+        #expect(gesture.handle(.elapsed(0.500)).isEmpty)
+    }
+
+    @Test func longerDelayReplaysBeforeTheNextPhoneticKey() {
+        var gesture = FHoldGesture(delayMilliseconds: 500)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.elapsed(0.200)).isEmpty)
+        #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
+        #expect(gesture.handle(.release).isEmpty)
+    }
+
+    @Test func configuredThresholdAndRelease() {
+        for milliseconds in [100, 150, 300, 500, 1000] {
+            var gesture = FHoldGesture(delayMilliseconds: milliseconds)
+            let seconds = Double(milliseconds) / 1000
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.elapsed(seconds)).isEmpty)
+            #expect(gesture.handle(.elapsed(seconds + 0.001)) == [.beginLayer])
+            #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        }
+    }
+
+    @Test func invalidDelayIsBoundedAndDefaultIsUnchanged() {
+        #expect(FHoldGesture().delay == 0.1)
+        #expect(FHoldGesture(delayMilliseconds: Int.min).delay == 0.1)
+        #expect(FHoldGesture(delayMilliseconds: Int.max).delay == 1.0)
+    }
+
     @Test func suppliedKeyboardRows() {
         let rows: [([UInt16], [String])] = [
             ([50,18,19,20,21,23,22,26,28,25,29,27,24],

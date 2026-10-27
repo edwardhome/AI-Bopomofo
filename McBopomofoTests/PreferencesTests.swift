@@ -61,6 +61,17 @@ final class PreferencesTests {
         }
     }
 
+    @Test func fHoldDelayPersistsAndBoundsStoredValues() {
+        #expect(Preferences.fHoldDelayMilliseconds == 100)
+        Preferences.fHoldDelayMilliseconds = 450
+        #expect(Preferences.fHoldDelayMilliseconds == 450)
+        #expect(UserDefaults.standard.integer(forKey: "FHoldDelayMilliseconds") == 450)
+        Preferences.fHoldDelayMilliseconds = 0
+        #expect(Preferences.fHoldDelayMilliseconds == 100)
+        UserDefaults.standard.set(Int.max, forKey: "FHoldDelayMilliseconds")
+        #expect(Preferences.fHoldDelayMilliseconds == 1000)
+    }
+
     @Test("Test keyboard layout setting")
     func testKeyboardLayout() {
         #expect(Preferences.keyboardLayout == .standard)

@@ -308,3 +308,7 @@
 "Shift Diagnostic Started (20 Seconds)" = "雙擊 Shift 診斷已開始（20 秒）";
 
 "Could Not Create Shift Diagnostic Report" = "無法建立雙擊 Shift 診斷檔";
+
+"F Hold Delay:" = "F 長按等待時間：";
+"%d ms" = "%d 毫秒";
+"Increase the delay if F triggers symbols while typing Bopomofo. Default: 100 ms." = "輸入注音時若 F 容易誤觸符號，請延長等待時間。預設為 100 毫秒。";

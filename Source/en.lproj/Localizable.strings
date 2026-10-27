@@ -310,3 +310,7 @@
 "Shift Diagnostic Started (20 Seconds)" = "Shift Diagnostic Started (20 Seconds)";
 
 "Could Not Create Shift Diagnostic Report" = "Could Not Create Shift Diagnostic Report";
+
+"F Hold Delay:" = "F Hold Delay:";
+"%d ms" = "%d ms";
+"Increase the delay if F triggers symbols while typing Bopomofo. Default: 100 ms." = "Increase the delay if F triggers symbols while typing Bopomofo. Default: 100 ms.";

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 AI-Bopomofo contributors. MIT License.
 import Cocoa
 import Testing
+import MixedInputCore
 @testable import McBopomofo
 
 @Suite("Mixed ASCII input", .serialized)
@@ -37,6 +38,22 @@ struct MixedInputTests {
         @discardableResult func begin() -> Bool {
             handler.beginASCII(with: state, stateCallback: transition, errorCallback: { self.errors += 1 })
         }
+    }
+
+    @Test func delayedFTapRemainsPhonetic() {
+        let previousLayout = Preferences.keyboardLayout
+        defer { Preferences.keyboardLayout = previousLayout }
+        Preferences.keyboardLayout = .standard
+        let s = Session()
+        var gesture = FHoldGesture(delayMilliseconds: 400)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.elapsed(0.200)).isEmpty)
+        let effects = gesture.handle(.release)
+        #expect(effects.contains(.replayTap))
+        if effects.contains(.replayTap) { s.key("f", code: 3) }
+        #expect((s.state as? InputState.Inputting)?.composingBuffer == "ㄑ")
+        #expect(s.committed.isEmpty)
+        #expect(s.errors == 0)
     }
 
     @Test func standaloneSymbolsCommitAndReturnToChinese() {
