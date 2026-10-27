@@ -10,7 +10,7 @@
 
 Debug 遇既有 PrecompiledHeaders 與 modulemap 過期問題，只清除該建置快取後重建成功；Release 通用建置成功。紀錄 artifacts/f-delay-headless.log、artifacts/f-delay-debug-retry.log、artifacts/f-delay-release.log。尚未實機重現使用者提及的字母 f，因此不宣稱另有已確認的模式錯誤修復。
 
-本機候選包 dist/0.6.7-dev.1 已完成；pkg 解包後 77 個檔案與 app 一致，簽章、識別、安裝位置與 SHA-256 核對通過，包含 arm64／x86_64。另存 iCloud 文件 AI_Bopomofo-0.6.7，供 MacBook Air 安裝。原 0.6.6 發行版保留。Mac mini 已安裝並重啟 0.6.7，77 個檔案與套件一致，偏好與詞庫未變；輸入監控的舊簽章更新仍待系統驗證完成。使用者另行授權發布 0.6.7 至 GitHub，準備 release/0.6.7 分支與 v0.6.7 標籤。
+本機候選包 dist/0.6.7-dev.1 已完成；pkg 解包後 77 個檔案與 app 一致，簽章、識別、安裝位置與 SHA-256 核對通過，包含 arm64／x86_64。另存 iCloud 文件 AI_Bopomofo-0.6.7，供 MacBook Air 安裝。原 0.6.6 發行版保留。Mac mini 已安裝並重啟 0.6.7，77 個檔案與套件一致，偏好與詞庫未變；輸入監控已經系統設定更新，確認授權符合 0.6.7 簽章；已重啟並切出再切回注音來源。使用者另行授權發布 0.6.7 至 GitHub，準備 release/0.6.7 分支與 v0.6.7 標籤。
 
 ebbebd3ecd411cd5cb3718ae473f1f88c69656b1faa9f83093921399765b956f  ./AI-Bopomofo-0.6.7-dev.1.pkg
 b6b890cd1307e030e14c0e50d9f2319640e0dd81a0371b567b2bafb917d72dc9  ./AI-Bopomofo-0.6.7-dev.1.zip
@@ -20,3 +20,5 @@ b6b890cd1307e030e14c0e50d9f2319640e0dd81a0371b567b2bafb917d72dc9  ./AI-Bopomofo-
 發布準備更新時間：2026-10-27T23:31:08+08:00。標籤對應套件原始來源 c557930，後續僅補充發布文件。
 
 發布完成時間：2026-10-27T23:35:52+08:00。公開開發測試版：[v0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7)。六個附件已從公開下載連結取回，逐一核對 SHA-256 與發布檔案一致；保留 v0.6.6。預設分支已更新為 release/0.6.7，首頁顯示新版本與 F 等待時間說明。核對時間：2026-10-27T23:37:47+08:00。套件與標籤來源仍為 c557930，後續 commit 僅更新文件。
+
+Mac mini 授權更新完成：2026-10-27T23:41:17+08:00。系統設定顯示輸入監控啟用，授權要求符合目前 app，重新啟動後程序與輸入來源切換成功。實際 F 短按／長按及等待時間介面仍待使用者確認。
