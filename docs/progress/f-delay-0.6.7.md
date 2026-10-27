@@ -10,4 +10,9 @@
 
 Debug 遇既有 PrecompiledHeaders 與 modulemap 過期問題，只清除該建置快取後重建成功；Release 通用建置成功。紀錄 artifacts/f-delay-headless.log、artifacts/f-delay-debug-retry.log、artifacts/f-delay-release.log。尚未實機重現使用者提及的字母 f，因此不宣稱另有已確認的模式錯誤修復。
 
-本機候選版待包裝與核對，預計放到 iCloud 文件供 MacBook Air 安裝。沒有覆蓋已發布的 0.6.6、沒有推送本功能分支、沒有安裝或重啟目前電腦。
+本機候選包 dist/0.6.7-dev.1 已完成；pkg 解包後 77 個檔案與 app 一致，簽章、識別、安裝位置與 SHA-256 核對通過，包含 arm64／x86_64。另存 iCloud 文件 AI_Bopomofo-0.6.7，供 MacBook Air 安裝。沒有覆蓋已發布的 0.6.6、沒有推送本功能分支、沒有安裝或重啟目前電腦。
+
+ebbebd3ecd411cd5cb3718ae473f1f88c69656b1faa9f83093921399765b956f  ./AI-Bopomofo-0.6.7-dev.1.pkg
+b6b890cd1307e030e14c0e50d9f2319640e0dd81a0371b567b2bafb917d72dc9  ./AI-Bopomofo-0.6.7-dev.1.zip
+
+套件來源 commit：c557930。
