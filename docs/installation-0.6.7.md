@@ -1,6 +1,6 @@
-# 0.6.7 本機候選版：F 長按等待時間
+# 0.6.7 開發測試版：F 長按等待時間
 
-安裝 `AI-Bopomofo-0.6.7-dev.1.pkg`（Apple Silicon／Intel 通用），或使用 zip 作為替代封裝。不要同時安裝兩份；此版未發布至 GitHub，也未經 Apple 公證。
+安裝 `AI-Bopomofo-0.6.7-dev.1.pkg`（Apple Silicon／Intel 通用），或使用 zip 作為替代封裝。不要同時安裝兩份；此版未經 Apple 公證，供開發測試。從 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 取得檔案與校驗值。
 
 1. 保存工作並切換其他輸入法；升級前備份目前 app、偏好與使用者詞庫，保留 0.6.6 安裝包以便復原。
 2. 依一般安裝流程執行 pkg；如 macOS 阻擋，依「隱私權與安全性」中該套件的「仍要打開」流程，由本人驗證。

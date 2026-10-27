@@ -1,13 +1,13 @@
-# 0.6.6 開發測試版安裝
+# 0.6.7 開發測試版安裝
 
 適用於 Apple Silicon 與 Intel Mac；基本功能部署目標為 macOS 13 以上，舊系統相容性尚待實測。Apple 模型功能另外需要 macOS 26 以上及可用的 Apple Intelligence。建議朋友先保留原有輸入法作為備用。
 
 ## 下載與核對
 
-從 [0.6.6 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.6) 下載：
+從 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 下載：
 
-- `AI-Bopomofo-0.6.6-dev.1.pkg`：一般安裝，固定安裝到 `/Library/Input Methods/AI-Bopomofo.app`。
-- `AI-Bopomofo-0.6.6-dev.1.zip`：app 備用封裝，僅在選擇使用者層安裝時使用。
+- `AI-Bopomofo-0.6.7-dev.1.pkg`：一般安裝，固定安裝到 `/Library/Input Methods/AI-Bopomofo.app`。
+- `AI-Bopomofo-0.6.7-dev.1.zip`：app 備用封裝，僅在選擇使用者層安裝時使用。
 - `checksums.txt`：下載檔案 SHA-256 校驗。
 - `technical-terms-example.txt`：可匯入的公開技術詞彙範例。
 
@@ -23,7 +23,8 @@
 4. 開啟「長按 F 輸入數字／符號」。再到「隱私權與安全性 → 輸入監控」加入並允許 `/Library/Input Methods/AI-Bopomofo.app`，依系統提示結束並重新打開。
 5. **重啟後先切到 US／ABC 等既有輸入來源，再切回 AI注音。** 只看到來源名稱被選取，不保證重啟後的連線已恢復；若仍無法組字，保存工作後登出再登入。
 6. 要使用中文逗號，取消勾選第一層選單「使用半形標點符號」；此時 Shift＋逗號輸出「，」。要使用 Shift＋字母英文組字，另開啟同名選項。
-7. 試注音組字、雙擊 Shift 來回切換，以及長按 F＋R 輸出 `+` 後放開退出。對照[測試清單](testing.md)。
+7. 在「AI注音輸入法偏好設定 → 進階 → F 長按等待時間」選擇 100～1000 毫秒，每格 50 毫秒；初始值維持 100 毫秒。詳見 [F 設定與驗收](installation-0.6.7.md)。
+8. 試注音組字、雙擊 Shift 來回切換，以及長按 F＋R 輸出 `+` 後放開退出。對照[測試清單](testing.md)。
 
 ad-hoc 版本每次程式更新，舊的輸入監控項目可能不再符合新版簽章。若 F 失效，透過系統設定移除舊 AI-Bopomofo.app 項目，再重新加入目前安裝的 app；僅切換開關不一定更新簽章。由使用者完成系統驗證，不修改權限資料庫。
 
