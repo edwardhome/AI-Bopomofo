@@ -36,3 +36,5 @@ ed7b41f2e99f658dac50dc7f346e8dc3d01703283fef4909002c1430b5ee9ce4  ./AI-Bopomofo-
 ```
 
 授權與重啟核對完成時間：2026-10-29T00:42:57+08:00。目前有效等待時間為 150 毫秒；安裝檔案、偏好與詞庫先前核對一致，未新增偏好覆寫。
+
+原始碼與安裝檔交付更新：2026-10-29T01:31:55+08:00。依使用者要求，原始碼已推送至個人 GitHub 的 [fix/f-hold-client-delivery](https://github.com/edwardhome/AI-Bopomofo/tree/fix/f-hold-client-delivery) 分支，未建立新 Release 或變更既有預設分支。iCloud 文件的 AI-Bopomofo-0.6.8 資料夾只放 pkg 與 AI-Bopomofo.app，沒有複製完整專案；pkg SHA-256 與 77 個 app 檔案核對一致，簽章驗證通過。雲端同步及 Air 收到檔案未在此機驗證。
