@@ -6,7 +6,7 @@
 
 ## 原因與修正範圍
 
-現有控制器在等待 F 時只回傳已處理，沒有立即顯示組字或提交。iTerm2 的 [iTermKeyboardHandler.m](https://github.com/gnachman/iTerm2/blob/master/sources/TerminalView/iTermKeyboardHandler.m) 在 `shouldPassPostCocoaEventToDelegate` 中，若前後都沒有組字且沒有處理結果，會將按鍵再交給終端。空字串提交也不會將 `_keyPressHandled` 設為真。因此「原始 f 先送出，輸入法稍後處理為 ㄑ」與此路徑相符；這是原始碼分析，尚非本機實鍵重現證明。英文模式是否受同一客戶端路徑影響仍待驗收。
+現有控制器在等待 F 時只回傳已處理，沒有立即顯示組字或提交。iTerm2 的 [iTermKeyboardHandler.m](https://github.com/gnachman/iTerm2/blob/8634ad69501d81b49fdb5e1806a1bcb9b1aeaa9b/sources/Keyboard/iTermKeyboardHandler.m) 在 `shouldPassPostCocoaEventToDelegate` 中，若前後都沒有組字且沒有處理結果，會將按鍵再交給終端。空字串提交也不會將 `_keyPressHandled` 設為真。因此「原始 f 先送出，輸入法稍後處理為 ㄑ」與此路徑相符；這是原始碼分析，尚非本機實鍵重現證明。英文模式是否受同一客戶端路徑影響仍待驗收。
 
 新增不可作為已提交文字的 PendingF 狀態，以「·」表示暫時等待，已有組字則維持原組字。進入分層、放開、模式切換、失焦與安全輸入會清除或還原此狀態；標記不進入組字內容、不提交至文件。空的 held QuickSymbols 也保留標記，避免長按重複事件被終端回退為 f。
 
@@ -27,3 +27,10 @@ FHoldGesture 區分被動觀察到放開與 IMK 收到放開，避免監聽器�
 ## 自行維護
 
 [開發教學](../development.md) 已涵蓋環境、分支、修改符號、偏好與版本、測試、編譯、提交、打包、安裝、備份、回退及輸入監控更新。發布包沿用小麥注音 MIT 與第三方授權。這一輪先產生本機候選版，不自動發布新 GitHub release。
+
+套件驗證：dist/0.6.8-dev.1 的 pkg 解包後 77 個 app 檔案與封裝 app 一致，識別、安裝位置與簽章通過，SHA-256 校驗成功。來源 b17f1ae。備份保存於 artifacts/install-0.6.8；安裝已送出，目前等待系統本人驗證，尚未重啟新版或更新輸入監控。
+
+```text
+405a16e3c69b9aae6b304b6cb8fc477c1353c611c31633ee9d901a1a1bd6bedf  ./AI-Bopomofo-0.6.8-dev.1.pkg
+ed7b41f2e99f658dac50dc7f346e8dc3d01703283fef4909002c1430b5ee9ce4  ./AI-Bopomofo-0.6.8-dev.1.zip
+```
