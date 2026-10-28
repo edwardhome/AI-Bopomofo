@@ -15,6 +15,18 @@ import CandidateRanking
 import UniformTypeIdentifiers
 
 extension InputState {
+    /// A temporary marked composition, never committed as text. Keeping a nonempty
+    /// mark tells clients such as iTerm2 that the deferred key belongs to the IME.
+    class PendingF: InputState {
+        let original: InputState
+        init(original: InputState) { self.original = original; super.init() }
+    }
+
+    static func fHoldMarkedText(original: Inputting?) -> NSAttributedString {
+        if let original, !original.composingBuffer.isEmpty { return original.attributedString }
+        return NSAttributedString(string: "·")
+    }
+
     @objc(InputStateQuickSymbols)
     class QuickSymbols: InputState, CandidateProvider {
         @objc let held: Bool

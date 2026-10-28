@@ -63,7 +63,7 @@ public enum QuickSymbolLayer {
 
 /// A local input-method gesture. The adapter owns the timer and original key event.
 public struct FHoldGesture {
-    public static let defaultDelayMilliseconds = 100
+    public static let defaultDelayMilliseconds = 150
     public static let delayRangeMilliseconds = 100...1000
 
     public static func clampedDelayMilliseconds(_ value: Int) -> Int {
@@ -74,11 +74,13 @@ public struct FHoldGesture {
     public let delay: Double
     public enum Phase: Equatable { case idle, pending, held }
     public enum Event {
-        case press(eligible: Bool, repeating: Bool), release, otherKey, timeout, cancel
+        case press(eligible: Bool, repeating: Bool), release, observedRelease, otherKey, timeout, cancel
         case elapsed(Double)
     }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
     public private(set) var phase: Phase = .idle
+    // The passive tap may finish the gesture before IMK receives the same key-up.
+    private var ownsKeyUp = false
     public init(delayMilliseconds: Int = Self.defaultDelayMilliseconds) {
         delay = Double(Self.clampedDelayMilliseconds(delayMilliseconds)) / 1000
     }
@@ -86,17 +88,25 @@ public struct FHoldGesture {
     public mutating func handle(_ event: Event) -> [Effect] {
         switch event {
         case .press(let eligible, let repeating):
-            if phase != .idle { return [.consume] }
+            if phase != .idle || (repeating && ownsKeyUp) { return [.consume] }
             guard eligible && !repeating else { return [] }
             phase = .pending
+            ownsKeyUp = true
             return [.schedule, .consume]
+        case .observedRelease:
+            let owned = ownsKeyUp
+            let effects = handle(.release)
+            ownsKeyUp = owned
+            return effects
         case .release:
+            let owned = ownsKeyUp
+            ownsKeyUp = false
             let previous = phase
             phase = .idle
             switch previous {
             case .pending: return [.invalidate, .replayTap, .consume]
             case .held: return [.invalidate, .endLayer, .consume]
-            case .idle: return []
+            case .idle: return owned ? [.consume] : []
             }
         case .otherKey:
             guard phase == .pending else { return [] }
@@ -110,6 +120,7 @@ public struct FHoldGesture {
             phase = .held
             return [.beginLayer]
         case .cancel:
+            ownsKeyUp = false
             let previous = phase
             phase = .idle
             return previous == .held ? [.invalidate, .endLayer] : [.invalidate]

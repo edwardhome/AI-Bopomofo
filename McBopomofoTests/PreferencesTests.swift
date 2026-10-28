@@ -62,7 +62,7 @@ final class PreferencesTests {
     }
 
     @Test func fHoldDelayPersistsAndBoundsStoredValues() {
-        #expect(Preferences.fHoldDelayMilliseconds == 100)
+        #expect(Preferences.fHoldDelayMilliseconds == 150)
         Preferences.fHoldDelayMilliseconds = 450
         #expect(Preferences.fHoldDelayMilliseconds == 450)
         #expect(UserDefaults.standard.integer(forKey: "FHoldDelayMilliseconds") == 450)

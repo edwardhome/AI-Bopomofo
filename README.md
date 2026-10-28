@@ -2,7 +2,7 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
 
-**目前版本：0.6.7 開發測試版。原始碼、安裝包與校驗檔已公開。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
+**公開版本：0.6.7 開發測試版。原始碼、安裝包與校驗檔已公開。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
 
 [下載 0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
 
@@ -75,14 +75,18 @@ STM32
 
 ## 開發
 
+本分支為 0.6.8 本機修正候選版，尚未發布；修正 F 延遲事件與客戶端組字通知，並將未設定時的長按門檻改為 150 毫秒。實際英文與 iTerm2 輸入仍待人工驗收。
+
 需要 Xcode 26 以上與 macOS 26 以上。內部模組／target 保留 `McBopomofo`，產品識別碼為 `org.aibopomofo.inputmethod.AIBopomofo`。
 
 ```bash
 scripts/test-headless.sh
 scripts/build.sh Release
-scripts/package.sh 0.6.7-dev.1 Release
-scripts/verify-package.sh dist/0.6.7-dev.1
+scripts/package.sh 0.6.8-dev.1 Release
+scripts/verify-package.sh dist/0.6.8-dev.1
 ```
+
+完整步驟與小功能修改範例見 [自己修改、編譯與打包](docs/development.md)。
 
 詳見 [AGENTS.md](AGENTS.md)、[架構](algorithm.md)與[交付紀錄](docs/DELIVERY.md)。私人詞庫、Kanata 設定、輸入紀錄與本機備份不納入 Git。
 

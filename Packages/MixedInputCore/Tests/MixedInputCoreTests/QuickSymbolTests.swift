@@ -4,6 +4,59 @@ import Testing
 
 @Suite("Independent F symbol layer")
 struct QuickSymbolTests {
+    @Test func passiveTapThenIMKReleaseDoesNotLeakF() {
+        for held in [false, true] {
+            var gesture = FHoldGesture(delayMilliseconds: 300)
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            if held { _ = gesture.handle(.elapsed(0.301)) }
+            let observed = gesture.handle(.observedRelease)
+            #expect(observed.contains(.replayTap) == !held)
+            #expect(observed.contains(.endLayer) == held)
+            #expect(gesture.phase == .idle)
+            #expect(gesture.handle(.observedRelease).contains(.replayTap) == false)
+            #expect(gesture.handle(.release) == [.consume])
+            #expect(gesture.handle(.release).isEmpty)
+        }
+    }
+
+    @Test func imkReleaseBeforePassiveTapReplaysOnlyOnce() {
+        var gesture = FHoldGesture(delayMilliseconds: 100)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.release).filter { $0 == .replayTap }.count == 1)
+        #expect(gesture.handle(.observedRelease).isEmpty)
+    }
+
+    @Test func rolledFRepeatsCannotLeakAfterReplayingTap() {
+        var gesture = FHoldGesture(delayMilliseconds: 500)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.otherKey).contains(.replayTap))
+        for _ in 0..<3 {
+            #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
+        }
+        #expect(gesture.handle(.release) == [.consume])
+        #expect(gesture.handle(.press(eligible: false, repeating: true)).isEmpty)
+    }
+
+    @Test func delayedTimerUsesSymbolEventDeadlineWithoutTypingF() {
+        var gesture = FHoldGesture(delayMilliseconds: 400)
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        // The adapter advances using R's timestamp even if the timer has not fired.
+        #expect(gesture.handle(.elapsed(0.450)) == [.beginLayer])
+        #expect(gesture.handle(.otherKey).isEmpty)
+        #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.release) == [.consume])
+    }
+
+    @Test func nextPressWorksWhenClientNeverDeliversKeyUp() {
+        var gesture = FHoldGesture(delayMilliseconds: 100)
+        for _ in 0..<3 {
+            #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
+            #expect(gesture.handle(.observedRelease) == [.invalidate, .replayTap, .consume])
+        }
+        _ = gesture.handle(.cancel)
+        #expect(gesture.handle(.release).isEmpty)
+    }
+
     @Test func longerDelayPreservesAnOrdinaryPress() {
         var gesture = FHoldGesture(delayMilliseconds: 400)
         _ = gesture.handle(.press(eligible: true, repeating: false))
@@ -20,7 +73,7 @@ struct QuickSymbolTests {
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.elapsed(0.200)).isEmpty)
         #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
-        #expect(gesture.handle(.release).isEmpty)
+        #expect(gesture.handle(.release) == [.consume])
     }
 
     @Test func configuredThresholdAndRelease() {
@@ -34,8 +87,21 @@ struct QuickSymbolTests {
         }
     }
 
-    @Test func invalidDelayIsBoundedAndDefaultIsUnchanged() {
-        #expect(FHoldGesture().delay == 0.1)
+    @Test func releaseInsideGraceIntervalKeepsOriginalKey() {
+        for seconds in [0.050, 0.099, 0.100, 0.125, 0.150] {
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.elapsed(seconds)).isEmpty)
+            #expect(gesture.handle(.observedRelease).contains(.replayTap))
+        }
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.elapsed(0.151)) == [.beginLayer])
+        #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+    }
+
+    @Test func invalidDelayIsBoundedAndDefaultIncludesGraceInterval() {
+        #expect(FHoldGesture().delay == 0.15)
         #expect(FHoldGesture(delayMilliseconds: Int.min).delay == 0.1)
         #expect(FHoldGesture(delayMilliseconds: Int.max).delay == 1.0)
     }
@@ -58,7 +124,7 @@ struct QuickSymbolTests {
     }
 
     @Test func tapReplaysExactlyOnce() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
         #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
         #expect(gesture.handle(.release).isEmpty)
@@ -66,7 +132,7 @@ struct QuickSymbolTests {
     }
 
     @Test func holdEntersAndReleaseExitsWithoutTypingF() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.timeout) == [.beginLayer])
         #expect(gesture.phase == .held)
@@ -77,15 +143,15 @@ struct QuickSymbolTests {
     }
 
     @Test func fastTypingReplaysBeforeFollowingKey() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
         #expect(gesture.handle(.timeout).isEmpty)
-        #expect(gesture.handle(.release).isEmpty)
+        #expect(gesture.handle(.release) == [.consume])
     }
 
     @Test func modifiedFAndEnglishAndPhoneticInputStayUntouched() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         #expect(gesture.handle(.press(eligible: false, repeating: false)).isEmpty)
         #expect(gesture.handle(.timeout).isEmpty)
         #expect(gesture.handle(.press(eligible: true, repeating: true)).isEmpty)
@@ -93,7 +159,7 @@ struct QuickSymbolTests {
     }
 
     @Test func deactivationInvalidatesPendingTimer() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.cancel) == [.invalidate])
         #expect(gesture.handle(.timeout).isEmpty)
@@ -101,14 +167,14 @@ struct QuickSymbolTests {
     }
 
     @Test func cancellationExitsHeldLayer() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         _ = gesture.handle(.timeout)
         #expect(gesture.handle(.cancel) == [.invalidate, .endLayer])
         #expect(gesture.phase == .idle)
     }
     @Test func thresholdAndMonitorRelease() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.elapsed(0.099)).isEmpty)
         #expect(gesture.handle(.elapsed(0.100)).isEmpty)
@@ -120,7 +186,7 @@ struct QuickSymbolTests {
     }
 
     @Test func monitorReleaseBeforeDeadlineReplaysOnlyOnce() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.elapsed(0.050)).isEmpty)
         #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
@@ -129,7 +195,7 @@ struct QuickSymbolTests {
     }
 
     @Test func monitorFailureReleasesPendingAndHeldGestures() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
         _ = gesture.handle(.press(eligible: true, repeating: false))
@@ -139,7 +205,7 @@ struct QuickSymbolTests {
     }
 
     @Test func cancelAndLateTimerCannotReenter() {
-        var gesture = FHoldGesture()
+        var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         _ = gesture.handle(.elapsed(0.101))
         _ = gesture.handle(.cancel)

@@ -40,6 +40,23 @@ struct MixedInputTests {
         }
     }
 
+    @Test func waitingMarkNeverBecomesCommittedComposition() {
+        let empty = InputState.Empty()
+        let pending = InputState.PendingF(original: empty)
+        #expect(pending.original === empty)
+        #expect(!((pending as InputState) is InputState.NotEmpty))
+        #expect(InputState.fHoldMarkedText(original: nil).string == "·")
+        let ascii = InputState.ASCII(text: "hello", cursor: 2)
+        #expect(InputState.fHoldMarkedText(original: ascii).string == ascii.attributedString.string)
+        let s = Session()
+        s.transition(pending)
+        s.transition(empty)
+        #expect(s.committed.isEmpty)
+        s.transition(InputState.QuickSymbols(held: true))
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed.isEmpty)
+    }
+
     @Test func delayedFTapRemainsPhonetic() {
         let previousLayout = Preferences.keyboardLayout
         defer { Preferences.keyboardLayout = previousLayout }
