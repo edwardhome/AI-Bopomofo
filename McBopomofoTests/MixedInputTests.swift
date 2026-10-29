@@ -80,10 +80,52 @@ struct MixedInputTests {
         #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
         #expect(s.committed == "我")
         s.key("y", code: 16); s.key("r", code: 15); s.key("n", code: 45)
-        #expect(s.committed == "我7+1")
+        #expect(s.committed == "我")
+        #expect((s.state as? InputState.QuickSymbols)?.heldBuffer?.raw == "7+1")
         s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "我7+1")
         s.type("ji3"); s.key("\r")
         #expect(s.committed == "我7+1我")
+        #expect(s.errors == 0)
+    }
+
+    @Test func heldLayerDeletesWithoutCommittingOrLeavingLayer() {
+        let s = Session()
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("y", code: 16); s.key("r", code: 15); s.key("n", code: 45)
+        for expected in ["7+", "7", "", ""] {
+            #expect(s.key("\u{7F}", code: 51))
+            #expect((s.state as? InputState.QuickSymbols)?.heldBuffer?.raw == expected)
+            #expect(s.committed.isEmpty)
+        }
+        s.key("r", code: 15)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "+")
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(s.errors == 0)
+    }
+
+    @Test func heldEnglishDeletionPreservesCompositionAndCursor() {
+        let s = Session()
+        s.state = InputState.ASCII(text: "abcd", cursor: 2)
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("r", code: 15)
+        s.key("\u{7F}", code: 51)
+        s.key("\u{F728}", code: 117)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "abd")
+        #expect((s.state as? InputState.ASCII)?.cursorIndex == 2)
+        #expect(s.committed.isEmpty)
+    }
+
+    @Test func nativeBackspaceDeletesPhoneticsAndAllowsRepeatedDelivery() {
+        let s = Session()
+        s.type("ji3")
+        #expect(s.key("\u{7F}", code: 51))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(s.committed.isEmpty)
         #expect(s.errors == 0)
     }
 

@@ -2,18 +2,18 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
 
-**公開版本：0.6.7 開發測試版。原始碼、安裝包與校驗檔已公開。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
+**開發版本：0.6.9。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
 
-[下載 0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
+[下載 0.6.9](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.9) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
 
-**0.6.7 新增**：在「偏好設定 → 進階」調整 F 長按等待時間（100～1000 毫秒、每格 50 毫秒），初始值保留 100 毫秒。詳見 [0.6.7 安裝與驗收](docs/installation-0.6.7.md)。先前 [0.6.6](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.6) 保留供回退。
+**0.6.9 修正**：按住 F 時可連續退格，數字／符號先在組字中編輯，放開 F 後送出；刪除範圍限目前組字。F 等待時間可調整為 100～1000 毫秒，未設定時預設 150 毫秒。前版 F 功能已經使用者驗收，本版退格修正仍待 MacBook Air 實鍵確認。[0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
 
 ## 這個版本的特色
 
 | 功能 | 使用方式與範圍 |
 | --- | --- |
 | 雙擊 Shift 切換英文／注音 | 快速按放 Shift 兩次，在輸入法內切換；游標旁短暫顯示「英文／注音」。0.6.6 已修正重複修飾鍵通知造成無法切換的問題，並完成使用者實機驗收。 |
-| 不依賴 Kanata 的 F 數字／符號分層 | 開啟選單中的「長按 F 輸入數字／符號」並授予輸入監控；按住 F 超過設定時間（預設 100 毫秒）後按 R 輸入 `+`，放開 F 退出。中文、直接英文及 ASCII 組字均支援。 |
+| 不依賴 Kanata 的 F 數字／符號分層 | 開啟選單中的「長按 F 輸入數字／符號」並授予輸入監控；按住 F 超過設定時間（預設 150 毫秒）後按 R 輸入 `+`，放開 F 退出。中文、直接英文及 ASCII 組字均支援。 |
 | 明確英文／ASCII 組字 | 從選單進入，或選擇啟用「Shift＋字母開始英文組字」。保留大小寫、數字與程式符號；Enter 送出。 |
 | 專業詞彙候選與匯入／匯出 | 自訂英文技術詞以 UTF-8 純文字每行一詞匯入。原字串保留第一候選，Tab 選取補全，不擅自替換。 |
 | 可切換全形／半形標點 | 關閉「使用半形標點符號」後，`Shift + ,` 為 `，`、`Shift + .` 為 `。`；開啟時為 `,`、`.`。普通注音鍵位保持原樣。 |
@@ -35,7 +35,7 @@ F 分層部分鍵位：
 
 ## 下載與第一次設定
 
-1. 從 [Releases](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 下載 `.pkg` 安裝包及 `checksums.txt`。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64），MacBook Air 不需要另外選 CPU 版本。
+1. 從 [Releases](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.9) 下載 `.pkg` 安裝包及 `checksums.txt`。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64），MacBook Air 不需要另外選 CPU 版本。
 2. 按照[安裝說明](docs/installation.md)安裝，登出再登入後，於鍵盤設定加入「AI注音輸入法」。
 3. 要使用 F 分層，開啟「長按 F 輸入數字／符號」，並在「隱私權與安全性 → 輸入監控」允許目前安裝的 AI-Bopomofo.app。
 4. 要使用標準中文標點，取消勾選「使用半形標點符號」。新偏好預設半形，既有設定會保留。
@@ -65,7 +65,7 @@ STM32
 - 英文技術詞補全是確定性的前綴比對，並非 AI。尚未實作任意小寫英文與注音按鍵的無感自動判別。
 - 已移除本專案新增的 Vim／Neovim／VSCodeVim 自動切換整合，避免反覆開啟鍵盤設定；編輯器可使用自己的輸入法套件。
 - 0.6.5 已把原先無法執行的進階子選單指令移回第一層；診斷入口已實測可用，詞庫匯入／匯出及跨應用仍歡迎測試。
-- 202 項無介面測試通過、2 項上游案例跳過；0.6.6 已有使用者確認雙 Shift 英文／注音來回切換及中文逗號，0.6.7 調整介面與 Air 實機仍待驗收。測試通過不代表所有應用皆相容。
+- 213 項無介面測試通過、2 項上游案例跳過；0.6.8 的 F 主要功能已由使用者驗收，0.6.9 退格修正與 Air 實機仍待驗收。測試通過不代表所有應用皆相容。
 
 協助測試請看[測試與回報](docs/testing.md)。從 Kanata 遷移時，先保留設定備份，在目標 Mac 確認 AI注音功能後再依原安裝方式停用或移除 Kanata；安裝包不會自行變更 Kanata。
 
@@ -75,15 +75,15 @@ STM32
 
 ## 開發
 
-本分支為 0.6.8 本機修正候選版，尚未發布；修正 F 延遲事件與客戶端組字通知，並將未設定時的長按門檻改為 150 毫秒。實際英文與 iTerm2 輸入仍待人工驗收。
+本分支為 0.6.9 開發測試版，修正 F 分層退格與重複事件處理，保留 0.6.8 的延遲事件與 150 毫秒預設門檻。依使用者要求，只更新 iCloud 發布檔與個人 GitHub，由使用者自行安裝。
 
 需要 Xcode 26 以上與 macOS 26 以上。內部模組／target 保留 `McBopomofo`，產品識別碼為 `org.aibopomofo.inputmethod.AIBopomofo`。
 
 ```bash
 scripts/test-headless.sh
 scripts/build.sh Release
-scripts/package.sh 0.6.8-dev.1 Release
-scripts/verify-package.sh dist/0.6.8-dev.1
+scripts/package.sh 0.6.9-dev.1 Release
+scripts/verify-package.sh dist/0.6.9-dev.1
 ```
 
 完整步驟與小功能修改範例見 [自己修改、編譯與打包](docs/development.md)。

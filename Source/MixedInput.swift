@@ -31,9 +31,21 @@ extension InputState {
     class QuickSymbols: InputState, CandidateProvider {
         @objc let held: Bool
         @objc let originalASCII: InputState.ASCII?
-        @objc init(held: Bool) { self.held = held; originalASCII = nil; super.init() }
+        let heldBuffer: ASCIIComposition?
+        var editingComposition: ASCIIComposition? { originalASCII?.composition ?? heldBuffer }
+        var markedComposition: InputState.ASCII? {
+            originalASCII ?? heldBuffer.map { InputState.ASCII(composition: $0, predictionSuppressed: true) }
+        }
+        @objc init(held: Bool) {
+            self.held = held; originalASCII = nil
+            heldBuffer = held ? ASCIIComposition() : nil
+            super.init()
+        }
+        init(heldBuffer: ASCIIComposition) {
+            held = true; originalASCII = nil; self.heldBuffer = heldBuffer; super.init()
+        }
         @objc init(held: Bool, originalASCII: InputState.ASCII) {
-            self.held = held; self.originalASCII = originalASCII; super.init()
+            self.held = held; self.originalASCII = originalASCII; heldBuffer = nil; super.init()
         }
         var candidateCount: Int { QuickSymbolLayer.entries.count }
         func candidate(at index: Int) -> String {
@@ -79,20 +91,32 @@ extension InputState {
 
 @objc class QuickSymbolHandler: NSObject {
     @objc static func end(state: InputState.QuickSymbols, stateCallback: (InputState) -> Void) {
+        if let buffer = state.heldBuffer, !buffer.raw.isEmpty {
+            stateCallback(InputState.Committing(poppedText: buffer.raw))
+        }
         stateCallback(state.originalASCII ?? InputState.EmptyIgnoringPreviousState())
+    }
+    private static func update(_ composition: ASCIIComposition, state: InputState.QuickSymbols,
+                               stateCallback: (InputState) -> Void) {
+        if state.originalASCII != nil {
+            stateCallback(InputState.QuickSymbols(held: state.held,
+                originalASCII: InputState.ASCII(composition: composition, predictionSuppressed: true)))
+        } else {
+            stateCallback(InputState.QuickSymbols(heldBuffer: composition))
+        }
     }
     private static func insert(_ text: String, state: InputState.QuickSymbols,
                                stateCallback: (InputState) -> Void) {
-        if let original = state.originalASCII {
-            if case .updated(let composition) = original.composition.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
-                stateCallback(InputState.QuickSymbols(held: state.held,
-                    originalASCII: InputState.ASCII(composition: composition, predictionSuppressed: true)))
+        if let original = state.editingComposition {
+            if case .updated(let composition) = original.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
+                update(composition, state: state, stateCallback: stateCallback)
             }
         } else {
             stateCallback(InputState.Committing(poppedText: text))
             stateCallback(InputState.QuickSymbols(held: state.held))
         }
     }
+
     @objc static func select(index: Int, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) {
         guard QuickSymbolLayer.entries.indices.contains(index) else { return }
@@ -101,7 +125,9 @@ extension InputState {
     @objc static func handle(input: KeyHandlerInput, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) -> Bool {
         if input.isCommandHold || input.isOptionHold || input.isControlHold {
-            if let original = state.originalASCII { stateCallback(InputState.Committing(poppedText: original.composingBuffer)) }
+            if let original = state.editingComposition, !original.display.isEmpty {
+                stateCallback(InputState.Committing(poppedText: original.display))
+            }
             stateCallback(InputState.EmptyIgnoringPreviousState())
             return false
         }
@@ -109,8 +135,15 @@ extension InputState {
             end(state: state, stateCallback: stateCallback)
             return true
         }
-        if let value = QuickSymbolLayer.output(for: UInt16(input.keyCode)) {
+        let code: UInt16 = input.charCode == 8 ? 51 : UInt16(input.keyCode)
+        if let original = state.editingComposition,
+           case .updated(let composition) = QuickSymbolLayer.edit(keyCode: code, composition: original) {
+            update(composition, state: state, stateCallback: stateCallback)
+        } else if let value = QuickSymbolLayer.output(for: code) {
             insert(value, state: state, stateCallback: stateCallback)
+        } else if code == 51 || code == 117 {
+            end(state: state, stateCallback: stateCallback)
+            return false
         }
         return true
     }

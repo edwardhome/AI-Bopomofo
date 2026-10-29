@@ -59,6 +59,15 @@ public enum QuickSymbolLayer {
     public static func output(for keyCode: UInt16) -> String? {
         entries.first { $0.keyCode == keyCode }?.output
     }
+
+    /// Applies editing inside a held layer without committing text to the client.
+    public static func edit(keyCode: UInt16, composition: ASCIIComposition) -> ASCIIComposition.Result? {
+        if keyCode == 51 { return composition.applying(.backspace) }
+        if keyCode == 117 { return composition.applying(.delete) }
+        guard let text = output(for: keyCode) else { return nil }
+        return composition.applying(.insert(text))
+    }
+
 }
 
 /// A local input-method gesture. The adapter owns the timer and original key event.
@@ -125,5 +134,24 @@ public struct FHoldGesture {
             phase = .idle
             return previous == .held ? [.invalidate, .endLayer] : [.invalidate]
         }
+    }
+}
+
+
+/// Only mapped symbol keys belong to the layer after F is released. Editing keys
+/// must keep their native repeat behavior, even when IMK omits their key-up.
+public struct SymbolKeyOwnership {
+    private var keys: Set<UInt16> = []
+    public init() {}
+    public mutating func reset() { keys.removeAll() }
+    public mutating func keyUp(_ code: UInt16) -> Bool { keys.remove(code) != nil }
+    public mutating func keyDown(_ code: UInt16, repeating: Bool,
+                                 layerActive: Bool, shortcut: Bool) -> Bool {
+        if !repeating || shortcut { keys.remove(code) }
+        if repeating && keys.contains(code) && !layerActive { return true }
+        if layerActive && !shortcut && QuickSymbolLayer.output(for: code) != nil {
+            keys.insert(code)
+        }
+        return false
     }
 }

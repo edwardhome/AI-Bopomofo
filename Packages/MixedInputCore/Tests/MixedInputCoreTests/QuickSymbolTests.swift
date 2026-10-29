@@ -214,3 +214,69 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.press(eligible: true, repeating: false)) == [.schedule, .consume])
     }
 }
+
+
+@Suite("Held symbols and deletion")
+struct HeldSymbolEditingTests {
+    private func edit(_ code: UInt16, _ composition: ASCIIComposition) throws -> ASCIIComposition {
+        let result = try #require(QuickSymbolLayer.edit(keyCode: code, composition: composition))
+        guard case .updated(let updated) = result else {
+            Issue.record("Expected an editable composition")
+            return composition
+        }
+        return updated
+    }
+
+    @Test func backspaceRepeatsWhileFRemainsHeld() throws {
+        var buffer = ASCIIComposition()
+        for code: UInt16 in [16, 32, 34, 15] { buffer = try edit(code, buffer) }
+        #expect(buffer.raw == "789+")
+        for expected in ["789", "78", "7", "", ""] {
+            buffer = try edit(51, buffer)
+            #expect(buffer.raw == expected)
+        }
+        buffer = try edit(15, buffer)
+        #expect(buffer.raw == "+")
+    }
+
+    @Test func editingPreservesEnglishCursorAndForwardDelete() throws {
+        var buffer = ASCIIComposition(raw: "abcd", cursor: 2)
+        buffer = try edit(15, buffer)
+        #expect(buffer.raw == "ab+cd")
+        buffer = try edit(51, buffer)
+        #expect(buffer.raw == "abcd")
+        #expect(buffer.cursor == 2)
+        buffer = try edit(117, buffer)
+        #expect(buffer.raw == "abd")
+        #expect(buffer.cursor == 2)
+    }
+
+    @Test func deletionNeverAcquiresSymbolRepeatOwnership() {
+        var keys = SymbolKeyOwnership()
+        for code: UInt16 in [51, 117] {
+            #expect(keys.keyDown(code, repeating: false, layerActive: true, shortcut: false) == false)
+            for active in [true, false, false] {
+                #expect(keys.keyDown(code, repeating: true, layerActive: active, shortcut: false) == false)
+            }
+            #expect(keys.keyUp(code) == false)
+        }
+    }
+
+    @Test func mappedKeyRepeatStopsOnFReleaseAndFreshPressRecoversWithoutKeyUp() {
+        var keys = SymbolKeyOwnership()
+        #expect(keys.keyDown(15, repeating: false, layerActive: true, shortcut: false) == false)
+        #expect(keys.keyDown(15, repeating: true, layerActive: true, shortcut: false) == false)
+        #expect(keys.keyDown(15, repeating: true, layerActive: false, shortcut: false) == true)
+        #expect(keys.keyDown(15, repeating: false, layerActive: false, shortcut: false) == false)
+        #expect(keys.keyDown(15, repeating: true, layerActive: false, shortcut: false) == false)
+    }
+
+    @Test func shortcutAndKeyUpReleaseOwnership() {
+        var keys = SymbolKeyOwnership()
+        _ = keys.keyDown(15, repeating: false, layerActive: true, shortcut: false)
+        #expect(keys.keyUp(15) == true)
+        #expect(keys.keyDown(15, repeating: true, layerActive: false, shortcut: false) == false)
+        _ = keys.keyDown(15, repeating: false, layerActive: true, shortcut: false)
+        #expect(keys.keyDown(15, repeating: true, layerActive: false, shortcut: true) == false)
+    }
+}

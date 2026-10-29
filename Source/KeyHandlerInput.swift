@@ -56,7 +56,7 @@ class KeyHandlerInput: NSObject {
         self.inputText = inputText
         self.inputTextIgnoringModifiers = inputTextIgnoringModifiers ?? inputText
         self.keyCode = keyCode
-        self.charCode = charCode
+        self.charCode = charCode == 127 && keyCode == 51 ? 8 : charCode
         self.flags = flags
         useVerticalMode = isVerticalMode
         emacsKey = EmacsKeyHelper.detect(charCode: charCode, flags: flags)
@@ -81,7 +81,7 @@ class KeyHandlerInput: NSObject {
             let first = inputText[inputText.startIndex].utf16.first!
             return first
         }()
-        self.charCode = charCode
+        self.charCode = charCode == 127 && keyCode == 51 ? 8 : charCode
         emacsKey = EmacsKeyHelper.detect(charCode: charCode, flags: event.modifierFlags)
         cursorForwardKey = useVerticalMode ? .down : .right
         cursorBackwardKey = useVerticalMode ? .up : .left

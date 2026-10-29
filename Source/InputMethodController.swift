@@ -77,7 +77,7 @@ class McBopomofoInputMethodController: IMKInputController {
     private var fHoldTimer: Timer?
     private var pendingFEvent: NSEvent?
     private var fHoldStartedAt: TimeInterval?
-    private var symbolKeysDown: Set<UInt16> = []
+    private var symbolKeysDown = SymbolKeyOwnership()
 
     // Share the stored issues, so a set of issues is shown as notification only once.
     static var latestUserFileIssues: [String] = []
@@ -243,7 +243,7 @@ class McBopomofoInputMethodController: IMKInputController {
         directEnglish = false
         textAssistant.cancel()
         cancelFHold(client: client)
-        symbolKeysDown.removeAll()
+        symbolKeysDown.reset()
         UserDefaults.standard.synchronize()
 
         // Override the keyboard layout. Use US if not set.
@@ -271,7 +271,7 @@ class McBopomofoInputMethodController: IMKInputController {
         textAssistant.cancel()
         if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
         cancelFHold(client: client)
-        symbolKeysDown.removeAll()
+        symbolKeysDown.reset()
         currentClient = nil
         keyHandler.clear()
         self.handle(state: .Deactivated(), client: client)
@@ -581,12 +581,12 @@ class McBopomofoInputMethodController: IMKInputController {
             advanceFHold(to: event.timestamp, client: client)
         }
         // Keep ownership until key-up even when F was released before a symbol key.
-        if event.type == .keyUp, symbolKeysDown.remove(event.keyCode) != nil { return true }
-        if event.type == .keyDown, event.isARepeat, symbolKeysDown.contains(event.keyCode),
-           !(state is InputState.QuickSymbols) { return true }
-        if event.type == .keyDown, event.keyCode != UInt16(kVK_ANSI_F), state is InputState.QuickSymbols,
-           event.modifierFlags.intersection([.command, .control, .option]).isEmpty {
-            symbolKeysDown.insert(event.keyCode)
+        if event.type == .keyUp, symbolKeysDown.keyUp(event.keyCode) { return true }
+        if event.type == .keyDown,
+           symbolKeysDown.keyDown(event.keyCode, repeating: event.isARepeat,
+               layerActive: state is InputState.QuickSymbols,
+               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty) {
+            return true
         }
 
         if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
@@ -843,8 +843,8 @@ extension McBopomofoInputMethodController {
                 gCurrentCandidateController?.visible = false
                 hideTooltip()
                 // A held layer maps physical keys without presenting a selection UI.
-                (client as? IMKTextInput)?.setMarkedText(InputState.fHoldMarkedText(original: newState.originalASCII),
-                    selectionRange: NSRange(location: Int(newState.originalASCII?.cursorIndex ?? 0), length: 0),
+                (client as? IMKTextInput)?.setMarkedText(InputState.fHoldMarkedText(original: newState.markedComposition),
+                    selectionRange: NSRange(location: Int(newState.markedComposition?.cursorIndex ?? 0), length: 0),
                     replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
             } else {
                 handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)
