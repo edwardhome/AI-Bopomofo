@@ -1,3 +1,5 @@
+0.6.9 交付狀態：原始碼與 v0.6.9 標籤已上傳；iCloud 的 pkg／app 已核對。GitHub Release 草稿已保存，附件因瀏覽器上傳權限與本機鎖定尚未上傳，未公開 Release。未安裝或重啟本機。
+
 0.6.9 修正按住 F 時的退格與重複事件；213 項無介面測試通過、2 項跳過，Debug 整合測試編譯及通用 Release 建置成功。前版 F 主要功能已由使用者驗收，本版退格仍待 MacBook Air 實測。依最新要求只更新 iCloud 發布檔與個人 GitHub，不安裝、不重啟。詳見 [0.6.9 進度](progress/f-backspace-0.6.9.md)。以下為歷史紀錄。
 
 0.6.8 本機候選版已完成 F 延遲事件與組字標記修正、150 毫秒預設門檻與自行編譯教學；208 項無介面測試通過、2 項跳過，Debug 測試編譯與通用 Release 建置成功，套件 77 個 app 檔案一致。已備份並安裝，偏好與詞庫未變；輸入監控已核對符合 0.6.8，已重啟並重新建立注音連線，門檻為 150 毫秒。實鍵仍待驗收；原始碼已推送個人 GitHub 的 fix/f-hold-client-delivery 分支，尚未建立新 Release，iCloud 文件已複製 pkg 與 app。詳見 [0.6.8 進度](progress/f-client-0.6.8.md) 與 [自行開發教學](development.md)。以下為歷史紀錄。

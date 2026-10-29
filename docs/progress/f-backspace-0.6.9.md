@@ -32,3 +32,16 @@
 3. 放開 F 後長按退格，應可連續刪除文件內容。
 4. Shift 字母開始英文組詞後進入 F 分層，退格不提前提交英文，放開回到英文組詞。
 5. 在 iTerm2 重做，確認沒有 f、ㄑ或等待點殘留。
+
+## 交付結果
+
+更新時間：2026-10-29T11:12:27+08:00
+
+來源 7466dbc 已推送 fix/f-layer-backspace 與 v0.6.9 標籤。dist/0.6.9-dev.1 封裝及驗證成功，77 個 app 檔案與 pkg 解包結果一致。iCloud 文件的 AI-Bopomofo-0.6.9 僅複製 pkg 與 app，校驗一致，雲端同步與 Air 收到檔案未驗證。
+
+GitHub 發布附件受阻：Brave 擴充套件未允許檔案 URL 存取，系統選檔替代路徑因 Mac 鎖定而無法操作。已保存 0.6.9 發布草稿，尚未公開 Release 或上傳附件。草稿位址：https://github.com/edwardhome/AI-Bopomofo/releases/edit/untagged-44782cee7304be5a6c50 。下次使用此草稿續傳，勿重建重複版本。需要本人解鎖 Mac 才能繼續原生選檔；不可代為解鎖。
+
+```text
+55b5c3dca1127c4d685d8223ec942f9b8c4095783306f37bac6bc7db778f5ef4  AI-Bopomofo-0.6.9-dev.1.pkg
+7e325b1fd145356e72359e9f1f2befedb16d64c3fa640fbb6019f0e767af3639  AI-Bopomofo-0.6.9-dev.1.zip
+```

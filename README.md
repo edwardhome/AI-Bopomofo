@@ -2,9 +2,9 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
 
-**開發版本：0.6.9。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
+**開發版本：0.6.9。原始碼已公開，GitHub 安裝附件仍待上傳；擁有者的 iCloud 已放置安裝包與 app。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
 
-[下載 0.6.9](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.9) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
+[0.6.9 原始碼](https://github.com/edwardhome/AI-Bopomofo/tree/v0.6.9) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
 
 **0.6.9 修正**：按住 F 時可連續退格，數字／符號先在組字中編輯，放開 F 後送出；刪除範圍限目前組字。F 等待時間可調整為 100～1000 毫秒，未設定時預設 150 毫秒。前版 F 功能已經使用者驗收，本版退格修正仍待 MacBook Air 實鍵確認。[0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
 
@@ -35,7 +35,7 @@ F 分層部分鍵位：
 
 ## 下載與第一次設定
 
-1. 從 [Releases](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.9) 下載 `.pkg` 安裝包及 `checksums.txt`。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64），MacBook Air 不需要另外選 CPU 版本。
+1. 0.6.9 安裝包目前已交付擁有者的 iCloud；GitHub 發布草稿等待附件上傳，尚未公開。公開後可從 Releases 下載 `.pkg` 及 `checksums.txt`；現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64），MacBook Air 不需要另外選 CPU 版本。
 2. 按照[安裝說明](docs/installation.md)安裝，登出再登入後，於鍵盤設定加入「AI注音輸入法」。
 3. 要使用 F 分層，開啟「長按 F 輸入數字／符號」，並在「隱私權與安全性 → 輸入監控」允許目前安裝的 AI-Bopomofo.app。
 4. 要使用標準中文標點，取消勾選「使用半形標點符號」。新偏好預設半形，既有設定會保留。
