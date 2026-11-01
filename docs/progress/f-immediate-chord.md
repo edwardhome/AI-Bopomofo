@@ -1,6 +1,6 @@
 # F 立即組合鍵開發紀錄
 
-更新時間：2026-11-02T00:21:07+08:00
+更新時間：2026-11-02T00:23:39+08:00
 
 分支：fix/f-immediate-chord。開始前工作目錄已有 QuickSymbolLayer.swift 與 InputMethodController.swift 修改，已保存至忽略目錄 artifacts/f-immediate/pre-existing-changes.patch，再建立分支承接。沒有移除使用者既有修改的目的。
 
@@ -29,7 +29,9 @@
 
 ## 交付範圍
 
-版本 0.6.10，build 610。使用者指定交付目錄改為 Documents 下的 AI Bopomofo，依版本分資料夾，只放 pkg 與 app。原始碼推送個人 GitHub 的本開發分支，不建立 Release 或草稿；不安裝、不重啟輸入法、不更改 Kanata。封裝與交付結果待最後核對。
+版本 0.6.10，build 610。使用者指定交付目錄改為 Documents 下的 AI Bopomofo，依版本分資料夾，只放 pkg 與 app。原始碼推送個人 GitHub 的本開發分支，不建立 Release 或草稿；不安裝、不重啟輸入法、不更改 Kanata。已完成 0.6.10-dev.1 封裝與指定目錄複製：pkg 校驗一致，app 共 77 個檔案逐一一致，複製後簽章驗證成功。安裝包來源提交為 3f43dea017dabfb82a917c6f439c58b31c77227b；後續提交僅補交付紀錄。
+
+pkg SHA-256：`a0b0b2b159cdf5253c9c782fc34b07701c924ebde6febf44c8d99c02326e7be3`。同步目錄為 app 加入的 Finder 資訊已在副本移除；安裝建議使用 pkg，避免未封裝 app 的同步中繼資料影響簽章。
 
 ## 尚待實鍵驗收
 
