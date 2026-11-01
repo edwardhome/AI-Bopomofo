@@ -269,7 +269,7 @@ class McBopomofoInputMethodController: IMKInputController {
         shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: client) }
         cancelFHold(client: client)
         symbolKeysDown.reset()
         currentClient = nil
@@ -318,7 +318,7 @@ class McBopomofoInputMethodController: IMKInputController {
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
         if fHoldGesture.phase == .pending {
-            _ = applyFHold(.otherKey, client: client)
+            _ = applyFHold(.otherKey(isMapped: false), client: client)
         }
         cancelFHold(client: client)
         if state is InputState.QuickSymbols {
@@ -438,7 +438,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     @objc private func toggleFHoldSymbols(_ sender: Any?) {
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: currentClient) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: currentClient) }
         cancelFHold(client: currentClient)
         Preferences.fHoldSymbolsEnabled.toggle()
         if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess() {
@@ -582,12 +582,6 @@ class McBopomofoInputMethodController: IMKInputController {
         }
         // Keep ownership until key-up even when F was released before a symbol key.
         if event.type == .keyUp, symbolKeysDown.keyUp(event.keyCode) { return true }
-        if event.type == .keyDown,
-           symbolKeysDown.keyDown(event.keyCode, repeating: event.isARepeat,
-               layerActive: state is InputState.QuickSymbols,
-               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty) {
-            return true
-        }
 
         if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
             if applyFHold(.release, client: client) { return true }
@@ -602,9 +596,24 @@ class McBopomofoInputMethodController: IMKInputController {
                 pendingFEvent = event
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
-        } else if event.type == .keyDown || (event.type == .flagsChanged
-                    && event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift)) {
-            _ = applyFHold(.otherKey, client: client)
+        } else if event.type == .keyDown {
+            let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
+            let isMapped = QuickSymbolLayer.canStartChord(keyCode: event.keyCode,
+                repeating: event.isARepeat,
+                hasDisallowedModifiers: !event.modifierFlags.intersection(forbidden).isEmpty)
+            _ = applyFHold(.otherKey(isMapped: isMapped), client: client)
+        } else if event.type == .flagsChanged &&
+                    event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift) {
+            _ = applyFHold(.otherKey(isMapped: false), client: client)
+        }
+
+        // The first chord key must acquire ownership after it activates the layer,
+        // before normal text routing handles that same key exactly once.
+        if event.type == .keyDown,
+           symbolKeysDown.keyDown(event.keyCode, repeating: event.isARepeat,
+               layerActive: state is InputState.QuickSymbols,
+               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty) {
+            return true
         }
 
         // Preserve F's momentary layer in direct English; other keys pass through literally.

@@ -131,7 +131,7 @@ extension InputState {
             stateCallback(InputState.EmptyIgnoringPreviousState())
             return false
         }
-        if input.charCode == 27 || input.charCode == 13 || input.isEnter {
+        if (input.charCode == 27 && !state.held) || input.charCode == 13 || input.isEnter {
             end(state: state, stateCallback: stateCallback)
             return true
         }

@@ -31,6 +31,7 @@ public enum QuickSymbolLayer {
         .init(keyCode: 30, label: "]", output: "]"),
         .init(keyCode: 42, label: "\\", output: "\\"),
         .init(keyCode: 50, label: "`", output: "`"),
+        .init(keyCode: 53, label: "Esc", output: "`"),
         .init(keyCode: 18, label: "1", output: "!"),
         .init(keyCode: 19, label: "2", output: "@"),
         .init(keyCode: 20, label: "3", output: "#"),
@@ -60,6 +61,11 @@ public enum QuickSymbolLayer {
         entries.first { $0.keyCode == keyCode }?.output
     }
 
+    public static func canStartChord(keyCode: UInt16, repeating: Bool,
+                                     hasDisallowedModifiers: Bool) -> Bool {
+        !repeating && !hasDisallowedModifiers && output(for: keyCode) != nil
+    }
+
     /// Applies editing inside a held layer without committing text to the client.
     public static func edit(keyCode: UInt16, composition: ASCIIComposition) -> ASCIIComposition.Result? {
         if keyCode == 51 { return composition.applying(.backspace) }
@@ -83,7 +89,12 @@ public struct FHoldGesture {
     public let delay: Double
     public enum Phase: Equatable { case idle, pending, held }
     public enum Event {
-        case press(eligible: Bool, repeating: Bool), release, observedRelease, otherKey, timeout, cancel
+        case press(eligible: Bool, repeating: Bool)
+        case release
+        case observedRelease
+        case otherKey(isMapped: Bool)
+        case timeout
+        case cancel
         case elapsed(Double)
     }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
@@ -117,8 +128,11 @@ public struct FHoldGesture {
             case .held: return [.invalidate, .endLayer, .consume]
             case .idle: return owned ? [.consume] : []
             }
-        case .otherKey:
+        case .otherKey(let isMapped):
             guard phase == .pending else { return [] }
+            // Starting early has exactly the same lifetime as starting on timeout:
+            // the adapter must keep its passive F release monitor and health timer.
+            if isMapped { return handle(.timeout) }
             phase = .idle
             return [.invalidate, .replayTap]
         case .elapsed(let seconds):

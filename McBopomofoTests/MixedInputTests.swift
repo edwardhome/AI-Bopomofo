@@ -129,6 +129,38 @@ struct MixedInputTests {
         #expect(s.errors == 0)
     }
 
+    @Test func earlyFChordHandlesFirstKeyAndEscAsBacktick() {
+        for english in [false, true] {
+            let s = Session()
+            if english { s.begin(); s.type("Hello") }
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.otherKey(isMapped: true)) == [.beginLayer])
+            #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+            #expect(s.key("r", code: 15))
+            #expect(s.key("\u{1B}", code: 53))
+            #expect(s.state is InputState.QuickSymbols)
+            #expect((s.state as? InputState.QuickSymbols)?.editingComposition?.raw == (english ? "Hello+`" : "+`"))
+            #expect(s.committed.isEmpty)
+            #expect(gesture.handle(.observedRelease).contains(.endLayer))
+            s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+            if english {
+                #expect((s.state as? InputState.ASCII)?.composingBuffer == "Hello+`")
+                #expect(s.committed.isEmpty)
+            } else {
+                #expect(s.committed == "+`")
+            }
+        }
+    }
+
+    @Test func escapeStillExitsManualSymbolMenu() {
+        let s = Session()
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: false, stateCallback: s.transition))
+        #expect(s.key("\u{1B}", code: 53))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(s.committed.isEmpty)
+    }
+
     @Test func contextualPredictionAcceptsOnlyOnTab() {
         let s = Session()
         s.begin(); s.type("I would like to ")
@@ -242,11 +274,11 @@ struct MixedInputTests {
         #expect(s.committed == "Hello++world")
     }
 
-    @Test func englishSymbolLayerEscRestoresCursorWithoutCommitting() {
+    @Test func englishSymbolLayerEnterRestoresCursorWithoutCommitting() {
         let s = Session()
         s.state = InputState.ASCII(text: "abc", cursor: 1)
         #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
-        s.key("r", code: 15); s.key("\u{1B}")
+        s.key("r", code: 15); s.key("\r", code: 36)
         #expect((s.state as? InputState.ASCII)?.composingBuffer == "a+bc")
         #expect((s.state as? InputState.ASCII)?.cursorIndex == 2)
         #expect(s.committed.isEmpty)
