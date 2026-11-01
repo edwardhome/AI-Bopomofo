@@ -312,3 +312,5 @@
 "F Hold Delay:" = "F 長按等待時間：";
 "%d ms" = "%d 毫秒";
 "Increase the delay if F triggers symbols while typing Bopomofo. Default: 150 ms." = "輸入注音時若 F 容易誤觸符號，請延長等待時間。預設為 150 毫秒。";
+
+"Shift English: Space or Enter commits; Esc cancels" = "Shift 英文：空白或 Enter 送出，Esc 取消";

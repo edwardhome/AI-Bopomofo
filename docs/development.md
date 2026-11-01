@@ -21,6 +21,8 @@
 
 0.6.8 起未儲存過的 F 長按等待時間預設為 150 毫秒；已有個人設定保留。100～150 毫秒的緩衝區若放開，仍輸出原鍵，不吃字；完整說明見 [F 符號分層](quick-symbols.md)。
 
+先看 [程式架構與相互依賴](architecture.md)，再依下列流程修改。
+
 ## 1. 準備工具與工作副本
 
 開發需要完整 Xcode 26 以上、macOS 26 以上，以及 Git、Python 3、CMake。執行中的輸入法部署目標為 macOS 13；部署目標不等於每個舊版系統都已實機驗證。
@@ -85,10 +87,10 @@ git switch -c feature/my-symbols
 
 修改 `Source/McBopomofo-Info.plist` 的兩個值：
 
-- `CFBundleShortVersionString`：例如 `0.6.9`。
-- `CFBundleVersion`：例如 `609`，使用比上一版高的整數。
+- `CFBundleShortVersionString`：例如 `0.6.10`。
+- `CFBundleVersion`：例如 `610`，使用比上一版高的整數。
 
-本文以 **0.6.9-local.1** 作為自己的範例包名，不代表這個版本已正式發布。你實際使用其他版本時，請連同下面的打包指令一起替換。打包腳本不會替你改 app 版本；`0.6.9-local.1` 必須搭配 app 的 `0.6.9`。
+本文以 **0.6.10-local.1** 作為自己的範例包名，不代表這個版本已正式發布。你實際使用其他版本時，請連同下面的打包指令一起替換。打包腳本不會替你改 app 版本；`0.6.10-local.1` 必須搭配 app 的 `0.6.10`。
 
 ## 5. 執行不啟動輸入法的檢查
 
@@ -158,17 +160,17 @@ git commit -m 'feat(symbols): customize F layer output'
 再次確認 `git status --short` 沒有未提交的原始碼改動，再打包；`SOURCE-COMMIT.txt` 記錄目前提交，乾淨狀態才方便日後重現：
 
 ```bash
-scripts/package.sh 0.6.9-local.1 Release
-scripts/verify-package.sh dist/0.6.9-local.1
+scripts/package.sh 0.6.10-local.1 Release
+scripts/verify-package.sh dist/0.6.10-local.1
 ```
 
 輸出資料夾內有：
 
-- `AI-Bopomofo-0.6.9-local.1.pkg`：一般安裝使用。
-- `AI-Bopomofo-0.6.9-local.1.zip`：app 的替代封裝。
+- `AI-Bopomofo-0.6.10-local.1.pkg`：一般安裝使用。
+- `AI-Bopomofo-0.6.10-local.1.zip`：app 的替代封裝。
 - `AI-Bopomofo.app`、授權聲明、說明文件、校驗檔與來源提交紀錄。
 
-既有同名資料夾不會覆寫。如果要重新打包，用 `0.6.9-local.2`；保留舊包供回退。打包附帶的發布說明是儲存庫現有文件，你自己的行為改動也應補進 `docs/release-notes.md` 後再提交、打包。
+既有同名資料夾不會覆寫。如果要重新打包，用 `0.6.10-local.2`；保留舊包供回退。打包附帶的發布說明是儲存庫現有文件，你自己的行為改動也應補進 `docs/release-notes.md` 後再提交、打包。
 
 這些操作只保存在本機，不會自動推送 GitHub。
 
@@ -194,7 +196,7 @@ defaults export org.aibopomofo.inputmethod.AIBopomofo artifacts/manual-backup/pr
 1. 注音模式短按 F，只出現「ㄑ」，沒有多餘的 `f`。
 2. 雙擊 Shift 進英文，短按 F 只出現一次 `f`；Shift＋F 是 `F`。
 3. F 按超過設定時間，不應先提交 `f`；接著按 R 輸出設定的符號，放開 F 後恢復一般輸入。
-4. 快速連打 F 後接其他字母，順序沒有顛倒或漏字；連續長按、放開也不會卡住。
+4. F 先放開再按下一鍵應正常打字；F 與映射鍵重疊則立即進入分層。連續長按、放開不應卡住。
 5. 原本的選字、中文標點、Shift 英文組詞與雙 Shift 切換正常。
 
 不要在有重要命令的終端列直接測試。可先打開空白文字編輯器；終端測試使用自己的空白提示列，不按 Enter 執行測試文字。Kanata 與既有編輯器外掛的設定不會因編譯而變更。

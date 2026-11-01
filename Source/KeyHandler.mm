@@ -410,8 +410,16 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     return YES;
 }
 
+// Shift 修飾鍵狀態交由同一個狀態處理入口轉換，不直接修改控制器旗標。
+- (BOOL)releaseShiftWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback
+{
+    return [MixedInputHandler releaseShiftWithState:state stateCallback:stateCallback];
+}
+
 - (BOOL)handleInput:(KeyHandlerInput *)input state:(InputState *)inState stateCallback:(void (^)(InputState *))stateCallback errorCallback:(void (^)(void))errorCallback
 {
+    // 先按目前狀態分派英文、符號與文字協助；其餘事件沿用傳統注音引擎。
+    // stateCallback 回傳新狀態，由控制器統一呈現，不在這裡直接操作應用程式文字。
     InputState *state = inState;
     UniChar charCode = input.charCode;
     McBopomofoEmacsKey emacsKey = input.emacsKey;
@@ -581,7 +589,7 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
         !(input.isControlHold || input.isCommandHold || input.isOptionHold || input.isCapsLockOn) &&
         charCode >= 'A' && charCode <= 'Z' && _bpmfReadingBuffer->isEmpty()) {
         if ([self beginASCIIWithState:state stateCallback:stateCallback errorCallback:errorCallback]) {
-            stateCallback([[InputStateASCII alloc] initWithText:input.inputText cursor:input.inputText.length]);
+            stateCallback([[InputStateShiftASCII alloc] initWithShiftText:input.inputText cursor:input.inputText.length]);
             return YES;
         }
     }

@@ -2,19 +2,19 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
 
-**開發版本：0.6.9。原始碼已公開，GitHub 安裝附件仍待上傳；擁有者的 iCloud 已放置安裝包與 app。** 歡迎朋友協助測試與回報，尚未完成所有 macOS 版本及應用程式的相容性驗證。
+**開發版本：0.6.10，分支 `fix/f-immediate-chord`。** 本次提供原始碼與供擁有者自行安裝的開發包；尚未建立此版本的 GitHub Release，也尚未完成 MacBook Air 實鍵驗收。
 
-[0.6.9 原始碼](https://github.com/edwardhome/AI-Bopomofo/tree/v0.6.9) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [回報問題](https://github.com/edwardhome/AI-Bopomofo/issues)
+[開發分支](https://github.com/edwardhome/AI-Bopomofo/tree/fix/f-immediate-chord) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [自行修改與編譯](docs/development.md) · [架構與依賴圖](docs/architecture.md)
 
-**0.6.9 修正**：按住 F 時可連續退格，數字／符號先在組字中編輯，放開 F 後送出；刪除範圍限目前組字。F 等待時間可調整為 100～1000 毫秒，未設定時預設 150 毫秒。前版 F 功能已經使用者驗收，本版退格修正仍待 MacBook Air 實鍵確認。[0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
+**本次變更**：F＋映射鍵立即進符號層，加入 F＋Esc 反引號；Shift 區分單字組字與連續大寫；FM 以整段未送出組字處理容量與「在／再」語意建議，仍需明確選取。實際事件限制與模型評估見各功能文件。[0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
 
 ## 這個版本的特色
 
 | 功能 | 使用方式與範圍 |
 | --- | --- |
 | 雙擊 Shift 切換英文／注音 | 快速按放 Shift 兩次，在輸入法內切換；游標旁短暫顯示「英文／注音」。0.6.6 已修正重複修飾鍵通知造成無法切換的問題，並完成使用者實機驗收。 |
-| 不依賴 Kanata 的 F 數字／符號分層 | 開啟選單中的「長按 F 輸入數字／符號」並授予輸入監控；按住 F 超過設定時間（預設 150 毫秒）後按 R 輸入 `+`，放開 F 退出。中文、直接英文及 ASCII 組字均支援。 |
-| 明確英文／ASCII 組字 | 從選單進入，或選擇啟用「Shift＋字母開始英文組字」。保留大小寫、數字與程式符號；Enter 送出。 |
+| 不依賴 Kanata 的 F 數字／符號分層 | 開啟選單中的「長按 F 輸入數字／符號」並授予輸入監控；F＋R 立即輸入 `+`；單獨長按仍使用設定時間（預設 150 毫秒），放開 F 退出。中文、直接英文及 ASCII 組字均支援。 |
+| 明確英文／ASCII 組字 | 從選單進入，或選擇啟用「Shift＋字母開始英文組字」。Shift 首字母放開後組單字，空白／Enter 送出；持續按 Shift 打多個字母則直接送出大寫，放開回注音。選單 ASCII 可組整句。 |
 | 專業詞彙候選與匯入／匯出 | 自訂英文技術詞以 UTF-8 純文字每行一詞匯入。原字串保留第一候選，Tab 選取補全，不擅自替換。 |
 | 可切換全形／半形標點 | 關閉「使用半形標點符號」後，`Shift + ,` 為 `，`、`Shift + .` 為 `。`；開啟時為 `,`、`.`。普通注音鍵位保持原樣。 |
 | Markdown 友善符號 | 反引號預設直接輸入，可搭配 F 分層輸入括號、運算符號與數字。 |
@@ -30,12 +30,13 @@ F 分層部分鍵位：
 | N / M / 逗號鍵 | 1 / 2 / 3 |
 | 空白鍵 / 句點鍵 | 0 / 小數點 |
 | Q / W / E / R | `/` / `*` / `-` / `+` |
+| Esc | 反引號 |
 
 完整鍵位見 [F 分層說明](docs/quick-symbols.md)，模式操作見 [Shift 與英文輸入](docs/vim-input.md)。短按 F 仍按原模式處理，短按 Shift＋F 保留大寫 F。
 
 ## 下載與第一次設定
 
-1. 0.6.9 安裝包目前已交付擁有者的 iCloud；GitHub 發布草稿等待附件上傳，尚未公開。公開後可從 Releases 下載 `.pkg` 及 `checksums.txt`；現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64），MacBook Air 不需要另外選 CPU 版本。
+1. 0.6.10 尚未建立公開 Release；擁有者手動發布後可從 Releases 下載，開發者也可依[編譯指南](docs/development.md)自行產生 pkg。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64）。現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
 2. 按照[安裝說明](docs/installation.md)安裝，登出再登入後，於鍵盤設定加入「AI注音輸入法」。
 3. 要使用 F 分層，開啟「長按 F 輸入數字／符號」，並在「隱私權與安全性 → 輸入監控」允許目前安裝的 AI-Bopomofo.app。
 4. 要使用標準中文標點，取消勾選「使用半形標點符號」。新偏好預設半形，既有設定會保留。

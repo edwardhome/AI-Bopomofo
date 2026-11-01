@@ -42,6 +42,7 @@ class KeyHandlerInput: NSObject {
     @objc private(set) var useVerticalMode: Bool
     @objc private(set) var inputText: String?
     @objc private(set) var inputTextIgnoringModifiers: String?
+    @objc private(set) var isARepeat = false
     @objc private(set) var charCode: UInt16
     @objc private(set) var keyCode: UInt16
     private var flags: NSEvent.ModifierFlags
@@ -69,6 +70,7 @@ class KeyHandlerInput: NSObject {
     }
 
     @objc init(event: NSEvent, isVerticalMode: Bool) {
+        isARepeat = event.isARepeat
         inputText = event.characters
         inputTextIgnoringModifiers = event.charactersIgnoringModifiers
         keyCode = event.keyCode

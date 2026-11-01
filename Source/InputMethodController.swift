@@ -60,6 +60,7 @@ class McBopomofoInputMethodController: IMKInputController {
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
     private var shiftGesture = DoubleShiftGesture()
+    private var lastInputModifiers: NSEvent.ModifierFlags?
     // Explicitly enabled, bounded diagnostics. Never record text or key codes.
     private static var shiftDiagnosticLines: [String] = []
     private static var shiftDiagnosticDeadline: TimeInterval = 0
@@ -240,6 +241,7 @@ class McBopomofoInputMethodController: IMKInputController {
         recordShiftDiagnostic(.activate)
         hideInputModeIndicator()
         shiftGesture.reset()
+        lastInputModifiers = nil
         directEnglish = false
         textAssistant.cancel()
         cancelFHold(client: client)
@@ -457,6 +459,7 @@ class McBopomofoInputMethodController: IMKInputController {
         for effect in effects {
             switch effect {
             case .schedule:
+                // 暫存 F 並開始被動放開監聽；短按時才將原事件交回既有輸入流程。
                 fHoldTimer?.invalidate()
                 let started = pendingFEvent?.timestamp ?? ProcessInfo.processInfo.systemUptime
                 fHoldStartedAt = started
@@ -486,6 +489,7 @@ class McBopomofoInputMethodController: IMKInputController {
                 fHoldTimer = timer
                 RunLoop.main.add(timer, forMode: .common)
             case .invalidate:
+                // 只在手勢結束或取消時清理；提前進入分層不能走這個分支。
                 restorePendingF(client: client)
                 fHoldStartedAt = nil
                 fReleaseMonitor.stop()
@@ -502,10 +506,15 @@ class McBopomofoInputMethodController: IMKInputController {
                     }
                 }
             case .beginLayer:
+                // 同一條路徑處理長按與立即組合鍵；保留監聽，等真正放開 F 才退出。
                 restorePendingF(client: client)
                 if !directEnglish, pendingFEvent?.modifierFlags.contains(.shift) == true,
                    !(state is InputState.ASCII) {
-                    keyHandler.beginASCII(with: state, stateCallback: { self.handle(state: $0, client: client) }, errorCallback: {})
+                    keyHandler.beginASCII(with: state, stateCallback: { next in
+                        if let ascii = next as? InputState.ASCII {
+                            self.handle(state: InputState.ShiftASCII(composition: ascii.composition, mode: .initial), client: client)
+                        } else { self.handle(state: next, client: client) }
+                    }, errorCallback: {})
                 }
                 let began = keyHandler.beginQuickSymbols(with: state, held: true) {
                     self.handle(state: $0, client: client)
@@ -524,7 +533,19 @@ class McBopomofoInputMethodController: IMKInputController {
             case .consume: break
             }
         }
+        // F 的放開可能先由被動監聽器送達；套用最近觀察到的 Shift 狀態，
+        // 避免延後重播的 Shift+F 在 Shift 已放開後留下錯誤模式。
+        releaseShiftCompositionIfNeeded(client: client)
         return effects.contains(.consume)
+    }
+
+    private func releaseShiftCompositionIfNeeded(client: Any?) {
+        guard let modifiers = lastInputModifiers, !modifiers.contains(.shift),
+              !directEnglish, !IsSecureEventInputEnabled() else { return }
+        if keyHandler.releaseShift(with: state, stateCallback: { self.handle(state: $0, client: client) }) {
+            // 組詞的 Shift 放開不算雙擊 Shift 的第一下。
+            shiftGesture.reset()
+        }
     }
 
     private func restorePendingF(client: Any?) {
@@ -556,6 +577,10 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
+        if event.type == .keyDown || event.type == .keyUp || event.type == .flagsChanged {
+            lastInputModifiers = event.modifierFlags
+            releaseShiftCompositionIfNeeded(client: client)
+        }
         if event.type == .keyDown || IsSecureEventInputEnabled() {
             hideInputModeIndicator()
         }
@@ -675,6 +700,7 @@ class McBopomofoInputMethodController: IMKInputController {
                 InputFeedback.beep()
             }
         }
+        releaseShiftCompositionIfNeeded(client: client)
         return result
     }
 

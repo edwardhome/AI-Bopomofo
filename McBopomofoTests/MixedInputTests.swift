@@ -40,6 +40,70 @@ struct MixedInputTests {
         }
     }
 
+    @Test func shiftWordReleaseBackspaceAndLowercaseMM() {
+        let old = Preferences.mixedEnglishEnabled
+        let switching = Preferences.switchInputSourceUponShiftLetterKeyComboEnabled
+        defer { Preferences.mixedEnglishEnabled = old; Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = switching }
+        Preferences.mixedEnglishEnabled = true
+        Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = false
+        let s = Session()
+        s.key("M", code: 46, flags: .shift)
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .initial)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        s.key("\u{7F}", code: 51)
+        s.type("mm")
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .word)
+        #expect(s.committed.isEmpty)
+        s.key(" ", code: 49)
+        #expect(s.committed == "mm ")
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        s.key("j")
+        #expect(s.state is InputState.Inputting)
+        #expect(!(s.state is InputState.ASCII))
+    }
+
+    @Test func heldShiftABCCommitsThenReturnsToChinese() {
+        let s = Session()
+        s.state = InputState.ShiftASCII(shiftText: "A", cursor: 1)
+        s.key("B", code: 11, flags: .shift)
+        #expect(s.committed == "AB")
+        s.key("C", code: 8, flags: .shift)
+        #expect(s.committed == "ABC")
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .uppercase)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(!s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+    }
+
+    @Test func shiftReleasePreservesFStateAndCommitsUppercaseSymbolsOnce() {
+        let s = Session()
+        let upper = InputState.ShiftASCII(composition: ASCIIComposition(raw: "+"), mode: .uppercase)
+        s.state = InputState.QuickSymbols(held: true, originalASCII: upper)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(s.state is InputState.QuickSymbols)
+        #expect(s.committed == "+")
+        s.key("r", code: 15)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "++")
+        s.state = InputState.PendingF(original: InputState.ShiftASCII(shiftText: "S", cursor: 1))
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(((s.state as? InputState.PendingF)?.original as? InputState.ShiftASCII)?.mode == .word)
+    }
+
+    @Test func manualASCIIAndPredictionKeepTheirEntryMode() {
+        let s = Session()
+        s.begin(); s.type("hello")
+        #expect(!s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        s.key(" ")
+        #expect(s.committed.isEmpty)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "hello ")
+        s.state = InputState.ShiftASCII(composition: ASCIIComposition(raw: "hel"), mode: .word)
+        s.handler.publishPrediction("hello", state: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .word)
+        s.key("\r")
+        #expect(s.committed == "hel")
+    }
+
     @Test func waitingMarkNeverBecomesCommittedComposition() {
         let empty = InputState.Empty()
         let pending = InputState.PendingF(original: empty)

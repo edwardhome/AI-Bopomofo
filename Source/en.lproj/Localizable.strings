@@ -314,3 +314,5 @@
 "F Hold Delay:" = "F Hold Delay:";
 "%d ms" = "%d ms";
 "Increase the delay if F triggers symbols while typing Bopomofo. Default: 150 ms." = "Increase the delay if F triggers symbols while typing Bopomofo. Default: 150 ms.";
+
+"Shift English: Space or Enter commits; Esc cancels" = "Shift English: Space or Enter commits; Esc cancels";

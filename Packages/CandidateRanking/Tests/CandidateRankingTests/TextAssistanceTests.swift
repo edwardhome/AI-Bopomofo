@@ -5,6 +5,42 @@ import Testing
 
 @Suite("Correction and prediction validation")
 struct TextAssistanceTests {
+    @Test func contextExamplesAreAcceptedWithoutChangingNumbers() {
+        for (source, correction) in [("我在去一次", "我再去一次"), ("我再德國", "我在德國"),
+                                     ("我喝了500ML的水", "我喝了500mL的水"),
+                                     ("飲料容量是500 ML", "飲料容量是500 mL")] {
+            #expect(CorrectionRequest(revision: 0, text: source).validated([correction]) == [correction])
+        }
+        let request = CorrectionRequest(revision: 0, text: "我喝了500ML的水")
+        #expect(request.validated(["我喝了500百萬的水", "我喝了50mL的水", "我喝了500L的水"]).isEmpty)
+        #expect(request.validated([request.text]).isEmpty)
+    }
+
+    @Test func volumeExceptionDoesNotChangeCodeOrOtherMeanings() {
+        for text in ["喝水用 `500ML` 記錄", "喝水記錄 src/500ML", "喝水參考 https://example.com/500ML",
+                     "機器學習模型500ML", "容量代碼500ML", "容量500ML百萬", "ML代表機器學習"] {
+            #expect(TextProtection.normalizingVolumeUnit(text, words: []) == text)
+        }
+        #expect(TextProtection.normalizingVolumeUnit("我喝了500ML的水", words: ["ML"]) == "我喝了500ML的水")
+        let unrelated = CorrectionRequest(revision: 0, text: "模型500ML")
+        #expect(unrelated.validated(["模型500mL"]).isEmpty)
+    }
+
+    @Test func alreadyCorrectContextIsNotReturnedAsACorrection() {
+        for text in ["我跑得快", "我再去一次", "我在德國", "我喝了500mL的水"] {
+            #expect(CorrectionRequest(revision: 0, text: text).validated([text]).isEmpty)
+        }
+        #expect(ContextualCorrectionPrompt.instructions.contains("我跑得快"))
+        #expect(ContextualCorrectionPrompt.instructions.contains("WHOLE current uncommitted composition"))
+    }
+
+    @Test func rejectsChineseDeletionAndAdjacentAcronymChanges() {
+        #expect(CorrectionRequest(revision: 0, text: "我再去一次").validated(["我去一次"]).isEmpty)
+        #expect(CorrectionRequest(revision: 0, text: "我在去一次").validated(["我去一次"]).isEmpty)
+        #expect(CorrectionRequest(revision: 0, text: "這是ML模型").validated(["這是模型"]).isEmpty)
+        #expect(TextProtection.normalizingVolumeUnit("我喝了500ML的水", words: ["500ML"]) == "我喝了500ML的水")
+    }
+
     @Test func limitsAndUnicode() {
         #expect(!CorrectionRequest(revision: 0, text: " ").isValid)
         #expect(!CorrectionRequest(revision: 0, text: String(repeating: "字", count: 257)).isValid)
