@@ -92,6 +92,8 @@ extern InputMode InputModePlainBopomofo;
 - (void)selectQuickSymbolAtIndex:(NSInteger)index state:(InputState *)state
                   stateCallback:(void (^)(InputState *))stateCallback;
 
+- (BOOL)releaseShiftWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback;
+
 - (BOOL)beginASCIIWithState:(InputState *)state
              stateCallback:(void (^)(InputState *))stateCallback
              errorCallback:(void (^)(void))errorCallback;

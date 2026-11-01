@@ -1,0 +1,260 @@
+{
+  "availability" : "available",
+  "completed" : true,
+  "model" : "SystemLanguageModel.default (on-device)",
+  "notes" : "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.",
+  "rows" : [
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.359583,
+      "category" : "context",
+      "expected" : [
+        "我喝了500mL的水"
+      ],
+      "id" : "context-01",
+      "milliseconds" : 3498.350875,
+      "raw" : [
+        "我喝了500mL的水"
+      ],
+      "source" : "我喝了500ML的水",
+      "status" : "ready",
+      "suggestions" : [
+        "我喝了500mL的水"
+      ],
+      "totalRequestMilliseconds" : 3498.710458
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00475,
+      "category" : "context",
+      "expected" : [
+        "我再去一次"
+      ],
+      "id" : "context-02",
+      "milliseconds" : 960.494958,
+      "raw" : [
+        "我再去一次"
+      ],
+      "source" : "我在去一次",
+      "status" : "ready",
+      "suggestions" : [
+        "我再去一次"
+      ],
+      "totalRequestMilliseconds" : 960.4997079999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.00275,
+      "category" : "context",
+      "expected" : [
+        "我在德國"
+      ],
+      "id" : "context-03",
+      "milliseconds" : 868.186959,
+      "raw" : [
+        "我在德國"
+      ],
+      "source" : "我再德國",
+      "status" : "ready",
+      "suggestions" : [
+        "我在德國"
+      ],
+      "totalRequestMilliseconds" : 868.189709
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.004958,
+      "category" : "context",
+      "expected" : [
+
+      ],
+      "id" : "context-04",
+      "milliseconds" : 835.208625,
+      "raw" : [
+        "我跑得快"
+      ],
+      "source" : "我跑得快",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 835.213583
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002209,
+      "category" : "context",
+      "expected" : [
+
+      ],
+      "id" : "context-05",
+      "milliseconds" : 786.311542,
+      "raw" : [
+        "我在德國"
+      ],
+      "source" : "我在德國",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 786.313751
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002125,
+      "category" : "context",
+      "expected" : [
+
+      ],
+      "id" : "context-06",
+      "milliseconds" : 834.598,
+      "raw" : [
+        "我再去一次"
+      ],
+      "source" : "我再去一次",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 834.6001249999999
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002709,
+      "category" : "context",
+      "expected" : [
+        "飲料容量是500 mL"
+      ],
+      "id" : "context-07",
+      "milliseconds" : 926.513833,
+      "raw" : [
+        "飲料容量是500 mL"
+      ],
+      "source" : "飲料容量是500 ML",
+      "status" : "ready",
+      "suggestions" : [
+        "飲料容量是500 mL"
+      ],
+      "totalRequestMilliseconds" : 926.516542
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.0035,
+      "category" : "context",
+      "expected" : [
+        "明天我再來一次"
+      ],
+      "id" : "context-08",
+      "milliseconds" : 877.623542,
+      "raw" : [
+        "明天我再來一次"
+      ],
+      "source" : "明天我在來一次",
+      "status" : "ready",
+      "suggestions" : [
+        "明天我再來一次"
+      ],
+      "totalRequestMilliseconds" : 877.6270420000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003292,
+      "category" : "context",
+      "expected" : [
+        "我在台北工作"
+      ],
+      "id" : "context-09",
+      "milliseconds" : 826.401583,
+      "raw" : [
+        "我在台北工作"
+      ],
+      "source" : "我再台北工作",
+      "status" : "ready",
+      "suggestions" : [
+        "我在台北工作"
+      ],
+      "totalRequestMilliseconds" : 826.404875
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002834,
+      "category" : "context",
+      "expected" : [
+        "他跑得很快"
+      ],
+      "id" : "context-10",
+      "milliseconds" : 823.882708,
+      "raw" : [
+        "他跑得快"
+      ],
+      "source" : "他跑的很快",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 823.885542
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.003042,
+      "category" : "context",
+      "expected" : [
+
+      ],
+      "id" : "context-11",
+      "milliseconds" : 879.043125,
+      "raw" : [
+        "這是模型"
+      ],
+      "source" : "這是ML模型",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 879.0461670000001
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002292,
+      "category" : "context",
+      "expected" : [
+
+      ],
+      "id" : "context-12",
+      "milliseconds" : 914.990458,
+      "raw" : [
+        "我喝了500mL的水"
+      ],
+      "source" : "我喝了500mL的水",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 914.99275
+    }
+  ]
+}

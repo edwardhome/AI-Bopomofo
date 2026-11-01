@@ -15,13 +15,37 @@ import CandidateRanking
 import UniformTypeIdentifiers
 
 extension InputState {
+    /// A temporary marked composition, never committed as text. Keeping a nonempty
+    /// mark tells clients such as iTerm2 that the deferred key belongs to the IME.
+    class PendingF: InputState {
+        let original: InputState
+        init(original: InputState) { self.original = original; super.init() }
+    }
+
+    static func fHoldMarkedText(original: Inputting?) -> NSAttributedString {
+        if let original, !original.composingBuffer.isEmpty { return original.attributedString }
+        return NSAttributedString(string: "·")
+    }
+
     @objc(InputStateQuickSymbols)
     class QuickSymbols: InputState, CandidateProvider {
         @objc let held: Bool
         @objc let originalASCII: InputState.ASCII?
-        @objc init(held: Bool) { self.held = held; originalASCII = nil; super.init() }
+        let heldBuffer: ASCIIComposition?
+        var editingComposition: ASCIIComposition? { originalASCII?.composition ?? heldBuffer }
+        var markedComposition: InputState.ASCII? {
+            originalASCII ?? heldBuffer.map { InputState.ASCII(composition: $0, predictionSuppressed: true) }
+        }
+        @objc init(held: Bool) {
+            self.held = held; originalASCII = nil
+            heldBuffer = held ? ASCIIComposition() : nil
+            super.init()
+        }
+        init(heldBuffer: ASCIIComposition) {
+            held = true; originalASCII = nil; self.heldBuffer = heldBuffer; super.init()
+        }
         @objc init(held: Bool, originalASCII: InputState.ASCII) {
-            self.held = held; self.originalASCII = originalASCII; super.init()
+            self.held = held; self.originalASCII = originalASCII; heldBuffer = nil; super.init()
         }
         var candidateCount: Int { QuickSymbolLayer.entries.count }
         func candidate(at index: Int) -> String {
@@ -55,6 +79,17 @@ extension InputState {
             if prediction != nil { tooltip = NSLocalizedString("Prediction: Tab accepts; Esc dismisses; Enter sends only your text", comment: "") }
         }
 
+        /// 所有編輯／預測都經由這裡複製，避免把 Shift 啟動方式遺失。
+        func replacing(composition: ASCIIComposition, prediction: String? = nil,
+                       predictionSuppressed: Bool = false) -> ASCII {
+            if let shifted = self as? ShiftASCII {
+                return ShiftASCII(composition: composition, mode: shifted.mode,
+                    prediction: prediction, predictionSuppressed: predictionSuppressed)
+            }
+            return ASCII(composition: composition, prediction: prediction,
+                         predictionSuppressed: predictionSuppressed)
+        }
+
         var candidateCount: Int { prediction == nil ? composition.candidates.count : 2 }
         func candidate(at index: Int) -> String {
             if let prediction { return index == 1 ? prediction : composition.raw }
@@ -63,24 +98,60 @@ extension InputState {
         func reading(at index: Int) -> String? { nil }
         override var description: String { "<InputState.ASCII>" }
     }
+
+    /// 與選單啟動的 ASCII 分開，Shift 放開不會影響手動英文或雙 Shift 模式。
+    @objc(InputStateShiftASCII)
+    class ShiftASCII: ASCII {
+        let mode: ShiftLetterSession.Mode
+        var session: ShiftLetterSession { .init(composition: composition, mode: mode) }
+        @objc convenience init(shiftText: String, cursor: UInt) {
+            self.init(composition: ASCIIComposition(raw: shiftText, cursor: Int(cursor)), mode: .initial)
+        }
+        init(composition: ASCIIComposition, mode: ShiftLetterSession.Mode,
+             prediction: String? = nil, predictionSuppressed: Bool = false) {
+            self.mode = mode
+            super.init(composition: composition, prediction: prediction,
+                       predictionSuppressed: predictionSuppressed || mode != .word)
+            tooltip = NSLocalizedString("Shift English: Space or Enter commits; Esc cancels", comment: "")
+        }
+    }
+
 }
 
 @objc class QuickSymbolHandler: NSObject {
     @objc static func end(state: InputState.QuickSymbols, stateCallback: (InputState) -> Void) {
-        stateCallback(state.originalASCII ?? InputState.EmptyIgnoringPreviousState())
+        if let buffer = state.heldBuffer, !buffer.raw.isEmpty {
+            stateCallback(InputState.Committing(poppedText: buffer.raw))
+        }
+        if let original = state.originalASCII as? InputState.ShiftASCII, original.mode == .uppercase {
+            // F 放開只送出符號，仍按住 Shift 時繼續保留連續大寫模式。
+            if !original.composingBuffer.isEmpty { stateCallback(InputState.Committing(poppedText: original.composingBuffer)) }
+            stateCallback(original.replacing(composition: ASCIIComposition()))
+        } else {
+            stateCallback(state.originalASCII ?? InputState.EmptyIgnoringPreviousState())
+        }
+    }
+    private static func update(_ composition: ASCIIComposition, state: InputState.QuickSymbols,
+                               stateCallback: (InputState) -> Void) {
+        if let original = state.originalASCII {
+            stateCallback(InputState.QuickSymbols(held: state.held,
+                originalASCII: original.replacing(composition: composition, predictionSuppressed: true)))
+        } else {
+            stateCallback(InputState.QuickSymbols(heldBuffer: composition))
+        }
     }
     private static func insert(_ text: String, state: InputState.QuickSymbols,
                                stateCallback: (InputState) -> Void) {
-        if let original = state.originalASCII {
-            if case .updated(let composition) = original.composition.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
-                stateCallback(InputState.QuickSymbols(held: state.held,
-                    originalASCII: InputState.ASCII(composition: composition, predictionSuppressed: true)))
+        if let original = state.editingComposition {
+            if case .updated(let composition) = original.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
+                update(composition, state: state, stateCallback: stateCallback)
             }
         } else {
             stateCallback(InputState.Committing(poppedText: text))
             stateCallback(InputState.QuickSymbols(held: state.held))
         }
     }
+
     @objc static func select(index: Int, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) {
         guard QuickSymbolLayer.entries.indices.contains(index) else { return }
@@ -89,16 +160,25 @@ extension InputState {
     @objc static func handle(input: KeyHandlerInput, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) -> Bool {
         if input.isCommandHold || input.isOptionHold || input.isControlHold {
-            if let original = state.originalASCII { stateCallback(InputState.Committing(poppedText: original.composingBuffer)) }
+            if let original = state.editingComposition, !original.display.isEmpty {
+                stateCallback(InputState.Committing(poppedText: original.display))
+            }
             stateCallback(InputState.EmptyIgnoringPreviousState())
             return false
         }
-        if input.charCode == 27 || input.charCode == 13 || input.isEnter {
+        if (input.charCode == 27 && !state.held) || input.charCode == 13 || input.isEnter {
             end(state: state, stateCallback: stateCallback)
             return true
         }
-        if let value = QuickSymbolLayer.output(for: UInt16(input.keyCode)) {
+        let code: UInt16 = input.charCode == 8 ? 51 : UInt16(input.keyCode)
+        if let original = state.editingComposition,
+           case .updated(let composition) = QuickSymbolLayer.edit(keyCode: code, composition: original) {
+            update(composition, state: state, stateCallback: stateCallback)
+        } else if let value = QuickSymbolLayer.output(for: code) {
             insert(value, state: state, stateCallback: stateCallback)
+        } else if code == 51 || code == 117 {
+            end(state: state, stateCallback: stateCallback)
+            return false
         }
         return true
     }
@@ -113,12 +193,47 @@ extension InputState {
         let request = CorrectionRequest(revision: 0, text: state.composition.raw, mode: .prediction,
                                         isEnglish: true, protectedWords: lexicon.words)
         let prediction = request.validated([text]).first
-        return InputState.ASCII(composition: state.composition, prediction: prediction)
+        return state.replacing(composition: state.composition, prediction: prediction)
     }
 
     @objc static func acceptPrediction(state: InputState.ASCII, stateCallback: (InputState) -> Void) {
         guard let prediction = state.prediction else { return }
-        stateCallback(InputState.ASCII(composition: ASCIIComposition(raw: prediction, lexicon: lexicon)))
+        stateCallback(state.replacing(composition: ASCIIComposition(raw: prediction, lexicon: lexicon)))
+    }
+
+    /// 只轉換 Shift 英文來源。F 等待／分層是外層包裝，不能在放開 Shift 時取消 F。
+    private static func afterShiftRelease(_ state: InputState) -> (String?, InputState)? {
+        if let shifted = state as? InputState.ShiftASCII {
+            guard shifted.mode != .word else { return nil }
+            switch shifted.session.releasingShift() {
+            case .updated(let next):
+                return (nil, InputState.ShiftASCII(composition: next.composition, mode: next.mode))
+            case .commit(let text): return (text, InputState.EmptyIgnoringPreviousState())
+            default: return nil
+            }
+        }
+        if let pending = state as? InputState.PendingF,
+           let (text, next) = afterShiftRelease(pending.original) {
+            return (text, InputState.PendingF(original: next))
+        }
+        if let symbols = state as? InputState.QuickSymbols, let original = symbols.originalASCII,
+           let (text, next) = afterShiftRelease(original) {
+            if let ascii = next as? InputState.ASCII {
+                return (text, InputState.QuickSymbols(held: symbols.held, originalASCII: ascii))
+            }
+            return (text, InputState.QuickSymbols(held: symbols.held))
+        }
+        if let assistance = state as? InputState.Assistance {
+            return afterShiftRelease(assistance.original)
+        }
+        return nil
+    }
+
+    @objc static func releaseShift(state: InputState, stateCallback: (InputState) -> Void) -> Bool {
+        guard let (text, next) = afterShiftRelease(state) else { return false }
+        if let text, !text.isEmpty { stateCallback(InputState.Committing(poppedText: text)) }
+        stateCallback(next)
+        return true
     }
 
     static func reloadUserTerms() {
@@ -136,9 +251,9 @@ extension InputState {
         input: KeyHandlerInput, state: InputState.ASCII,
         stateCallback: (InputState) -> Void, errorCallback: () -> Void
     ) -> Bool {
-        if state.prediction != nil && !(input.isCommandHold || input.isOptionHold || input.isControlHold) {
+        if !(state is InputState.ShiftASCII && input.charCode == 27), state.prediction != nil && !(input.isCommandHold || input.isOptionHold || input.isControlHold) {
             if input.charCode == 27 {
-                stateCallback(InputState.ASCII(composition: state.composition, predictionSuppressed: true))
+                stateCallback(state.replacing(composition: state.composition, predictionSuppressed: true))
                 return true
             }
             if input.isTab && !input.isShiftHold {
@@ -161,10 +276,33 @@ extension InputState {
         else if input.isEnd { action = .end }
         else { action = .insert(input.inputText ?? "") }
 
+        if let shifted = state as? InputState.ShiftASCII {
+            switch shifted.session.applying(action, shiftHeld: input.isShiftHold,
+                repeating: input.isARepeat, lexicon: lexicon) {
+            case .updated(let next):
+                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode,
+                    predictionSuppressed: input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight))
+            case .commitAndContinue(let text, let next):
+                stateCallback(InputState.Committing(poppedText: text))
+                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode))
+            case .commit(let text):
+                stateCallback(InputState.Committing(poppedText: text))
+                stateCallback(InputState.EmptyIgnoringPreviousState())
+            case .passThrough(let text):
+                stateCallback(InputState.Committing(poppedText: text))
+                stateCallback(InputState.EmptyIgnoringPreviousState())
+                return false
+            case .forward: return false
+            case .cancel: stateCallback(InputState.EmptyIgnoringPreviousState())
+            case .rejected: errorCallback()
+            }
+            return true
+        }
+
         switch state.composition.applying(action, lexicon: lexicon) {
         case .updated(let composition):
             let navigated = input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight || input.isHome || input.isEnd
-            stateCallback(InputState.ASCII(composition: composition, predictionSuppressed: navigated))
+            stateCallback(state.replacing(composition: composition, predictionSuppressed: navigated))
         case .commit(let value):
             stateCallback(InputState.Committing(poppedText: value))
             stateCallback(InputState.Empty())

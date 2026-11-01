@@ -60,6 +60,7 @@ class McBopomofoInputMethodController: IMKInputController {
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
     private var shiftGesture = DoubleShiftGesture()
+    private var lastInputModifiers: NSEvent.ModifierFlags?
     // Explicitly enabled, bounded diagnostics. Never record text or key codes.
     private static var shiftDiagnosticLines: [String] = []
     private static var shiftDiagnosticDeadline: TimeInterval = 0
@@ -76,7 +77,8 @@ class McBopomofoInputMethodController: IMKInputController {
     private static var didRequestFMonitoring = false
     private var fHoldTimer: Timer?
     private var pendingFEvent: NSEvent?
-    private var symbolKeysDown: Set<UInt16> = []
+    private var fHoldStartedAt: TimeInterval?
+    private var symbolKeysDown = SymbolKeyOwnership()
 
     // Share the stored issues, so a set of issues is shown as notification only once.
     static var latestUserFileIssues: [String] = []
@@ -239,10 +241,11 @@ class McBopomofoInputMethodController: IMKInputController {
         recordShiftDiagnostic(.activate)
         hideInputModeIndicator()
         shiftGesture.reset()
+        lastInputModifiers = nil
         directEnglish = false
         textAssistant.cancel()
         cancelFHold(client: client)
-        symbolKeysDown.removeAll()
+        symbolKeysDown.reset()
         UserDefaults.standard.synchronize()
 
         // Override the keyboard layout. Use US if not set.
@@ -268,9 +271,9 @@ class McBopomofoInputMethodController: IMKInputController {
         shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: client) }
         cancelFHold(client: client)
-        symbolKeysDown.removeAll()
+        symbolKeysDown.reset()
         currentClient = nil
         keyHandler.clear()
         self.handle(state: .Deactivated(), client: client)
@@ -317,7 +320,7 @@ class McBopomofoInputMethodController: IMKInputController {
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
         if fHoldGesture.phase == .pending {
-            _ = applyFHold(.otherKey, client: client)
+            _ = applyFHold(.otherKey(isMapped: false), client: client)
         }
         cancelFHold(client: client)
         if state is InputState.QuickSymbols {
@@ -437,7 +440,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     @objc private func toggleFHoldSymbols(_ sender: Any?) {
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: currentClient) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: currentClient) }
         cancelFHold(client: currentClient)
         Preferences.fHoldSymbolsEnabled.toggle()
         if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess() {
@@ -456,11 +459,15 @@ class McBopomofoInputMethodController: IMKInputController {
         for effect in effects {
             switch effect {
             case .schedule:
+                // 暫存 F 並開始被動放開監聽；短按時才將原事件交回既有輸入流程。
                 fHoldTimer?.invalidate()
-                let started = ProcessInfo.processInfo.systemUptime
-                guard fReleaseMonitor.start(onRelease: { [weak self] in
+                let started = pendingFEvent?.timestamp ?? ProcessInfo.processInfo.systemUptime
+                fHoldStartedAt = started
+                handle(state: InputState.PendingF(original: state), client: client)
+                guard fReleaseMonitor.start(onRelease: { [weak self] releasedAt in
                     guard let self else { return }
-                    self.applyFHold(.release, client: self.currentClient)
+                    self.advanceFHold(to: releasedAt, client: self.currentClient)
+                    self.applyFHold(.observedRelease, client: self.currentClient)
                 }) else {
                     // Permission denial or tap failure must never swallow the original F.
                     _ = applyFHold(.release, client: client)
@@ -482,6 +489,9 @@ class McBopomofoInputMethodController: IMKInputController {
                 fHoldTimer = timer
                 RunLoop.main.add(timer, forMode: .common)
             case .invalidate:
+                // 只在手勢結束或取消時清理；提前進入分層不能走這個分支。
+                restorePendingF(client: client)
+                fHoldStartedAt = nil
                 fReleaseMonitor.stop()
                 fHoldTimer?.invalidate()
                 fHoldTimer = nil
@@ -496,9 +506,15 @@ class McBopomofoInputMethodController: IMKInputController {
                     }
                 }
             case .beginLayer:
+                // 同一條路徑處理長按與立即組合鍵；保留監聽，等真正放開 F 才退出。
+                restorePendingF(client: client)
                 if !directEnglish, pendingFEvent?.modifierFlags.contains(.shift) == true,
                    !(state is InputState.ASCII) {
-                    keyHandler.beginASCII(with: state, stateCallback: { self.handle(state: $0, client: client) }, errorCallback: {})
+                    keyHandler.beginASCII(with: state, stateCallback: { next in
+                        if let ascii = next as? InputState.ASCII {
+                            self.handle(state: InputState.ShiftASCII(composition: ascii.composition, mode: .initial), client: client)
+                        } else { self.handle(state: next, client: client) }
+                    }, errorCallback: {})
                 }
                 let began = keyHandler.beginQuickSymbols(with: state, held: true) {
                     self.handle(state: $0, client: client)
@@ -517,7 +533,31 @@ class McBopomofoInputMethodController: IMKInputController {
             case .consume: break
             }
         }
+        // F 的放開可能先由被動監聽器送達；套用最近觀察到的 Shift 狀態，
+        // 避免延後重播的 Shift+F 在 Shift 已放開後留下錯誤模式。
+        releaseShiftCompositionIfNeeded(client: client)
         return effects.contains(.consume)
+    }
+
+    private func releaseShiftCompositionIfNeeded(client: Any?) {
+        guard let modifiers = lastInputModifiers, !modifiers.contains(.shift),
+              !directEnglish, !IsSecureEventInputEnabled() else { return }
+        if keyHandler.releaseShift(with: state, stateCallback: { self.handle(state: $0, client: client) }) {
+            // 組詞的 Shift 放開不算雙擊 Shift 的第一下。
+            shiftGesture.reset()
+        }
+    }
+
+    private func restorePendingF(client: Any?) {
+        if let pending = state as? InputState.PendingF {
+            handle(state: pending.original, client: client)
+        }
+    }
+
+    // An event can arrive after the deadline but before a busy run loop fires the timer.
+    private func advanceFHold(to timestamp: TimeInterval, client: Any?) {
+        guard let started = fHoldStartedAt else { return }
+        _ = applyFHold(.elapsed(timestamp - started), client: client)
     }
 
     @objc private func importTechnicalTerms(_ sender: Any?) {
@@ -537,12 +577,17 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
+        if event.type == .keyDown || event.type == .keyUp || event.type == .flagsChanged {
+            lastInputModifiers = event.modifierFlags
+            releaseShiftCompositionIfNeeded(client: client)
+        }
         if event.type == .keyDown || IsSecureEventInputEnabled() {
             hideInputModeIndicator()
         }
         if IsSecureEventInputEnabled() {
             recordShiftDiagnostic(.secureStop)
             shiftGesture.reset()
+            cancelFHold(client: client)
         }
         else if event.type == .flagsChanged {
             recordShiftDiagnostic(.flags, flags: event.modifierFlags.rawValue)
@@ -557,14 +602,11 @@ class McBopomofoInputMethodController: IMKInputController {
             recordShiftDiagnostic(.keyDownReset)
             shiftGesture.reset()
         }
-        // Keep ownership until key-up even when F was released before a symbol key.
-        if event.type == .keyUp, symbolKeysDown.remove(event.keyCode) != nil { return true }
-        if event.type == .keyDown, event.isARepeat, symbolKeysDown.contains(event.keyCode),
-           !(state is InputState.QuickSymbols) { return true }
-        if event.type == .keyDown, event.keyCode != UInt16(kVK_ANSI_F), state is InputState.QuickSymbols,
-           event.modifierFlags.intersection([.command, .control, .option]).isEmpty {
-            symbolKeysDown.insert(event.keyCode)
+        if event.type == .keyDown || event.type == .keyUp {
+            advanceFHold(to: event.timestamp, client: client)
         }
+        // Keep ownership until key-up even when F was released before a symbol key.
+        if event.type == .keyUp, symbolKeysDown.keyUp(event.keyCode) { return true }
 
         if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
             if applyFHold(.release, client: client) { return true }
@@ -579,9 +621,24 @@ class McBopomofoInputMethodController: IMKInputController {
                 pendingFEvent = event
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
-        } else if event.type == .keyDown || (event.type == .flagsChanged
-                    && event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift)) {
-            _ = applyFHold(.otherKey, client: client)
+        } else if event.type == .keyDown {
+            let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
+            let isMapped = QuickSymbolLayer.canStartChord(keyCode: event.keyCode,
+                repeating: event.isARepeat,
+                hasDisallowedModifiers: !event.modifierFlags.intersection(forbidden).isEmpty)
+            _ = applyFHold(.otherKey(isMapped: isMapped), client: client)
+        } else if event.type == .flagsChanged &&
+                    event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift) {
+            _ = applyFHold(.otherKey(isMapped: false), client: client)
+        }
+
+        // The first chord key must acquire ownership after it activates the layer,
+        // before normal text routing handles that same key exactly once.
+        if event.type == .keyDown,
+           symbolKeysDown.keyDown(event.keyCode, repeating: event.isARepeat,
+               layerActive: state is InputState.QuickSymbols,
+               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty) {
+            return true
         }
 
         // Preserve F's momentary layer in direct English; other keys pass through literally.
@@ -643,6 +700,7 @@ class McBopomofoInputMethodController: IMKInputController {
                 InputFeedback.beep()
             }
         }
+        releaseShiftCompositionIfNeeded(client: client)
         return result
     }
 
@@ -768,11 +826,18 @@ extension McBopomofoInputMethodController {
         let previous = state
         state = newState
         if let symbols = previous as? InputState.QuickSymbols, symbols.held,
+           fHoldGesture.phase == .held,
            !(newState is InputState.QuickSymbols) && !(newState is InputState.Committing) {
             cancelFHold(client: client)
         }
 
         switch newState {
+        case let pending as InputState.PendingF:
+            let original = pending.original as? InputState.Inputting
+            (client as? IMKTextInput)?.setMarkedText(
+                InputState.fHoldMarkedText(original: original),
+                selectionRange: NSRange(location: Int(original?.cursorIndex ?? 0), length: 0),
+                replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
         case let assistance as InputState.Assistance:
             gCurrentCandidateController?.visible = false
             hideTooltip()
@@ -813,8 +878,8 @@ extension McBopomofoInputMethodController {
                 gCurrentCandidateController?.visible = false
                 hideTooltip()
                 // A held layer maps physical keys without presenting a selection UI.
-                (client as? IMKTextInput)?.setMarkedText(newState.originalASCII?.attributedString ?? NSAttributedString(string: ""),
-                    selectionRange: NSRange(location: Int(newState.originalASCII?.cursorIndex ?? 0), length: 0),
+                (client as? IMKTextInput)?.setMarkedText(InputState.fHoldMarkedText(original: newState.markedComposition),
+                    selectionRange: NSRange(location: Int(newState.markedComposition?.cursorIndex ?? 0), length: 0),
                     replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
             } else {
                 handleStateWithSimpleCandidateWindow(state: newState, previous: previous, client: client)
@@ -1419,10 +1484,10 @@ extension McBopomofoInputMethodController {
 private final class FReleaseMonitor {
     private var tap: CFMachPort?
     private var source: CFRunLoopSource?
-    private var onRelease: (() -> Void)?
+    private var onRelease: ((TimeInterval) -> Void)?
     var isEnabled: Bool { tap.map { CGEvent.tapIsEnabled(tap: $0) } ?? false }
 
-    func start(onRelease: @escaping () -> Void) -> Bool {
+    func start(onRelease: @escaping (TimeInterval) -> Void) -> Bool {
         stop()
         guard CGPreflightListenEventAccess(), !IsSecureEventInputEnabled() else { return false }
         self.onRelease = onRelease
@@ -1432,10 +1497,10 @@ private final class FReleaseMonitor {
                 guard let info else { return Unmanaged.passUnretained(event) }
                 let monitor = Unmanaged<FReleaseMonitor>.fromOpaque(info).takeUnretainedValue()
                 if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-                    monitor.onRelease?()
+                    monitor.onRelease?(ProcessInfo.processInfo.systemUptime)
                 } else if type == .keyUp,
                           event.getIntegerValueField(.keyboardEventKeycode) == Int64(kVK_ANSI_F) {
-                    monitor.onRelease?()
+                    monitor.onRelease?(Double(event.timestamp) / 1_000_000_000)
                 }
                 return Unmanaged.passUnretained(event)
             }, userInfo: Unmanaged.passUnretained(self).toOpaque()) else {

@@ -31,6 +31,7 @@ public enum QuickSymbolLayer {
         .init(keyCode: 30, label: "]", output: "]"),
         .init(keyCode: 42, label: "\\", output: "\\"),
         .init(keyCode: 50, label: "`", output: "`"),
+        .init(keyCode: 53, label: "Esc", output: "`"),
         .init(keyCode: 18, label: "1", output: "!"),
         .init(keyCode: 19, label: "2", output: "@"),
         .init(keyCode: 20, label: "3", output: "#"),
@@ -59,11 +60,25 @@ public enum QuickSymbolLayer {
     public static func output(for keyCode: UInt16) -> String? {
         entries.first { $0.keyCode == keyCode }?.output
     }
+
+    public static func canStartChord(keyCode: UInt16, repeating: Bool,
+                                     hasDisallowedModifiers: Bool) -> Bool {
+        !repeating && !hasDisallowedModifiers && output(for: keyCode) != nil
+    }
+
+    /// Applies editing inside a held layer without committing text to the client.
+    public static func edit(keyCode: UInt16, composition: ASCIIComposition) -> ASCIIComposition.Result? {
+        if keyCode == 51 { return composition.applying(.backspace) }
+        if keyCode == 117 { return composition.applying(.delete) }
+        guard let text = output(for: keyCode) else { return nil }
+        return composition.applying(.insert(text))
+    }
+
 }
 
 /// A local input-method gesture. The adapter owns the timer and original key event.
 public struct FHoldGesture {
-    public static let defaultDelayMilliseconds = 100
+    public static let defaultDelayMilliseconds = 150
     public static let delayRangeMilliseconds = 100...1000
 
     public static func clampedDelayMilliseconds(_ value: Int) -> Int {
@@ -74,11 +89,18 @@ public struct FHoldGesture {
     public let delay: Double
     public enum Phase: Equatable { case idle, pending, held }
     public enum Event {
-        case press(eligible: Bool, repeating: Bool), release, otherKey, timeout, cancel
+        case press(eligible: Bool, repeating: Bool)
+        case release
+        case observedRelease
+        case otherKey(isMapped: Bool)
+        case timeout
+        case cancel
         case elapsed(Double)
     }
     public enum Effect: Equatable { case schedule, invalidate, replayTap, beginLayer, endLayer, consume }
     public private(set) var phase: Phase = .idle
+    // The passive tap may finish the gesture before IMK receives the same key-up.
+    private var ownsKeyUp = false
     public init(delayMilliseconds: Int = Self.defaultDelayMilliseconds) {
         delay = Double(Self.clampedDelayMilliseconds(delayMilliseconds)) / 1000
     }
@@ -86,20 +108,31 @@ public struct FHoldGesture {
     public mutating func handle(_ event: Event) -> [Effect] {
         switch event {
         case .press(let eligible, let repeating):
-            if phase != .idle { return [.consume] }
+            if phase != .idle || (repeating && ownsKeyUp) { return [.consume] }
             guard eligible && !repeating else { return [] }
             phase = .pending
+            ownsKeyUp = true
             return [.schedule, .consume]
+        case .observedRelease:
+            let owned = ownsKeyUp
+            let effects = handle(.release)
+            ownsKeyUp = owned
+            return effects
         case .release:
+            let owned = ownsKeyUp
+            ownsKeyUp = false
             let previous = phase
             phase = .idle
             switch previous {
             case .pending: return [.invalidate, .replayTap, .consume]
             case .held: return [.invalidate, .endLayer, .consume]
-            case .idle: return []
+            case .idle: return owned ? [.consume] : []
             }
-        case .otherKey:
+        case .otherKey(let isMapped):
             guard phase == .pending else { return [] }
+            // Starting early has exactly the same lifetime as starting on timeout:
+            // the adapter must keep its passive F release monitor and health timer.
+            if isMapped { return handle(.timeout) }
             phase = .idle
             return [.invalidate, .replayTap]
         case .elapsed(let seconds):
@@ -110,9 +143,29 @@ public struct FHoldGesture {
             phase = .held
             return [.beginLayer]
         case .cancel:
+            ownsKeyUp = false
             let previous = phase
             phase = .idle
             return previous == .held ? [.invalidate, .endLayer] : [.invalidate]
         }
+    }
+}
+
+
+/// Only mapped symbol keys belong to the layer after F is released. Editing keys
+/// must keep their native repeat behavior, even when IMK omits their key-up.
+public struct SymbolKeyOwnership {
+    private var keys: Set<UInt16> = []
+    public init() {}
+    public mutating func reset() { keys.removeAll() }
+    public mutating func keyUp(_ code: UInt16) -> Bool { keys.remove(code) != nil }
+    public mutating func keyDown(_ code: UInt16, repeating: Bool,
+                                 layerActive: Bool, shortcut: Bool) -> Bool {
+        if !repeating || shortcut { keys.remove(code) }
+        if repeating && keys.contains(code) && !layerActive { return true }
+        if layerActive && !shortcut && QuickSymbolLayer.output(for: code) != nil {
+            keys.insert(code)
+        }
+        return false
     }
 }

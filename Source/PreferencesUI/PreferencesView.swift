@@ -630,7 +630,7 @@ private struct AdvancedPreferencesView: View {
                     }
                     .labelsHidden()
                     .fixedSize()
-                    Text(localized("Increase the delay if F triggers symbols while typing Bopomofo. Default: 100 ms."))
+                    Text(localized("Increase the delay if F triggers symbols while typing Bopomofo. Default: 150 ms."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)

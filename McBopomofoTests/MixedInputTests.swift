@@ -40,6 +40,87 @@ struct MixedInputTests {
         }
     }
 
+    @Test func shiftWordReleaseBackspaceAndLowercaseMM() {
+        let old = Preferences.mixedEnglishEnabled
+        let switching = Preferences.switchInputSourceUponShiftLetterKeyComboEnabled
+        defer { Preferences.mixedEnglishEnabled = old; Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = switching }
+        Preferences.mixedEnglishEnabled = true
+        Preferences.switchInputSourceUponShiftLetterKeyComboEnabled = false
+        let s = Session()
+        s.key("M", code: 46, flags: .shift)
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .initial)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        s.key("\u{7F}", code: 51)
+        s.type("mm")
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .word)
+        #expect(s.committed.isEmpty)
+        s.key(" ", code: 49)
+        #expect(s.committed == "mm ")
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        s.key("j")
+        #expect(s.state is InputState.Inputting)
+        #expect(!(s.state is InputState.ASCII))
+    }
+
+    @Test func heldShiftABCCommitsThenReturnsToChinese() {
+        let s = Session()
+        s.state = InputState.ShiftASCII(shiftText: "A", cursor: 1)
+        s.key("B", code: 11, flags: .shift)
+        #expect(s.committed == "AB")
+        s.key("C", code: 8, flags: .shift)
+        #expect(s.committed == "ABC")
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .uppercase)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(!s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+    }
+
+    @Test func shiftReleasePreservesFStateAndCommitsUppercaseSymbolsOnce() {
+        let s = Session()
+        let upper = InputState.ShiftASCII(composition: ASCIIComposition(raw: "+"), mode: .uppercase)
+        s.state = InputState.QuickSymbols(held: true, originalASCII: upper)
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(s.state is InputState.QuickSymbols)
+        #expect(s.committed == "+")
+        s.key("r", code: 15)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "++")
+        s.state = InputState.PendingF(original: InputState.ShiftASCII(shiftText: "S", cursor: 1))
+        #expect(s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        #expect(((s.state as? InputState.PendingF)?.original as? InputState.ShiftASCII)?.mode == .word)
+    }
+
+    @Test func manualASCIIAndPredictionKeepTheirEntryMode() {
+        let s = Session()
+        s.begin(); s.type("hello")
+        #expect(!s.handler.releaseShift(with: s.state, stateCallback: s.transition))
+        s.key(" ")
+        #expect(s.committed.isEmpty)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "hello ")
+        s.state = InputState.ShiftASCII(composition: ASCIIComposition(raw: "hel"), mode: .word)
+        s.handler.publishPrediction("hello", state: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ShiftASCII)?.mode == .word)
+        s.key("\r")
+        #expect(s.committed == "hel")
+    }
+
+    @Test func waitingMarkNeverBecomesCommittedComposition() {
+        let empty = InputState.Empty()
+        let pending = InputState.PendingF(original: empty)
+        #expect(pending.original === empty)
+        #expect(!((pending as InputState) is InputState.NotEmpty))
+        #expect(InputState.fHoldMarkedText(original: nil).string == "·")
+        let ascii = InputState.ASCII(text: "hello", cursor: 2)
+        #expect(InputState.fHoldMarkedText(original: ascii).string == ascii.attributedString.string)
+        let s = Session()
+        s.transition(pending)
+        s.transition(empty)
+        #expect(s.committed.isEmpty)
+        s.transition(InputState.QuickSymbols(held: true))
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed.isEmpty)
+    }
+
     @Test func delayedFTapRemainsPhonetic() {
         let previousLayout = Preferences.keyboardLayout
         defer { Preferences.keyboardLayout = previousLayout }
@@ -63,11 +144,85 @@ struct MixedInputTests {
         #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
         #expect(s.committed == "我")
         s.key("y", code: 16); s.key("r", code: 15); s.key("n", code: 45)
-        #expect(s.committed == "我7+1")
+        #expect(s.committed == "我")
+        #expect((s.state as? InputState.QuickSymbols)?.heldBuffer?.raw == "7+1")
         s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "我7+1")
         s.type("ji3"); s.key("\r")
         #expect(s.committed == "我7+1我")
         #expect(s.errors == 0)
+    }
+
+    @Test func heldLayerDeletesWithoutCommittingOrLeavingLayer() {
+        let s = Session()
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("y", code: 16); s.key("r", code: 15); s.key("n", code: 45)
+        for expected in ["7+", "7", "", ""] {
+            #expect(s.key("\u{7F}", code: 51))
+            #expect((s.state as? InputState.QuickSymbols)?.heldBuffer?.raw == expected)
+            #expect(s.committed.isEmpty)
+        }
+        s.key("r", code: 15)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect(s.committed == "+")
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(s.errors == 0)
+    }
+
+    @Test func heldEnglishDeletionPreservesCompositionAndCursor() {
+        let s = Session()
+        s.state = InputState.ASCII(text: "abcd", cursor: 2)
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+        s.key("r", code: 15)
+        s.key("\u{7F}", code: 51)
+        s.key("\u{F728}", code: 117)
+        s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+        #expect((s.state as? InputState.ASCII)?.composingBuffer == "abd")
+        #expect((s.state as? InputState.ASCII)?.cursorIndex == 2)
+        #expect(s.committed.isEmpty)
+    }
+
+    @Test func nativeBackspaceDeletesPhoneticsAndAllowsRepeatedDelivery() {
+        let s = Session()
+        s.type("ji3")
+        #expect(s.key("\u{7F}", code: 51))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(!s.key("\u{7F}", code: 51))
+        #expect(s.committed.isEmpty)
+        #expect(s.errors == 0)
+    }
+
+    @Test func earlyFChordHandlesFirstKeyAndEscAsBacktick() {
+        for english in [false, true] {
+            let s = Session()
+            if english { s.begin(); s.type("Hello") }
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.otherKey(isMapped: true)) == [.beginLayer])
+            #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+            #expect(s.key("r", code: 15))
+            #expect(s.key("\u{1B}", code: 53))
+            #expect(s.state is InputState.QuickSymbols)
+            #expect((s.state as? InputState.QuickSymbols)?.editingComposition?.raw == (english ? "Hello+`" : "+`"))
+            #expect(s.committed.isEmpty)
+            #expect(gesture.handle(.observedRelease).contains(.endLayer))
+            s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+            if english {
+                #expect((s.state as? InputState.ASCII)?.composingBuffer == "Hello+`")
+                #expect(s.committed.isEmpty)
+            } else {
+                #expect(s.committed == "+`")
+            }
+        }
+    }
+
+    @Test func escapeStillExitsManualSymbolMenu() {
+        let s = Session()
+        #expect(s.handler.beginQuickSymbols(with: s.state, held: false, stateCallback: s.transition))
+        #expect(s.key("\u{1B}", code: 53))
+        #expect(s.state is InputState.EmptyIgnoringPreviousState)
+        #expect(s.committed.isEmpty)
     }
 
     @Test func contextualPredictionAcceptsOnlyOnTab() {
@@ -183,11 +338,11 @@ struct MixedInputTests {
         #expect(s.committed == "Hello++world")
     }
 
-    @Test func englishSymbolLayerEscRestoresCursorWithoutCommitting() {
+    @Test func englishSymbolLayerEnterRestoresCursorWithoutCommitting() {
         let s = Session()
         s.state = InputState.ASCII(text: "abc", cursor: 1)
         #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
-        s.key("r", code: 15); s.key("\u{1B}")
+        s.key("r", code: 15); s.key("\r", code: 36)
         #expect((s.state as? InputState.ASCII)?.composingBuffer == "a+bc")
         #expect((s.state as? InputState.ASCII)?.cursorIndex == 2)
         #expect(s.committed.isEmpty)

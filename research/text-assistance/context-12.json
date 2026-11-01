@@ -1,0 +1,112 @@
+[
+  {
+    "id": "context-01",
+    "category": "context",
+    "text": "我喝了500ML的水",
+    "expected": [
+      "我喝了500mL的水"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-02",
+    "category": "context",
+    "text": "我在去一次",
+    "expected": [
+      "我再去一次"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-03",
+    "category": "context",
+    "text": "我再德國",
+    "expected": [
+      "我在德國"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-04",
+    "category": "context",
+    "text": "我跑得快",
+    "expected": [],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-05",
+    "category": "context",
+    "text": "我在德國",
+    "expected": [],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-06",
+    "category": "context",
+    "text": "我再去一次",
+    "expected": [],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-07",
+    "category": "context",
+    "text": "飲料容量是500 ML",
+    "expected": [
+      "飲料容量是500 mL"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-08",
+    "category": "context",
+    "text": "明天我在來一次",
+    "expected": [
+      "明天我再來一次"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-09",
+    "category": "context",
+    "text": "我再台北工作",
+    "expected": [
+      "我在台北工作"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-10",
+    "category": "context",
+    "text": "他跑的很快",
+    "expected": [
+      "他跑得很快"
+    ],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-11",
+    "category": "context",
+    "text": "這是ML模型",
+    "expected": [],
+    "isEnglish": false,
+    "protectedWords": []
+  },
+  {
+    "id": "context-12",
+    "category": "context",
+    "text": "我喝了500mL的水",
+    "expected": [],
+    "isEnglish": false,
+    "protectedWords": []
+  }
+]

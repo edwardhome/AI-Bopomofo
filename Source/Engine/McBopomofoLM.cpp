@@ -137,6 +137,8 @@ std::vector<McBopomofoLM::UserFileIssue> McBopomofoLM::getUserFileIssues()
 
 std::vector<Formosa::Gramambular2::LanguageModel::Unigram>
 McBopomofoLM::getUnigrams(const std::string& key) {
+  // 依讀音鍵合併內建詞與使用者詞，套用排除及替換規則，再交給組句引擎評分。
+  // 此處只處理詞庫資料，不呼叫生成式模型，也不接觸 AppKit。
   if (key == " ") {
     std::vector<Formosa::Gramambular2::LanguageModel::Unigram> spaceUnigrams;
     spaceUnigrams.emplace_back(" ", 0);

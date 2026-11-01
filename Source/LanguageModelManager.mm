@@ -85,6 +85,8 @@ static void LTLoadVariantAnnotatorData()
 
 + (void)loadDataModels
 {
+    // 這裡載入的是注音詞頻與關聯詞資料，不是 Apple 生成式模型。
+    // 透過橋接集中管理 C++ 資料生命週期，Swift 不直接操作引擎。
     if (!gLanguageModelMcBopomofo.isDataModelLoaded()) {
         LTLoadLanguageModelFile(@"data", gLanguageModelMcBopomofo);
     }

@@ -194,7 +194,7 @@ extension McBopomofoInputMethodController {
         Preferences.englishPredictionEnabled.toggle()
         textAssistant.cancel()
         if let ascii = state as? InputState.ASCII {
-            handle(state: InputState.ASCII(composition: ascii.composition, predictionSuppressed: !Preferences.englishPredictionEnabled), client: currentClient)
+            handle(state: ascii.replacing(composition: ascii.composition, predictionSuppressed: !Preferences.englishPredictionEnabled), client: currentClient)
         }
     }
 }
