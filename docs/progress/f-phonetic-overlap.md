@@ -44,3 +44,18 @@
 ## 使用者實鍵回報
 
 記錄時間：2026-11-03T01:34:06+08:00。使用者回報：等待時間設為 100 毫秒時，「去、七、其」即使按鍵重疊也可正常輸入，手感合適。這是使用者實際驗收，不是 GUI 自動測試；沒有據此推定其他裝置或所有應用皆通過，也沒有修改新使用者的 150 毫秒預設值。
+
+## 主線整理與更新交付
+
+記錄時間：2026-11-03T01:46:02+08:00。使用者後續明確授權合併並統一 GitHub 主線為小寫 `main`，重新撰寫 README，另在桌面提供命令列指南；Release 仍由使用者自行發布。
+
+在 `release/main-consolidation` 準備文件與 CI 修正：Foundation Models 改用 macOS 26 SDK 已有的 `sampling:` 參數；SystemCharacterInfo 明確宣告 macOS 13 部署目標，避免低於 SQLite 的最低版本要求。無介面 CI 從 Info.plist 取得版號，不再固定打 0.3.1 包；保留上游 hosted IME 工作流程，但衍生專案不執行該工作。
+
+本機重新驗證為 232 項通過、2 項跳過，Debug 整合測試只編譯，通用 Release 建置與套件驗證成功。第一次本機編譯遇到舊預編譯標頭快取失效，保留該快取備份並重建後通過。未安裝、未重啟輸入法，未執行 GUI／模擬打字或模型推論測試。
+
+最終交付改為 `0.6.11-dev.3`，來源提交 `efe32426c64ab71c38c7fc4a5ae8e186173dd23f`。指定的 `0.6.11` 同步資料夾只保留以下 pkg 與 app ZIP；dev.1、dev.2 保存在本機打包目錄與備份。複製後 SHA-256 一致，解開 ZIP 的 77 個 app 檔案一致，嚴格簽章驗證通過。這只證明本機同步資料夾交付正確，不代表另一台 Mac 已下載完成。
+
+- `AI-Bopomofo-0.6.11-dev.3.pkg`：`b508b04bee44d61b5a1c2c5375ade3d440cbe08771b6b9928d1cf8bb3a1f01bc`
+- `AI-Bopomofo-0.6.11-dev.3.zip`：`62289bc40411fd8bd5f3296b1c7de37a219e3a713f16ab732d78676d2c11636c`
+
+完整 Git 歷史備份位於忽略的 `artifacts/main-consolidation/before-main.bundle`。清理只針對已被主線包含的分支；`research/apple-fm` 的兩個獨立提交及研究 worktree 保留，歷史標籤與既有 Release 不變。操作說明見 [GitHub 命令列指南](../github-workflow.md)。
