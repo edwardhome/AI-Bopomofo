@@ -25,6 +25,8 @@ on:
 
 jobs:
   build:
+    # 衍生專案使用 headless 工作流程；保留上游設定，但不在本專案啟動 hosted IME 測試。
+    if: github.repository == 'openvanilla/McBopomofo'
     name: Build and Test with Xcode
     strategy:
       matrix:

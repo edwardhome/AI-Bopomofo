@@ -28,8 +28,9 @@ public struct AppleTextAssistance: CorrectionProvider {
             struct Payload: Encodable { let mode: AssistanceMode; let text: String }
             let payload = Payload(mode: request.mode, text: request.text)
             let prompt = String(decoding: try JSONEncoder().encode(payload), as: UTF8.self)
+            // 使用 macOS 26 SDK 已有的參數名稱，讓 Xcode 26 與新版 SDK 都能編譯。
             let response = try await session.respond(to: prompt, generating: TextSuggestions.self,
-                options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 384))
+                options: GenerationOptions(sampling: .greedy, maximumResponseTokens: 384))
             try Task.checkCancellation()
             return response.content.suggestions
         }

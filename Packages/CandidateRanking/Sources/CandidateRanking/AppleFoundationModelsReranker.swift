@@ -35,7 +35,8 @@ public struct AppleFoundationModelsReranker: CandidateReranker {
         let prompt = String(decoding: try JSONEncoder().encode(request), as: UTF8.self)
         let response = try await session.respond(
             to: prompt, generating: ModelSelection.self,
-            options: GenerationOptions(samplingMode: .greedy, maximumResponseTokens: 64)
+            // 與 macOS 26 SDK 相容；保留 greedy 取樣與原本的回應長度上限。
+            options: GenerationOptions(sampling: .greedy, maximumResponseTokens: 64)
         )
         try Task.checkCancellation()
         guard response.content.compositionVersion >= 0 else { throw RankingError.invalidRequest }

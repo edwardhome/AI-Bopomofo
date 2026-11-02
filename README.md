@@ -1,52 +1,66 @@
 # AI注音輸入法（AI-Bopomofo）
 
-以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
+以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**開發版本：0.6.11，分支 `fix/f-phonetic-overlap`。** 本次提供原始碼與供擁有者自行安裝的開發包；尚未建立此版本的 GitHub Release，也尚未完成 MacBook Air 實鍵驗收。
+**主線固定為 `main`，目前程式版本為 0.6.11。** 0.6.11 尚待擁有者手動發布；已有 [0.6.10 開發測試版](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.10) 可下載。主線程式碼、版本標籤和 Release 安裝附件是不同的交付項目，請以各 Release 頁標示的版本為準。
 
-[開發分支](https://github.com/edwardhome/AI-Bopomofo/tree/fix/f-phonetic-overlap) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [自行修改與編譯](docs/development.md) · [架構與依賴圖](docs/architecture.md)
+[下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
-**本次修正**：快速打「其、去」時，門檻內的 ㄑㄧ／ㄑㄩ 優先組注音，避免因 F 與 U／M 重疊而變成 `8`／`2`。要輸入這兩個數字，先長按 F 超過設定時間；其餘立即組合鍵及英文模式維持原行為。詳見 [F 分層說明](docs/quick-symbols.md)。
+## 0.6.11 修正：快速打「其、去」不再搶進符號層
 
-## 這個版本的特色
+0.6.10 的立即組合鍵會把重疊的 F＋U／M 當成 `8`／`2`，單純調高等待時間無法避免。0.6.11 在一般注音模式優先保護 ㄑㄧ／ㄑㄩ：
 
-| 功能 | 使用方式與範圍 |
+| 操作 | 結果 |
 | --- | --- |
-| 雙擊 Shift 切換英文／注音 | 快速按放 Shift 兩次，在輸入法內切換；游標旁短暫顯示「英文／注音」。0.6.6 已修正重複修飾鍵通知造成無法切換的問題，並完成使用者實機驗收。 |
-| 不依賴 Kanata 的 F 數字／符號分層 | 開啟選單中的「長按 F 輸入數字／符號」並授予輸入監控；F＋R 立即輸入 `+`；單獨長按仍使用設定時間（預設 150 毫秒），放開 F 退出。中文、直接英文及 ASCII 組字均支援。 |
-| 明確英文／ASCII 組字 | 從選單進入，或選擇啟用「Shift＋字母開始英文組字」。Shift 首字母放開後組單字，空白／Enter 送出；持續按 Shift 打多個字母則直接送出大寫，放開回注音。選單 ASCII 可組整句。 |
-| 專業詞彙候選與匯入／匯出 | 自訂英文技術詞以 UTF-8 純文字每行一詞匯入。原字串保留第一候選，Tab 選取補全，不擅自替換。 |
-| 可切換全形／半形標點 | 關閉「使用半形標點符號」後，`Shift + ,` 為 `，`、`Shift + .` 為 `。`；開啟時為 `,`、`.`。普通注音鍵位保持原樣。 |
-| Markdown 友善符號 | 反引號預設直接輸入，可搭配 F 分層輸入括號、運算符號與數字。 |
-| 本機文字協助 | 對目前尚未送出的組字提供手動錯字檢查與英文續字建議；原文優先，明確接受後才採用。Apple 模型不可用時保留原文與可用的系統拼字回退。 |
-| 保留小麥注音的傳統輸入 | 保留注音顯示、選字與既有詞庫；使用獨立識別碼，可與原版並存。 |
+| F（ㄑ）按下後，在長按門檻內接 U（ㄧ）或 M（ㄩ） | 正常組注音，兩鍵可以重疊 |
+| 先按住 F 超過門檻，再按 U／M | 輸入 `8`／`2` |
+| F＋R、F＋Esc 等其他映射鍵 | 仍立即進入符號層 |
+| 直接英文、Shift 英文、選單 ASCII | 維持原本的立即組合鍵行為 |
 
-F 分層部分鍵位：
+判斷依目前注音鍵盤配置，不把實體 U／M 的例外硬套到其他配置。既有等待時間保留；新偏好預設 150 毫秒，可在進階偏好調整 100～1000 毫秒。使用者已回報設為 **100 毫秒**時，「去、七、其」即使重疊按鍵也可正常輸入；這是該次實鍵結果，不代表所有裝置或應用程式都完成驗收。
+
+## 主要功能
+
+| 功能 | 使用方式 |
+| --- | --- |
+| 雙擊 Shift 切換英文／注音 | 兩次獨立短按切換直接英文，游標旁短暫顯示模式提示 |
+| F 數字／符號層 | 開啟「長按 F 輸入數字／符號」並授予輸入監控，不依賴 Kanata；放開 F 退出 |
+| 英文單字組字 | 開啟「Shift＋字母開始英文組字」，首字母後放開 Shift 繼續組單字；空白／Enter 送出後回注音，Esc 取消 |
+| 連續大寫 | 持續按住 Shift，第二個新字母確認連續大寫；放開 Shift 回注音 |
+| 小寫單位 | Shift＋M 放開後可退格刪空，再輸入 `mm`；刪空不強制退出英文單字模式 |
+| 整句 ASCII 組字 | 從選單進入，保留大小寫、數字與符號，Enter 送出 |
+| 專業詞候選 | 匯入英文技術詞，以前綴比對補全；原文優先，不擅自替換 |
+| 全形／半形標點 | 關閉「使用半形標點符號」後，Shift＋逗號為 `，`、Shift＋句點為 `。` |
+| 本機文字協助 | 檢查目前未送出的中文／英文組字，或提供英文續字；由使用者明確接受 |
+
+按住 F 期間的符號先在組字中編輯，可連續退格；放開 F 送出，若從英文組字進入則回到原英文組字。刪除範圍限目前組字，不跨入已送出的文件。
+
+部分符號鍵位如下，完整表格見 [F 分層說明](docs/quick-symbols.md)：
 
 | 按住 F，再按 | 輸出 |
 | --- | --- |
-| Y / U / I | 7 / 8 / 9 |
-| H / J / K | 4 / 5 / 6 |
-| N / M / 逗號鍵 | 1 / 2 / 3 |
-| 空白鍵 / 句點鍵 | 0 / 小數點 |
-| Q / W / E / R | `/` / `*` / `-` / `+` |
+| Y／U／I | 7／8／9 |
+| H／J／K | 4／5／6 |
+| N／M／逗號 | 1／2／3 |
+| 空白／句點 | 0／小數點 |
+| Q／W／E／R | 除號斜線／星號／減號／加號 |
 | Esc | 反引號 |
 
-完整鍵位見 [F 分層說明](docs/quick-symbols.md)，模式操作見 [Shift 與英文輸入](docs/vim-input.md)。短按 F 仍按原模式處理，短按 Shift＋F 保留大寫 F。
+注音模式輸入 `8`／`2` 時需先讓 F 超過長按門檻。其他映射鍵重疊仍視為組合鍵；輸入普通連續字母時，需放開 F 再按下一鍵。短按 F／Shift＋F 保留原模式的 ㄑ／f／F 行為。
 
-## 下載與第一次設定
+## 安裝與設定
 
-1. 本分支的 0.6.11 尚未建立公開 Release；擁有者手動發布後可從 Releases 下載，開發者也可依[編譯指南](docs/development.md)自行產生 pkg。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64）。現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
-2. 按照[安裝說明](docs/installation.md)安裝，登出再登入後，於鍵盤設定加入「AI注音輸入法」。
-3. 要使用 F 分層，開啟「長按 F 輸入數字／符號」，並在「隱私權與安全性 → 輸入監控」允許目前安裝的 AI-Bopomofo.app。
-4. 要使用標準中文標點，取消勾選「使用半形標點符號」。新偏好預設半形，既有設定會保留。
-5. 要使用 Shift＋字母英文組字，開啟同名選項；雙擊 Shift 的直接英文切換不依賴該選項。
+1. 從 [Releases](https://github.com/edwardhome/AI-Bopomofo/releases) 選定版本，下載 `.pkg`；`.zip` 是 app 的替代封裝。若頁面只有 Source code，表示尚未附上安裝包。
+2. 依 [安裝說明](docs/installation.md)自行安裝並加入「AI注音輸入法」。套件包含 Apple Silicon（arm64）與 Intel（x86_64）。
+3. 使用 F 分層時，在「系統設定 → 隱私權與安全性 → 輸入監控」允許目前安裝的 app，並開啟輸入法選單中的 F 功能。
+4. 更新後若一般注音正常、F 分層卻失效，先檢查新版輸入監控授權及選單設定，參閱安裝文件，不必先重裝整套系統。
+5. 英文組字、半形標點及長按時間可依個人習慣調整；既有詞庫與偏好不因新版預設重設。
 
-本開發版使用 ad-hoc 簽章，沒有 Developer ID 簽章或 Apple 公證，下載安裝時可能出現系統確認。請先閱讀安裝說明；不需要停用整體 Gatekeeper 或 SIP。
+目前套件使用 ad-hoc 簽章，沒有 Developer ID 簽署或 Apple 公證。基本輸入部署目標是 **macOS 13 以上**；Apple Foundation Models 文字協助另外需要 **macOS 26 以上**與可用的 Apple Intelligence 本機模型。尚未完成所有系統、應用程式與裝置的相容性驗收。
 
-## 專業詞彙怎麼加入
+## 匯入專業詞彙
 
-下載或複製 [technical-terms-example.txt](examples/technical-terms-example.txt)，以 UTF-8 純文字編輯，每行一詞，例如：
+準備 UTF-8 純文字，每行一個英文技術詞，例如：
 
 ```text
 SystemVerilog
@@ -55,48 +69,50 @@ OpenOCD
 STM32
 ```
 
-從 AI注音第一層選單選「匯入專業詞彙…」，選取檔案。檔案上限 1 MiB、5000 詞；每詞最多 64 個可列印 ASCII 字元，至少包含一個英文字母，不含空白。中文詞、帶空白的片語及 CSV 不屬於此匯入格式，中文使用原有「編輯使用者詞庫」。
+從第一層選單選「匯入專業詞彙…」。檔案上限 1 MiB、5000 詞，每詞最多 64 個可列印 ASCII 字元，至少含一個英文字母且不含空白。候選用於英文／ASCII 組字，直接英文模式不顯示補全。中文詞彙使用原有「編輯使用者詞庫」。範例與備份流程見 [專業詞庫文件](docs/dictionary.md)。
 
-技術詞候選在「英文／ASCII 組字」模式使用；直接英文模式將按鍵交給應用，不顯示詞庫候選。完整範例、備份與匯出限制見 [專業詞庫](docs/dictionary.md)。
+## 本機 AI 與隱私
 
-## 系統需求與目前限制
+文字協助只讀取**目前尚未送出的組字**。原文保留第一候選，選取建議才套用；英文預測只能接續原字串，不能偷偷修改前綴。模型不可用時保留原文及可用的系統拼字建議。
 
-- 基本輸入部署目標為 **macOS 13 以上**；本次開發機實測為 macOS 27.0.1，其他系統與 MacBook Air 仍待測試。
-- Apple Foundation Models 文字協助需要 **macOS 26 以上**及裝置上可用的 Apple Intelligence 模型；基本注音、英文模式與 F 分層不依賴模型。這不是雲端聊天或整份文件理解功能。
-- 英文技術詞補全是確定性的前綴比對，並非 AI。尚未實作任意小寫英文與注音按鍵的無感自動判別。
-- 已移除本專案新增的 Vim／Neovim／VSCodeVim 自動切換整合，避免反覆開啟鍵盤設定；編輯器可使用自己的輸入法套件。
-- 0.6.5 已把原先無法執行的進階子選單指令移回第一層；診斷入口已實測可用，詞庫匯入／匯出及跨應用仍歡迎測試。
-- 213 項無介面測試通過、2 項上游案例跳過；0.6.8 的 F 主要功能已由使用者驗收，0.6.9 退格修正與 Air 實機仍待驗收。測試通過不代表所有應用皆相容。
+例如 `我喝了500ML的水` 可建議 `我喝了500mL的水`，`我在去一次` 可建議 `我再去一次`。數字、技術詞、網址與程式碼受保護；模型仍可能漏判或誤判，不能當成自動改寫整份文件的工具。
 
-協助測試請看[測試與回報](docs/testing.md)。從 Kanata 遷移時，先保留設定備份，在目標 Mac 確認 AI注音功能後再依原安裝方式停用或移除 Kanata；安裝包不會自行變更 Kanata。
+不讀取整份文件、不保存已送出的輸入歷史、不上傳文字。F 只在手勢期間被動監聽 F 放開，立即略過非 F 鍵。選用的短期 Shift 診斷不記錄一般打字內容。詳見 [文字協助](docs/text-assistance.md) 與 [隱私說明](docs/privacy.md)。
 
-## 隱私
+## 開發與版本管理
 
-文字協助只處理目前尚未送出的組字；不讀取整份文件，不保存已送出的文字歷史，也不上傳輸入內容。F 分層只在 F 手勢期間使用被動 key-up 監聽，略過非 F 鍵。選用的 20 秒診斷只記錄修飾鍵及控制狀態，不含文字或一般鍵碼，預設關閉。詳見[隱私說明](docs/privacy.md)。
+- `main`：整合完成的主線；新工作從 `main` 建立 `fix/*`、`feature/*`、`research/*` 或 `release/*` 分支。
+- `v0.6.x` 標籤：保存各版本的確切提交，不因主線更新而移動。
+- Release：由擁有者手動建立並上傳安裝附件；推送或合併不會自動發布。
+- 未合併的研究分支獨立保留，不會因整理主線而混入產品。
 
-## 開發
-
-本分支為 0.6.9 開發測試版，修正 F 分層退格與重複事件處理，保留 0.6.8 的延遲事件與 150 毫秒預設門檻。依使用者要求，只更新 iCloud 發布檔與個人 GitHub，由使用者自行安裝。
-
-需要 Xcode 26 以上與 macOS 26 以上。內部模組／target 保留 `McBopomofo`，產品識別碼為 `org.aibopomofo.inputmethod.AIBopomofo`。
+需要 Xcode 26 以上與 macOS 26 以上；內部 target／module 保留 `McBopomofo`，產品識別為 `org.aibopomofo.inputmethod.AIBopomofo`。使用無介面檢查，不啟動 hosted IME／GUI 測試：
 
 ```bash
-scripts/test-headless.sh
-scripts/build.sh Release
-scripts/package.sh 0.6.9-dev.1 Release
-scripts/verify-package.sh dist/0.6.9-dev.1
+mkdir -p artifacts
+scripts/test-headless.sh > artifacts/headless.log 2>&1
+scripts/build.sh Release > artifacts/release.log 2>&1
 ```
 
-完整步驟與小功能修改範例見 [自己修改、編譯與打包](docs/development.md)。
+打包前確認原始碼已提交，再選尚未使用的包名，例如：
 
-詳見 [AGENTS.md](AGENTS.md)、[架構](algorithm.md)與[交付紀錄](docs/DELIVERY.md)。私人詞庫、Kanata 設定、輸入紀錄與本機備份不納入 Git。
+```bash
+scripts/package.sh 0.6.11-local.1 Release
+scripts/verify-package.sh dist/0.6.11-local.1
+```
+
+版本前三段必須與 Info.plist 相同；打包不會自動修改 app 版本，也不會自動安裝。這次 F 修正的本機無介面檢查為 **232 項通過、2 項跳過**，整合測試僅編譯；實際 GitHub CI 狀態請看 [Actions](https://github.com/edwardhome/AI-Bopomofo/actions)。
+
+[修改與編譯指南](docs/development.md) · [Mermaid 架構與依賴圖](docs/architecture.md) · [GitHub 命令列指南](docs/github-workflow.md) · [測試回報](docs/testing.md) · [專案規則](AGENTS.md)
+
+Vim／Neovim／VSCodeVim 自動切換整合已移除，編輯器可使用自己的套件。本專案不自行變更 Kanata、已安裝的輸入法或私人詞庫。
 
 ## 上游作者與 MIT 授權
 
-本專案衍生自 [OpenVanilla / McBopomofo（小麥注音輸入法）](https://github.com/openvanilla/McBopomofo)，保留其原始碼歷史、作者署名及 MIT License。感謝小麥注音作者與所有貢獻者提供基礎引擎、詞庫及 macOS 輸入法實作。
+本專案衍生自 [OpenVanilla／McBopomofo（小麥注音輸入法）](https://github.com/openvanilla/McBopomofo)，保留上游原始碼歷史、作者署名及 MIT License。感謝小麥注音作者與貢獻者提供注音引擎、詞庫與 macOS 輸入法基礎。
 
-> MIT License — Copyright (c) 2011-2026 Mengjuei Hsieh et al.
+Copyright (c) 2011–2026 Mengjuei Hsieh et al.
 
-完整授權原文見 [LICENSE.txt](LICENSE.txt)，上游 README 見 [上游 README](docs/README-upstream.markdown)。散布時須保留授權及著作權聲明；本軟體依 MIT 條款按現狀提供，不附保證。本分支新增程式碼亦以 MIT 授權提供，檔案中的個別著作權聲明保持有效。
+完整條款見 [LICENSE.txt](LICENSE.txt)，上游介紹見 [保留的上游 README](docs/README-upstream.markdown)。本分支新增程式碼亦以 MIT 授權提供，個別檔案著作權聲明保留。散布時須保留授權及著作權聲明；軟體依 MIT 條款按現狀提供，不附保證。
 
-第三方元件仍依各自授權：請參閱 [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) 與 [licenses/](licenses/)。安裝包附帶對應授權文件；其中注音字型相關資料另採 Apache License 2.0，並非將所有第三方素材重新授權為 MIT。
+第三方元件依各自授權，見 [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) 與 [licenses](licenses/)。安裝包包含授權文件；部分字型資料採 Apache License 2.0，並非所有第三方素材都改授權為 MIT。
