@@ -2,11 +2,11 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法客製分支，為中文、英文、技術詞彙與程式符號混合輸入而開發。由 [edwardhome](https://github.com/edwardhome) 維護；這是獨立衍生專案，並非小麥注音官方版本。
 
-**開發版本：0.6.10，分支 `fix/f-immediate-chord`。** 本次提供原始碼與供擁有者自行安裝的開發包；尚未建立此版本的 GitHub Release，也尚未完成 MacBook Air 實鍵驗收。
+**開發版本：0.6.11，分支 `fix/f-phonetic-overlap`。** 本次提供原始碼與供擁有者自行安裝的開發包；尚未建立此版本的 GitHub Release，也尚未完成 MacBook Air 實鍵驗收。
 
-[開發分支](https://github.com/edwardhome/AI-Bopomofo/tree/fix/f-immediate-chord) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [自行修改與編譯](docs/development.md) · [架構與依賴圖](docs/architecture.md)
+[開發分支](https://github.com/edwardhome/AI-Bopomofo/tree/fix/f-phonetic-overlap) · [安裝說明](docs/installation.md) · [專業詞彙匯入](docs/dictionary.md) · [自行修改與編譯](docs/development.md) · [架構與依賴圖](docs/architecture.md)
 
-**本次變更**：F＋映射鍵立即進符號層，加入 F＋Esc 反引號；Shift 區分單字組字與連續大寫；FM 以整段未送出組字處理容量與「在／再」語意建議，仍需明確選取。實際事件限制與模型評估見各功能文件。[0.6.7](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
+**本次修正**：快速打「其、去」時，門檻內的 ㄑㄧ／ㄑㄩ 優先組注音，避免因 F 與 U／M 重疊而變成 `8`／`2`。要輸入這兩個數字，先長按 F 超過設定時間；其餘立即組合鍵及英文模式維持原行為。詳見 [F 分層說明](docs/quick-symbols.md)。
 
 ## 這個版本的特色
 
@@ -36,7 +36,7 @@ F 分層部分鍵位：
 
 ## 下載與第一次設定
 
-1. 0.6.10 尚未建立公開 Release；擁有者手動發布後可從 Releases 下載，開發者也可依[編譯指南](docs/development.md)自行產生 pkg。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64）。現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
+1. 本分支的 0.6.11 尚未建立公開 Release；擁有者手動發布後可從 Releases 下載，開發者也可依[編譯指南](docs/development.md)自行產生 pkg。同一套件包含 Apple Silicon（arm64）與 Intel（x86_64）。現有 [0.6.7 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.7) 保留供回退。
 2. 按照[安裝說明](docs/installation.md)安裝，登出再登入後，於鍵盤設定加入「AI注音輸入法」。
 3. 要使用 F 分層，開啟「長按 F 輸入數字／符號」，並在「隱私權與安全性 → 輸入監控」允許目前安裝的 AI-Bopomofo.app。
 4. 要使用標準中文標點，取消勾選「使用半形標點符號」。新偏好預設半形，既有設定會保留。

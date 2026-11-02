@@ -62,8 +62,9 @@ public enum QuickSymbolLayer {
     }
 
     public static func canStartChord(keyCode: UInt16, repeating: Bool,
-                                     hasDisallowedModifiers: Bool) -> Bool {
-        !repeating && !hasDisallowedModifiers && output(for: keyCode) != nil
+                                     hasDisallowedModifiers: Bool,
+                                     prefersPhonetic: Bool = false) -> Bool {
+        !prefersPhonetic && !repeating && !hasDisallowedModifiers && output(for: keyCode) != nil
     }
 
     /// Applies editing inside a held layer without committing text to the client.

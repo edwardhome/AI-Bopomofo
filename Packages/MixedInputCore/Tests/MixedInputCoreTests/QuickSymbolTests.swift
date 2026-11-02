@@ -4,6 +4,77 @@ import Testing
 
 @Suite("Independent F symbol layer")
 struct QuickSymbolTests {
+    @Test func phoneticOverlapReplaysOnceAndNeverReenters() {
+        for code: UInt16 in [32, 46] {
+            for milliseconds in [100, 150, 250, 1000] {
+                let deadline = Double(milliseconds) / 1000
+                for elapsed in [0.001, deadline - 0.001, deadline] {
+                    for fReleasedFirst in [false, true] {
+                        var gesture = FHoldGesture(delayMilliseconds: milliseconds)
+                        var ownership = SymbolKeyOwnership()
+                        _ = gesture.handle(.press(eligible: true, repeating: false))
+                        #expect(gesture.handle(.elapsed(elapsed)).isEmpty)
+                        let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
+                            hasDisallowedModifiers: false, prefersPhonetic: true)
+                        #expect(!mapped)
+                        #expect(gesture.handle(.otherKey(isMapped: mapped)) == [.invalidate, .replayTap])
+                        #expect(gesture.phase == .idle)
+                        #expect(ownership.keyDown(code, repeating: false, layerActive: false, shortcut: false) == false)
+                        // 已選注音就不能被晚到的計時器或仍按住的 F 重複事件變回符號。
+                        #expect(gesture.handle(.elapsed(deadline + 1)).isEmpty)
+                        #expect(gesture.handle(.timeout).isEmpty)
+                        #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume])
+                        #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+                        if !fReleasedFirst { #expect(ownership.keyUp(code) == false) }
+                        #expect(gesture.handle(.observedRelease) == [.consume])
+                        #expect(gesture.handle(.release) == [.consume])
+                        if fReleasedFirst { #expect(ownership.keyUp(code) == false) }
+                        #expect(gesture.handle(.release).isEmpty)
+                        #expect(ownership.keyDown(code, repeating: true, layerActive: false, shortcut: false) == false)
+                    }
+                }
+            }
+        }
+    }
+
+    @Test func longHoldKeepsEightAndTwoAfterPhoneticDeadline() {
+        for (code, output): (UInt16, String) in [(32, "8"), (46, "2")] {
+            var gesture = FHoldGesture(delayMilliseconds: 250)
+            var ownership = SymbolKeyOwnership()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.elapsed(0.251)) == [.beginLayer])
+            #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+            #expect(ownership.keyDown(code, repeating: false, layerActive: true, shortcut: false) == false)
+            #expect(QuickSymbolLayer.output(for: code) == output)
+            #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
+            #expect(ownership.keyDown(code, repeating: true, layerActive: false, shortcut: false) == true)
+            #expect(ownership.keyUp(code) == true)
+        }
+    }
+
+    @Test func englishAndOtherChordsKeepImmediateEntry() {
+        for code: UInt16 in [32, 46, 15, 53] {
+            var gesture = FHoldGesture(delayMilliseconds: 250)
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
+                hasDisallowedModifiers: false, prefersPhonetic: false)
+            #expect(mapped)
+            #expect(gesture.handle(.otherKey(isMapped: mapped)) == [.beginLayer])
+            #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        }
+    }
+
+    @Test func phoneticCancelAndIMKFirstReleaseCannotReplayAgain() {
+        for end in [FHoldGesture.Event.release, .cancel] {
+            var gesture = FHoldGesture(delayMilliseconds: 250)
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.otherKey(isMapped: false)) == [.invalidate, .replayTap])
+            #expect(!gesture.handle(end).contains(.replayTap))
+            #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+            #expect(gesture.handle(.timeout).isEmpty)
+        }
+    }
+
     @Test func immediateChordRetainsMonitorUntilRelease() {
         for milliseconds in [100, 150, 500, 1000] {
             var gesture = FHoldGesture(delayMilliseconds: milliseconds)

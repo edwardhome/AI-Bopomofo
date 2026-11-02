@@ -560,6 +560,20 @@ class McBopomofoInputMethodController: IMKInputController {
         _ = applyFHold(.elapsed(timestamp - started), client: client)
     }
 
+    private func prefersPhoneticFChord(with event: NSEvent) -> Bool {
+        // 呼叫前已按事件時間檢查長按門檻；已進層就不再把數字改回注音。
+        let modifiers: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
+        guard fHoldGesture.phase == .pending, !directEnglish, !event.isARepeat,
+              !IsSecureEventInputEnabled(), let first = pendingFEvent,
+              first.modifierFlags.intersection(modifiers).isEmpty,
+              event.modifierFlags.intersection(modifiers).isEmpty,
+              let pending = state as? InputState.PendingF,
+              let firstText = first.characters, firstText.utf16.count == 1,
+              let nextText = event.characters, nextText.utf16.count == 1,
+              let firstKey = firstText.utf16.first, let nextKey = nextText.utf16.first else { return false }
+        return keyHandler.prefersPhoneticFChord(firstKey: firstKey, nextKey: nextKey, state: pending.original)
+    }
+
     @objc private func importTechnicalTerms(_ sender: Any?) {
         (NSApp.delegate as? AppDelegate)?.importTechnicalTerms(sender)
     }
@@ -625,7 +639,10 @@ class McBopomofoInputMethodController: IMKInputController {
             let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
             let isMapped = QuickSymbolLayer.canStartChord(keyCode: event.keyCode,
                 repeating: event.isARepeat,
-                hasDisallowedModifiers: !event.modifierFlags.intersection(forbidden).isEmpty)
+                hasDisallowedModifiers: !event.modifierFlags.intersection(forbidden).isEmpty,
+                prefersPhonetic: prefersPhoneticFChord(with: event))
+            // 注音優先時沿用非組合鍵路徑：取消計時、重播 F，再處理當前鍵一次。
+            // 不進入符號層，因此下方的按鍵歸屬也不會把 U／M 當成符號鍵。
             _ = applyFHold(.otherKey(isMapped: isMapped), client: client)
         } else if event.type == .flagsChanged &&
                     event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift) {

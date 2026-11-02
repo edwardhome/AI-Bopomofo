@@ -40,6 +40,80 @@ struct MixedInputTests {
         }
     }
 
+    @Test func phoneticFChordQueryDoesNotChangeComposition() {
+        let s = Session()
+        for next: UInt16 in [117, 109] { // u、m
+            #expect(s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: next, state: s.state))
+            #expect(s.handler.canBeginQuickSymbols(with: s.state))
+            #expect(s.state is InputState.Empty)
+        }
+        for next: UInt16 in [114, 27, 106, 85, 0x3107] {
+            #expect(!s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: next, state: s.state))
+        }
+        #expect(!s.handler.prefersPhoneticFChord(firstKey: 70, nextKey: 117, state: s.state))
+        #expect(!s.handler.prefersPhoneticFChord(firstKey: 0x3107, nextKey: 117, state: s.state))
+        s.key("f", code: 3)
+        let before = (s.state as? InputState.Inputting)?.composingBuffer
+        #expect(!s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: 117, state: s.state))
+        #expect((s.state as? InputState.Inputting)?.composingBuffer == before)
+    }
+
+    @Test func protectedOverlapRestoresFBeforeMedialExactlyOnce() {
+        for (next, code, reading): (String, UInt16, String) in [("u", 32, "ㄑㄧ"), ("m", 46, "ㄑㄩ")] {
+            for elapsed in [0.001, 0.249, 0.250, 0.251] {
+                let s = Session()
+                var gesture = FHoldGesture(delayMilliseconds: 250)
+                _ = gesture.handle(.press(eligible: true, repeating: false))
+                _ = gesture.handle(.elapsed(elapsed))
+                let original = s.state
+                s.state = InputState.PendingF(original: original)
+                let prefer = gesture.phase == .pending && s.handler.prefersPhoneticFChord(
+                    firstKey: 102, nextKey: next.utf16.first!, state: original)
+                let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
+                    hasDisallowedModifiers: false, prefersPhonetic: prefer)
+                let effects = gesture.handle(.otherKey(isMapped: mapped))
+                s.state = original
+                if prefer {
+                    #expect(effects == [.invalidate, .replayTap])
+                    s.key("f", code: 3)
+                    s.key(next, code: code)
+                    #expect((s.state as? InputState.Inputting)?.composingBuffer == reading)
+                    #expect(s.committed.isEmpty)
+                    #expect(s.errors == 0)
+                    #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+                    #expect(!gesture.handle(.release).contains(.replayTap))
+                } else {
+                    #expect(gesture.phase == .held)
+                    #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
+                    s.key(next, code: code)
+                    s.handler.endQuickSymbols(with: s.state, stateCallback: s.transition)
+                    #expect(s.committed == (code == 32 ? "8" : "2"))
+                }
+            }
+        }
+    }
+
+    @Test func phoneticPriorityExcludesEnglishAndOtherLayouts() {
+        let s = Session()
+        let englishStates: [InputState] = [InputState.ASCII(text: "", cursor: 0),
+            InputState.ShiftASCII(shiftText: "S", cursor: 1),
+            InputState.ShiftASCII(composition: ASCIIComposition(), mode: .uppercase)]
+        for state in englishStates {
+            #expect(!s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: 117, state: state))
+            #expect(!s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: 109, state: state))
+        }
+        let savedLayout = Preferences.keyboardLayout
+        defer { Preferences.keyboardLayout = savedLayout }
+        for layout: KeyboardLayout in [.eten, .hsu, .eten26, .hanyuPinyin, .IBM, .standard] {
+            Preferences.keyboardLayout = layout
+            s.handler.syncWithPreferences()
+            for next: UInt16 in [117, 109] {
+                #expect(s.handler.prefersPhoneticFChord(firstKey: 102, nextKey: next, state: s.state)
+                    == (layout == .standard))
+            }
+        }
+    }
+
     @Test func shiftWordReleaseBackspaceAndLowercaseMM() {
         let old = Preferences.mixedEnglishEnabled
         let switching = Preferences.switchInputSourceUponShiftLetterKeyComboEnabled

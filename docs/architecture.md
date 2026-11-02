@@ -65,7 +65,7 @@ stateDiagram-v2
     idle --> pending: 合格的 F 按下
     pending --> held: 映射鍵按下或達到長按門檻
     pending --> idle: F 放開／重播原始短按
-    pending --> idle: 非映射鍵／重播後正常處理該鍵
+    pending --> idle: 非映射鍵或受保護注音／重播後正常處理該鍵
     held --> idle: F 放開／結束分層
     pending --> idle: 失焦或取消
     held --> idle: 失焦或取消
@@ -75,7 +75,8 @@ stateDiagram-v2
 - `pending → held` 提前啟動只產生 `beginLayer`，不可產生 `invalidate`。F 尚未放開，監聽與健康檢查仍需要存在。
 - 監聽器只在 F 手勢期間被動觀察 F key-up，其餘鍵碼立即丟棄。它不記錄打字內容，也不取代 macOS 授權。
 - `SymbolKeyOwnership` 保留已處理映射鍵的歸屬，避免放開 F 後殘留的 key repeat 變成一般字母。
-- 短按 F 回原注音／英文處理；F 與映射鍵實際重疊就視為組合鍵。因此快速打字須先放開 F 再按下一鍵，無法從相同事件序列推測不同意圖。
+- 短按 F 回原注音／英文處理。0.6.11 起，控制器在等待中透過 KeyHandler 唯讀查詢目前配置，將單義 ㄑ接ㄧ／ㄩ優先交回注音；先重播 F、再處理下一鍵，取消這次手勢。已超過長按門檻、英文入口及其他映射不適用。
+- 其餘 F 與映射鍵的實際重疊仍視為組合鍵，無法從相同事件序列推測不同意圖。
 
 修改入口：[QuickSymbolLayer.swift](../Packages/MixedInputCore/Sources/MixedInputCore/QuickSymbolLayer.swift)、[控制器內的 FReleaseMonitor](../Source/InputMethodController.swift)、[F 操作說明](quick-symbols.md)。
 

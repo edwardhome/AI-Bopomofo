@@ -85,6 +85,10 @@ extern InputMode InputModePlainBopomofo;
 - (void)acceptPredictionWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback;
 
 - (BOOL)canBeginQuickSymbolsWithState:(InputState *)state;
+- (BOOL)prefersPhoneticFChordWithFirstKey:(unichar)firstKey
+                               nextKey:(unichar)nextKey
+                                 state:(InputState *)state
+    NS_SWIFT_NAME(prefersPhoneticFChord(firstKey:nextKey:state:));
 - (BOOL)beginQuickSymbolsWithState:(InputState *)state held:(BOOL)held
                     stateCallback:(void (^)(InputState *))stateCallback;
 - (void)endQuickSymbolsWithState:(InputState *)state

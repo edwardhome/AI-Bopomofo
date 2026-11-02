@@ -333,6 +333,25 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
          [state isKindOfClass:[InputStateInputting class]]);
 }
 
+- (BOOL)prefersPhoneticFChordWithFirstKey:(unichar)firstKey
+                               nextKey:(unichar)nextKey
+                                 state:(InputState *)state
+{
+    // 只查目前配置，不試打、不更改讀音緩衝區；英文組字不適用注音優先。
+    if ([state isKindOfClass:[InputStateASCII class]] ||
+        ![self canBeginQuickSymbolsWithState:state] || firstKey > 127 || nextKey > 127) {
+        return NO;
+    }
+    const auto *layout = _bpmfReadingBuffer->keyboardLayout();
+    if (layout == nullptr) { return NO; }
+    const auto first = layout->keyToComponents(static_cast<char>(firstKey));
+    const auto next = layout->keyToComponents(static_cast<char>(nextKey));
+    using Formosa::Mandarin::BPMF;
+    // ㄑ只接ㄧ／ㄩ；多義鍵或其他配置的 F 不套用標準鍵位假設。
+    return first.size() == 1 && first.front() == BPMF::Q && next.size() == 1 &&
+        (next.front() == BPMF::I || next.front() == BPMF::UE);
+}
+
 - (BOOL)canBeginAssistanceWithState:(InputState *)state
 {
     return _bpmfReadingBuffer->isEmpty() && [state isKindOfClass:[InputStateInputting class]] &&
