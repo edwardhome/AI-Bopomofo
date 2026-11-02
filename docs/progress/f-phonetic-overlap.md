@@ -31,3 +31,12 @@
 仍需由使用者在實際輸入欄位確認「其實我是要告訴你怎麼去這裡」、「其他、其中、去年、去除」，以及先長按 F 後的 8／2、F＋R／Esc、按住 F 退格、雙 Shift 與英文入口。自動檢查不代表 MacBook Air／iTerm2 實鍵驗收完成。
 
 交付目標為 `/Users/defu/Documents/AI Bopomofo/0.6.11/` 的 pkg 與 app ZIP；沿用 ZIP 避免同步服務替未封裝 app 加入 Finder 資訊破壞簽章。只推送本修正分支，合併及 Release 由使用者自行操作。不安裝或重啟本機輸入法，不變更 Kanata、偏好或詞庫。
+
+## 交付核對
+
+已複製 pkg 與 app ZIP 至指定的 0.6.11 資料夾。兩個檔案 SHA-256 與封裝原件一致；從交付 ZIP 解開後的 77 個 app 檔案逐一一致，嚴格簽章檢查通過。
+
+安裝包來源提交：`41dc00d0044488eb82c89385a75ee3dabc22ad81`。後續提交只補交付紀錄。
+
+- `AI-Bopomofo-0.6.11-dev.1.pkg`：`c9feb6225ee4b8111afd6e9443c058ef268b5aed5bbd4f7f1c7c54c50446bb30`
+- `AI-Bopomofo-0.6.11-dev.1.zip`：`609d038b46083ee66823c2dabde208fa327fe682137f91d51ac2330ad8a2e4a8`
