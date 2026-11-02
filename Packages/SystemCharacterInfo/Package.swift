@@ -5,6 +5,8 @@ import PackageDescription
 
 let package = Package(
     name: "SystemCharacterInfo",
+    // 與輸入法的 macOS 13 部署目標一致，避免低於 SQLite 相依套件的最低需求。
+    platforms: [.macOS(.v13)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(

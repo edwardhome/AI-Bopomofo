@@ -57,7 +57,7 @@ git status
 git branch -vv
 git branch -a
 git log --oneline --graph --decorate -20
-git tag --sort=-version:refname
+git tag --list 'v0.6.*' --sort=-version:refname
 gh release list --repo edwardhome/AI-Bopomofo
 ```
 
@@ -67,6 +67,7 @@ gh release list --repo edwardhome/AI-Bopomofo
 - `behind 2`：追蹤分支有兩個你尚未取得到目前分支的提交。
 - `--prune`：清除已不存在的遠端分支之本機追蹤紀錄，不刪你的未提交檔案。
 - Draft 只有有權限的人看得到；Pre-release 是開發測試發布。
+- `v0.6.*` 篩選本專案目前的版本；不加篩選會同時看到保留的小麥注音上游標籤，那些不是重複資料。
 
 ## 4. 開始改一個功能
 
@@ -133,7 +134,8 @@ gh pr list --repo edwardhome/AI-Bopomofo
 ```bash
 gh pr diff 123 --repo edwardhome/AI-Bopomofo
 gh pr checks 123 --repo edwardhome/AI-Bopomofo --watch
-gh pr merge 123 --repo edwardhome/AI-Bopomofo --merge --delete-branch
+gh pr merge 123 --repo edwardhome/AI-Bopomofo --merge --delete-branch \
+  --subject "fix(input): merge the reviewed input change"
 git switch main
 git pull --ff-only origin main
 git fetch origin --prune
@@ -158,13 +160,13 @@ gh run list --repo edwardhome/AI-Bopomofo --branch main --limit 10
 gh run view RUN_ID --repo edwardhome/AI-Bopomofo --log-failed
 ```
 
-準備使用本次的 `0.6.11-dev.2` 包時，先在專案根目錄核對：
+準備使用本次的 `0.6.11-dev.3` 包時，先在專案根目錄核對：
 
 ```bash
-cat dist/0.6.11-dev.2/SOURCE-COMMIT.txt
-git diff --exit-code "$(cat dist/0.6.11-dev.2/SOURCE-COMMIT.txt)" HEAD \
-  -- Source Packages McBopomofo.xcodeproj scripts
-scripts/verify-package.sh dist/0.6.11-dev.2
+cat dist/0.6.11-dev.3/SOURCE-COMMIT.txt
+git diff --exit-code "$(cat dist/0.6.11-dev.3/SOURCE-COMMIT.txt)" HEAD \
+  -- Source Packages McBopomofo.xcodeproj scripts LICENSE.txt ACKNOWLEDGEMENTS.md licenses
+scripts/verify-package.sh dist/0.6.11-dev.3
 ```
 
 `git diff` 沒有輸出且退出碼為 0，代表這些程式與建置路徑沒有變動。若你又修改程式，應重新編譯並用新的包名打包，不能拿舊安裝檔配新程式標籤。MacBook Air 的 Git clone 不包含 dist；本機開發包在指定的「AI Bopomofo/0.6.11」同步資料夾，若要完整重新驗證來源，可在 Air 自行建置並打包。
@@ -188,11 +190,11 @@ git push origin v0.6.11
 從 Mac mini 的已驗證打包目錄建立草稿；如果使用自行重建的包，替換資料夾及附件名稱：
 
 ```bash
-cd /Volumes/DATA/DATA/AI_Bopomofo/dist/0.6.11-dev.2
+cd /Volumes/DATA/DATA/AI_Bopomofo/dist/0.6.11-dev.3
 shasum -a 256 -c checksums.txt
 gh release create v0.6.11 \
-  AI-Bopomofo-0.6.11-dev.2.pkg \
-  AI-Bopomofo-0.6.11-dev.2.zip \
+  AI-Bopomofo-0.6.11-dev.3.pkg \
+  AI-Bopomofo-0.6.11-dev.3.zip \
   checksums.txt SOURCE-COMMIT.txt \
   --repo edwardhome/AI-Bopomofo \
   --verify-tag --draft --prerelease \
