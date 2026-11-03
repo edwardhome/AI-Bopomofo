@@ -100,6 +100,15 @@ scripts/verify-package.sh dist/0.6.13-dev.1
 - `e5fc032f`：Phase 1–4 輸入提交介接、XPC 模型隔離、核准管理介面與候選快照。
 - Phase 5 文件及建置驗證另以 conventional commit 保存；上述提交均在功能分支，沒有改動 main。
 
-打包與複製的最終結果於交付後補記。
+開發包為 `0.6.13-dev.1`，封裝來源提交 `d27d102d`；之後的提交只補交付文件。pkg、ZIP 校驗通過，pkg 解開後 86 個檔案逐一相符，ZIP 另行解開並核對全部 86 檔及簽章。打包期間有四行 `write: Permission denied` 診斷，但工具成功結束；後續獨立 staging 複製未再現，兩種封裝均未發現缺檔或內容差異，沒有隱藏該紀錄。
 
-更新時間：2026-11-04T02:48:30+08:00
+僅將以下兩檔複製至 `/Users/defu/Documents/AI Bopomofo/0.6.13-dev.1/`，與來源 SHA-256 一致；不宣稱 iCloud 雲端同步或另一台電腦下載已完成：
+
+| 檔案 | SHA-256 |
+| --- | --- |
+| AI-Bopomofo-0.6.13-dev.1.pkg | aa5b738e98339ac7e022aa792fbe57bb07951e632c6715ca7e241c3529f1b0c6 |
+| AI-Bopomofo-0.6.13-dev.1.zip | 8d9b56534943c64593cdfa8d058da34262473860c12b45bc154cc93ffe951843 |
+
+GitHub 交付目標是 `edwardhome/AI-Bopomofo` 的 `feature/lexicon-learning-v1`，不是 main。未建立 Release 或標籤。
+
+更新時間：2026-11-04T02:49:54+08:00
