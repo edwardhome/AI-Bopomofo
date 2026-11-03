@@ -5,9 +5,10 @@ import LearningCore
 
 private final class Connection: @unchecked Sendable {
     let db: OpaquePointer
-    init(_ path: String) throws {
+    init(_ path: String, readOnly: Bool = false) throws {
         var pointer: OpaquePointer?
-        let code = sqlite3_open_v2(path, &pointer, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX, nil)
+        let flags = readOnly ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
+        let code = sqlite3_open_v2(path, &pointer, flags | SQLITE_OPEN_FULLMUTEX, nil)
         guard code == SQLITE_OK, let pointer else {
             if let pointer { sqlite3_close(pointer) }; throw LexiconError.invalid("無法開啟學習資料庫（\(code)）")
         }
@@ -48,16 +49,19 @@ private final class Connection: @unchecked Sendable {
 /// 所有 SQLite 操作在 actor 上串行；建立此 actor 也必須由背景工作呼叫。
 public actor SQLiteStore {
     private let connection: Connection
+    private let beforeCommit: @Sendable () throws -> Void
     public let url: URL
-    public init(url: URL) throws {
+    public init(url: URL, readOnly: Bool = false, beforeCommit: @escaping @Sendable () throws -> Void = {}) throws {
         self.url = url
+        self.beforeCommit = beforeCommit
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true,
                                                 attributes: [.posixPermissions: 0o700])
-        connection = try Connection(url.path)
+        connection = try Connection(url.path, readOnly: readOnly)
         let check = try connection.rows("PRAGMA quick_check")
         guard check.first?.first == "ok" else { throw LexiconError.invalid("學習資料庫完整性檢查失敗") }
         let version = Int(try connection.rows("PRAGMA user_version").first?.first ?? "0") ?? -1
         guard version <= 1 else { throw LexiconError.invalid("學習資料庫版本較新，停止學習以免降版破壞資料") }
+        if readOnly { return }
         try connection.execute("PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA journal_size_limit=1048576; PRAGMA max_page_count=16384;")
         if version == 0 {
             try connection.execute("""
@@ -89,6 +93,7 @@ public actor SQLiteStore {
             for event in events {
                 guard (try? event.entry.validated()) != nil else { continue }
                 let e = event.entry
+                if event.kind == .explicitRemember { try connection.run("DELETE FROM excluded_terms WHERE entry_key=?", [e.entry_id]) }
                 if !(try connection.rows("SELECT 1 FROM excluded_terms WHERE entry_key=?", [e.entry_id])).isEmpty { continue }
                 try connection.run("INSERT OR IGNORE INTO processed_events VALUES(?,?)", [event.id.uuidString, String(now.timeIntervalSince1970)])
                 guard sqlite3_changes(connection.db) == 1 else { continue }
@@ -107,6 +112,7 @@ public actor SQLiteStore {
                   """, [e.entry_id,e.term_type.rawValue,e.reading,e.text,payload,String(commit),String(manual),String(confirmed),String(day),String(day)])
             }
             try prune(now)
+            try beforeCommit()
             try connection.execute("COMMIT")
         } catch { try? connection.execute("ROLLBACK"); throw error }
         try connection.execute("PRAGMA wal_checkpoint(PASSIVE)")
@@ -118,16 +124,16 @@ public actor SQLiteStore {
         try connection.execute("DELETE FROM model_suggestions WHERE suggestion_id IN (SELECT suggestion_id FROM model_suggestions ORDER BY created_at DESC LIMIT -1 OFFSET 5000)")
         try connection.execute("DELETE FROM processed_events WHERE event_id IN (SELECT event_id FROM processed_events ORDER BY processed_at DESC LIMIT -1 OFFSET 4096)")
     }
-    public func entries(pendingOnly: Bool = false, limit: Int = 20_000) throws -> [LexiconEntry] {
+    public func entries(pendingOnly: Bool = false, limit: Int = 50_000) throws -> [LexiconEntry] {
         let filter = pendingOnly ? "WHERE organized_count<commit_count AND attempts<3 AND retry_at<\(Date().timeIntervalSince1970)" : ""
-        return try connection.rows("SELECT payload,commit_count,manual_selection_count,user_confirmed FROM observed_terms \(filter) ORDER BY entry_key LIMIT \(min(20_000,max(0,limit)))").map { row in
+        return try connection.rows("SELECT payload,commit_count,manual_selection_count,user_confirmed FROM observed_terms \(filter) ORDER BY entry_key LIMIT \(min(50_000,max(0,limit)))").map { row in
             var e = try JSONDecoder().decode(LexiconEntry.self, from: Data(row[0].utf8))
             e.usage = Usage(commits: Int64(row[1]) ?? 0, manual: Int64(row[2]) ?? 0)
             e.review = Review(.observed, confirmed: row[3] == "1"); return e
         }
     }
     public func suggestions() throws -> [LexiconEntry] {
-        try connection.rows("SELECT payload FROM model_suggestions ORDER BY suggestion_id LIMIT 5000").map {
+        try connection.rows("SELECT payload FROM model_suggestions WHERE status='proposed' ORDER BY suggestion_id LIMIT 5000").map {
             try JSONDecoder().decode(LexiconEntry.self, from: Data($0[0].utf8))
         }
     }
@@ -138,6 +144,7 @@ public actor SQLiteStore {
             for e in suggestions {
                 try e.validated()
                 guard e.review.status == .proposed, let s = e.model_suggestion, origins.contains(s.origin_entry_id) else { throw LexiconError.invalid("模型建議來源不符") }
+                if !(try connection.rows("SELECT 1 FROM excluded_terms WHERE entry_key=?", [e.entry_id])).isEmpty { continue }
                 try connection.run("INSERT OR IGNORE INTO model_suggestions VALUES(?,?,?,?,?)", [s.suggestion_id,s.origin_entry_id,String(decoding: try JSONEncoder().encode(e),as: UTF8.self),"proposed",String(Date().timeIntervalSince1970)])
             }
             for e in originals { try connection.run("UPDATE observed_terms SET organized_count=?,attempts=0,retry_at=0 WHERE entry_key=?", [String(e.usage?.commit_count ?? 0),e.entry_id]) }
@@ -151,10 +158,45 @@ public actor SQLiteStore {
         try connection.execute("BEGIN IMMEDIATE")
         do {
             try connection.run("INSERT OR IGNORE INTO excluded_terms VALUES(?)", [key])
+            for row in try connection.rows("SELECT suggestion_id,payload FROM model_suggestions") {
+                let entry = try JSONDecoder().decode(LexiconEntry.self, from: Data(row[1].utf8))
+                if entry.entry_id == key { try connection.run("DELETE FROM model_suggestions WHERE suggestion_id=?", [row[0]]) }
+            }
             try connection.run("DELETE FROM observed_terms WHERE entry_key=?", [key]); try connection.execute("COMMIT")
         } catch { try? connection.execute("ROLLBACK"); throw error }
     }
     public func clear() throws { try connection.execute("BEGIN IMMEDIATE; DELETE FROM model_suggestions; DELETE FROM observed_terms; DELETE FROM processed_events; COMMIT; PRAGMA wal_checkpoint(TRUNCATE);") }
+    public func retryPending() throws { try connection.execute("UPDATE observed_terms SET attempts=0,retry_at=0 WHERE attempts>0") }
+    /// 核准檔案才是權威；此為可失敗的 SQLite 查閱鏡本，不參與版本切換交易。
+    public func recordApproval(id: String, version: String, checksum: String, at: Date, entries: [LexiconEntry]) throws {
+        try connection.execute("BEGIN IMMEDIATE")
+        do {
+            try connection.execute("UPDATE lexicon_versions SET status='archived' WHERE status='active'")
+            try connection.run("INSERT INTO lexicon_versions VALUES(?,?,?,?,?,?) ON CONFLICT(version_id) DO UPDATE SET activated_at=excluded.activated_at,status='active'",
+                [version,"1.0.0",checksum,String(at.timeIntervalSince1970),String(Date().timeIntervalSince1970),"active"])
+            for entry in entries {
+                try connection.run("INSERT OR IGNORE INTO review_records VALUES(?,?,?,?,?)", [id+":"+entry.entry_id,entry.entry_id,"approved","local_user",String(at.timeIntervalSince1970)])
+                if let suggestion = entry.model_suggestion {
+                    try connection.run("UPDATE model_suggestions SET status='approved' WHERE suggestion_id=?", [suggestion.suggestion_id])
+                }
+            }
+            try connection.execute("DELETE FROM review_records WHERE review_id IN (SELECT review_id FROM review_records ORDER BY reviewed_at DESC LIMIT -1 OFFSET 60000)")
+            try connection.execute("COMMIT")
+        } catch { try? connection.execute("ROLLBACK"); throw error }
+    }
+    public func periodicBackup() throws {
+        let previous = Double(try connection.rows("SELECT value FROM settings WHERE key='backup_at'").first?.first ?? "0") ?? 0
+        guard Date().timeIntervalSince1970 - previous >= 86400 else { return }
+        let folder = url.deletingLastPathComponent().appendingPathComponent("snapshots")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+        let name = "learning-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString).sqlite"
+        try backup(to: folder.appendingPathComponent(name))
+        try connection.run("INSERT OR REPLACE INTO settings VALUES('backup_at',?)", [String(Date().timeIntervalSince1970)])
+        let files = try FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.hasPrefix("learning-") && $0.pathExtension == "sqlite" }
+            .sorted { $0.lastPathComponent > $1.lastPathComponent }
+        for file in files.dropFirst(3) { try FileManager.default.removeItem(at: file) }
+    }
     public func backup(to target: URL) throws {
         guard !FileManager.default.fileExists(atPath: target.path) else { throw LexiconError.invalid("備份檔已存在") }
         let destination = try Connection(target.path)

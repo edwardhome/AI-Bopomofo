@@ -11,6 +11,28 @@ public struct Observation: Sendable {
         self.id = id; self.entry = entry; self.kind = kind; self.at = at
     }
 }
+public struct TermSpan: Sendable {
+    public let reading: String, text: String
+    public let location: Int
+    public let manual: Bool
+    public init(reading: String, text: String, location: Int, manual: Bool) {
+        self.reading = reading; self.text = text; self.location = location; self.manual = manual
+    }
+}
+public enum CommitProjection {
+    /// 只投影已送出前綴內的完整詞；不猜測剩餘音節，不跨提交事件串接。
+    public static func terms(committed: String, composition: String, spans: [TermSpan]) -> [TermSpan] {
+        guard !committed.isEmpty, !composition.isEmpty, composition.hasPrefix(committed) else { return [] }
+        return spans.prefix(64).filter { term in
+            guard term.location >= 0, term.text.utf16.count <= 128,
+                  term.location <= committed.utf16.count,
+                  term.text.utf16.count <= committed.utf16.count - term.location else { return false }
+            let range = NSRange(location: term.location, length: term.text.utf16.count)
+            guard let valid = Range(range, in: committed) else { return false }
+            return committed[valid] == term.text
+        }
+    }
+}
 
 /// 生產者只使用 try-lock；消費者或管理工作佔用時直接略過，不等待鎖。
 public final class ObservationQueue: @unchecked Sendable {

@@ -47,6 +47,7 @@ private struct Receipt: Codable {
     var version: String
 }
 private struct Manifest: Codable { var active: String?; var history: [String] = [] }
+public enum DeploymentCheckpoint: Sendable { case staged, verified, activating }
 
 /// 已核准版本及核准紀錄獨立於 SQLite；資料庫損壞也能離線載入和人工部署。
 public actor DeploymentStore {
@@ -54,20 +55,27 @@ public actor DeploymentStore {
     private var manifest = Manifest()
     private var current = LexiconSnapshot()
     private var previews: [UUID: (ImportPreview, String, Bool)] = [:]
-    public init(root: URL) throws {
+    private let checkpoint: @Sendable (DeploymentCheckpoint) throws -> Void
+    public private(set) var recoveryNotice: String?
+    public init(root: URL, checkpoint: @escaping @Sendable (DeploymentCheckpoint) throws -> Void = { _ in }) throws {
         self.root = root
+        self.checkpoint = checkpoint
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
     }
     public func load() throws -> LexiconSnapshot {
         let pointer = root.appendingPathComponent("active.json")
         if FileManager.default.fileExists(atPath: pointer.path) {
-            let bytes = try boundedRead(pointer, max: 4096)
-            manifest = try JSONDecoder().decode(Manifest.self, from: bytes)
+            do { manifest = try JSONDecoder().decode(Manifest.self, from: boundedRead(pointer, max: 4096)) }
+            catch {
+                manifest = try JSONDecoder().decode(Manifest.self, from: boundedRead(root.appendingPathComponent("previous-active.json"), max: 4096))
+                recoveryNotice = "目前版本指標損毀，已回復上一次版本指標"
+            }
         }
         for id in ([manifest.active].compactMap { $0 } + manifest.history).prefix(6) {
             if let snapshot = try? readVersion(id) {
                 if manifest.active != id {
-                    manifest.active = id; try persistManifest()
+                    manifest.active = id; manifest.history.removeAll { $0 == id }; try persistManifest()
+                    recoveryNotice = "目前詞庫損毀，已回復有效歷史版本"
                 }
                 current = snapshot; return snapshot
             }
@@ -129,13 +137,15 @@ public actor DeploymentStore {
         try write(bytes, to: stage.appendingPathComponent("lexicon.json"))
         let receipt = Receipt(approval: UUID(), approvedAt: Date(), sourceChecksum: preview.digest, checksum: checksum, version: doc.dictionary_version)
         try write(try JSONEncoder().encode(receipt), to: stage.appendingPathComponent("receipt.json"))
+        try checkpoint(.staged)
         let folder = root.appendingPathComponent(checksum)
         if !FileManager.default.fileExists(atPath: folder.path) { try FileManager.default.moveItem(at: stage, to: folder) }
         let snapshot = try readVersion(checksum)
+        try checkpoint(.verified)
         let old = manifest
         manifest.history = Array(([manifest.active].compactMap { $0 } + manifest.history).filter { $0 != checksum }.prefix(5))
         manifest.active = checksum
-        do { try persistManifest() } catch { manifest = old; throw error }
+        do { try checkpoint(.activating); try persistManifest() } catch { manifest = old; throw error }
         current = snapshot; pruneVersions(); return snapshot
     }
     public func cancel(_ token: UUID) { previews.removeValue(forKey: token) }
@@ -164,7 +174,23 @@ public actor DeploymentStore {
               doc.entries.allSatisfy({ $0.review.status == .approved }), Set(doc.entries.map(\.entry_id)).count == doc.entries.count else { throw LexiconError.invalid("缺少有效核准版本") }
         return LexiconSnapshot(version: doc.dictionary_version, entries: doc.entries)
     }
-    private func persistManifest() throws { try write(try JSONEncoder().encode(manifest), to: root.appendingPathComponent("active.json")) }
+    public func auditDescription() throws -> String {
+        guard let id = manifest.active else { return "" }
+        let receipt = try readReceipt(id)
+        return "\(receipt.version)\n\(ISO8601DateFormatter().string(from: receipt.approvedAt))\nSHA-256: \(receipt.checksum)\nApproval: \(receipt.approval.uuidString)"
+    }
+    public func activeAudit() throws -> (id: String, version: String, checksum: String, at: Date)? {
+        guard let id = manifest.active else { return nil }
+        let receipt = try readReceipt(id)
+        return (receipt.approval.uuidString, receipt.version, receipt.checksum, receipt.approvedAt)
+    }
+    private func persistManifest() throws {
+        let pointer = root.appendingPathComponent("active.json")
+        if let previous = try? boundedRead(pointer, max: 4096), (try? JSONDecoder().decode(Manifest.self, from: previous)) != nil {
+            try write(previous, to: root.appendingPathComponent("previous-active.json"))
+        }
+        try write(try JSONEncoder().encode(manifest), to: pointer)
+    }
     private func write(_ data: Data, to url: URL) throws {
         try data.write(to: url, options: .atomic)
         try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)

@@ -14,6 +14,54 @@ private func temporary() throws -> URL {
     try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true); return url
 }
 @Suite struct SchemaTests {
+    @Test func commitProjectionDoesNotLearnPartialOrChangedText() {
+        let spans = [TermSpan(reading: "ㄒㄧˋ-ㄊㄨㄥˇ", text: "系統", location: 0, manual: true),
+                     TermSpan(reading: "ㄙㄜˋ-ㄐㄧˋ", text: "設計", location: 2, manual: false)]
+        #expect(CommitProjection.terms(committed: "系統", composition: "系統設計", spans: spans).count == 1)
+        #expect(CommitProjection.terms(committed: "系", composition: "系統設計", spans: spans).isEmpty)
+        #expect(CommitProjection.terms(committed: "", composition: "系統設計", spans: spans).isEmpty)
+        #expect(CommitProjection.terms(committed: "變更", composition: "系統設計", spans: spans).isEmpty)
+        #expect(CommitProjection.terms(committed: "系統設計", composition: "系統設計", spans: spans).count == 2)
+    }
+    @Test func publishedExampleAndBundledEngineeringAdapter() throws {
+        var root = URL(fileURLWithPath: #filePath)
+        for _ in 0..<5 { root.deleteLastPathComponent() }
+        let example = try LexiconDocument.decode(Data(contentsOf: root.appendingPathComponent("examples/lexicon-review-example.json")))
+        #expect(example.entries.count == 2)
+        struct Catalog: Decodable {
+            struct Term: Decodable { let aliases: [String]; let outputs: [String]; let annotation: String }
+            let terms: [Term]
+        }
+        let catalog = try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: root.appendingPathComponent("Packages/MixedInputCore/Sources/MixedInputCore/Resources/engineering-terms.json")))
+        let converted = catalog.terms.flatMap { term in term.aliases.flatMap { code in term.outputs.map {
+            LexiconEntry(type: .unicode, reading: code, text: $0, source: "bundled_engineering", annotation: term.annotation)
+        } } }
+        #expect(catalog.terms.count == 103)
+        let doc = try LexiconDocument.decode(LexiconDocument(entries: converted).encoded())
+        #expect(Set(doc.entries.map(\.text)) == Set(catalog.terms.flatMap(\.outputs)))
+        #expect(doc.entries.allSatisfy { $0.review.status != .approved })
+    }
+    @Test func unknownKeysDepthAndIdentityTampering() throws {
+        let bytes = try LexiconDocument(entries: [term()]).encoded()
+        var object = try JSONSerialization.jsonObject(with: bytes) as! [String: Any]
+        object["execute"] = "do not execute"
+        #expect(throws: (any Error).self) { try LexiconDocument.decode(JSONSerialization.data(withJSONObject: object)) }
+        #expect(throws: (any Error).self) { try JSONPreflight.validate(Data((String(repeating: "[", count: 14) + "0" + String(repeating: "]", count: 14)).utf8)) }
+        var e = term(); e.text = "SiO2"
+        #expect(throws: (any Error).self) { try e.validated() }
+    }
+    @Test func suggestionDoesNotOverwriteObservedFacts() {
+        let original = term()
+        var proposal = original; proposal.review.status = .proposed; proposal.source = "apple_fm"
+        proposal.annotation = "模型推測"
+        proposal.model_suggestion = ModelSuggestion(origin: original.entry_id, reason: "待確認", model: "synthetic")
+        proposal.model_suggestion?.suggested_annotation = "模型推測"
+        let merged = LexiconDocument.mergedReviewEntries([original, proposal])
+        #expect(merged.count == 1)
+        #expect(merged[0].annotation == original.annotation)
+        #expect(merged[0].source == "user_observation")
+        #expect(merged[0].model_suggestion?.suggested_annotation == "模型推測")
+    }
     @Test func stableIdentity() {
         #expect(term().entry_id == term().entry_id)
         #expect(term("SiO2").entry_id != term().entry_id)
@@ -22,6 +70,9 @@ private func temporary() throws -> URL {
     @Test func roundTripAndUnicode() throws {
         let data = try LexiconDocument(entries: [term()]).encoded()
         #expect(try LexiconDocument.decode(data).entries[0].text == "SiO₂")
+        #expect(try LexiconDocument.decode(LexiconDocument(entries: [term()]).exchangeData()).entries[0].text == "SiO₂")
+        var invalid = LexiconDocument(entries: [term()]); invalid.schema_version = "2.0.0"
+        #expect(throws: (any Error).self) { try invalid.exchangeData() }
     }
     @Test func rejectDuplicateKeys() throws {
         let data = try LexiconDocument(entries: [term()]).encoded()
@@ -61,6 +112,48 @@ private func temporary() throws -> URL {
     }
 }
 @Suite struct StorageTests {
+    @Test func failedTransactionRollsBackCountsAndDedupMarker() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("learning.sqlite")
+        let event = Observation(entry: term(), kind: .manualSelected)
+        let broken = try SQLiteStore(url: url) { throw LexiconError.invalid("synthetic SQLITE_FULL before COMMIT") }
+        await #expect(throws: (any Error).self) { try await broken.ingest([event]) }
+        #expect(try await broken.entries().isEmpty)
+        let healthy = try SQLiteStore(url: url)
+        try await healthy.ingest([event])
+        #expect(try await healthy.entries()[0].usage == Usage(commits: 1, manual: 1))
+    }
+    @Test func newerDatabaseIsNotDowngraded() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("learning.sqlite")
+        let store = try SQLiteStore(url: url)
+        try await store.ingest([Observation(entry: term(), kind: .autoCommitted)])
+        let command = Process(); command.executableURL = URL(fileURLWithPath: "/usr/bin/sqlite3")
+        command.arguments = [url.path, "PRAGMA user_version=2;"]
+        try command.run(); command.waitUntilExit(); #expect(command.terminationStatus == 0)
+        #expect(throws: (any Error).self) { try SQLiteStore(url: url) }
+        #expect(try await store.entries().count == 1)
+    }
+    @Test func readOnlyFailureKeepsInputQueueIndependent() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let url = root.appendingPathComponent("learning.sqlite")
+        let writer = try SQLiteStore(url: url)
+        try await writer.ingest([Observation(entry: term(), kind: .autoCommitted)])
+        let reader = try SQLiteStore(url: url, readOnly: true)
+        await #expect(throws: (any Error).self) { try await reader.ingest([Observation(entry: term(), kind: .autoCommitted)]) }
+        #expect(try await writer.entries()[0].usage?.commit_count == 1)
+        let queue = ObservationQueue(capacity: 1)
+        #expect(queue.offer(Observation(entry: term(), kind: .autoCommitted)))
+    }
+    @Test func boundedRetriesAndClear() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let store = try SQLiteStore(url: root.appendingPathComponent("learning.sqlite"))
+        try await store.ingest([Observation(entry: term(), kind: .autoCommitted)])
+        for _ in 0..<3 { try await store.failedBatch([term()]) }
+        #expect(try await store.entries(pendingOnly: true).isEmpty)
+        try await store.retryPending(); #expect(try await store.entries(pendingOnly: true).count == 1)
+        try await store.clear(); #expect(try await store.entries().isEmpty)
+    }
     @Test func aggregationDedupAndBackup() async throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let store = try SQLiteStore(url: root.appendingPathComponent("learning.sqlite"))
@@ -78,6 +171,10 @@ private func temporary() throws -> URL {
         try await store.exclude(term().entry_id)
         try await store.ingest([Observation(entry: term(), kind: .autoCommitted)])
         #expect(try await store.entries().isEmpty)
+        // 明確重新記住可撤回排除，但不補算先前被略過的提交。
+        try await store.ingest([Observation(entry: term(), kind: .explicitRemember)])
+        #expect(try await store.entries()[0].review.user_confirmed)
+        #expect(try await store.entries()[0].usage?.commit_count == 0)
     }
     @Test func failedOpenAndCorruption() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
@@ -99,6 +196,35 @@ private func temporary() throws -> URL {
     }
 }
 @Suite struct DeploymentTests {
+    @Test(arguments: [DeploymentCheckpoint.staged, .verified, .activating])
+    func interruptedDeploymentKeepsOldVersion(_ failure: DeploymentCheckpoint) async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let original = try DeploymentStore(root: root)
+        let first = try await original.preview(LexiconDocument(version: "one", entries: [term()]).encoded())
+        _ = try await original.approve(first.token)
+        let broken = try DeploymentStore(root: root) { step in
+            if step == failure { throw LexiconError.invalid("synthetic disk full") }
+        }
+        _ = try await broken.load()
+        let next = try await broken.preview(LexiconDocument(version: "two", entries: [term("SiO2")]).encoded())
+        await #expect(throws: (any Error).self) { try await broken.approve(next.token) }
+        let restored = try DeploymentStore(root: root)
+        #expect(try await restored.load().version == "one")
+    }
+    @Test func corruptActiveVersionFallsBack() async throws {
+        let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
+        let store = try DeploymentStore(root: root)
+        for (version,text) in [("one","SiO₂"),("two","SiO2")] {
+            let p = try await store.preview(LexiconDocument(version: version, entries: [term(text)]).encoded())
+            _ = try await store.approve(p.token)
+        }
+        let pointer = try JSONSerialization.jsonObject(with: Data(contentsOf: root.appendingPathComponent("active.json"))) as! [String:Any]
+        let active = pointer["active"] as! String
+        try Data("{".utf8).write(to: root.appendingPathComponent(active).appendingPathComponent("lexicon.json"))
+        let restored = try DeploymentStore(root: root)
+        #expect(try await restored.load().version == "one")
+        #expect(await restored.recoveryNotice != nil)
+    }
     @Test func approvalRollbackAndNoDatabase() async throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }
         let store = try DeploymentStore(root: root)

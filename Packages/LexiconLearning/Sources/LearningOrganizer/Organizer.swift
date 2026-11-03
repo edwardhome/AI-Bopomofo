@@ -18,6 +18,7 @@ public struct OrganizerProposal: Codable, Sendable {
 public enum SuggestionValidator {
     public static func validate(_ data: Data, originals: [LexiconEntry]) throws -> [LexiconEntry] {
         guard data.count <= 65536, originals.count <= 16 else { throw LexiconError.invalid("整理批次超過限制") }
+        try JSONPreflight.validate(data)
         let proposals = try JSONDecoder().decode([OrganizerProposal].self, from: data)
         guard proposals.count <= 32 else { throw LexiconError.invalid("模型建議過多") }
         let origins = Set(originals.map(\.entry_id)); var seen = Set<String>(); var result: [LexiconEntry] = []
@@ -27,6 +28,8 @@ public enum SuggestionValidator {
                                  review: Review(.proposed), annotation: p.annotation)
             e.category = p.category
             e.model_suggestion = ModelSuggestion(origin: p.origin, reason: p.reason, model: "apple.foundationmodels.ondevice")
+            e.model_suggestion?.suggested_annotation = p.annotation
+            e.model_suggestion?.suggested_category = p.category
             try e.validated()
             if seen.insert(e.entry_id).inserted { result.append(e) }
         }

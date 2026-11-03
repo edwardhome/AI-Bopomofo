@@ -1,0 +1,38 @@
+{
+  "format": "ai-bopomofo.lexicon",
+  "schema_version": "1.0.0",
+  "document_type": "review",
+  "dictionary_version": "example-1",
+  "entries": [
+    {
+      "entry_id": "bfe5fe57abda9f5a016be80142b4cde18f1ecc3bc2b68e4d6c6e9981128f257e",
+      "term_type": "zh_phrase",
+      "reading": "ㄒㄧˋ-ㄊㄨㄥˇ",
+      "text": "系統",
+      "source": "synthetic_example",
+      "review": {
+        "status": "observed",
+        "user_confirmed": false
+      },
+      "usage": {
+        "commit_count": 42,
+        "manual_selection_count": 8
+      }
+    },
+    {
+      "entry_id": "7df06b0da093bcf463b0f9e9788765832a2ff707a41a0f8c95eded8498f30ec1",
+      "term_type": "unicode_mapping",
+      "reading": "sio2",
+      "text": "SiO₂",
+      "source": "synthetic_example",
+      "review": {
+        "status": "observed",
+        "user_confirmed": false
+      },
+      "usage": {
+        "commit_count": 42,
+        "manual_selection_count": 8
+      }
+    }
+  ]
+}

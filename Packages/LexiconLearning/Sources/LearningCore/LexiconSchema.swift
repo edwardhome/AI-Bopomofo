@@ -24,6 +24,8 @@ public struct ModelSuggestion: Codable, Sendable, Equatable {
     public var reason: String
     public var model_id: String
     public var model_version: String?
+    public var suggested_annotation: String?
+    public var suggested_category: String?
     public init(origin: String, reason: String, model: String, version: String? = nil) {
         suggestion_id = UUID().uuidString; origin_entry_id = origin; self.reason = reason
         model_id = model; model_version = version
@@ -82,7 +84,9 @@ public struct LexiconEntry: Codable, Sendable, Equatable {
         if let s = model_suggestion {
             guard Self.safe(s.suggestion_id, max: 80), s.origin_entry_id.count == 64,
                   Self.safe(s.reason, max: 512), Self.safe(s.model_id, max: 128),
-                  s.model_version.map({ Self.safe($0, max: 128) }) ?? true else { throw LexiconError.invalid("模型建議欄位不合法") }
+                  s.model_version.map({ Self.safe($0, max: 128) }) ?? true,
+                  s.suggested_annotation.map({ Self.safe($0, max: 80) }) ?? true,
+                  s.suggested_category.map({ Self.safe($0, max: 80) }) ?? true else { throw LexiconError.invalid("模型建議欄位不合法") }
         }
     }
     public static func safe(_ s: String, max: Int) -> Bool {
@@ -108,6 +112,7 @@ public struct LexiconDocument: Codable, Sendable, Equatable {
     public static func decode(_ data: Data) throws -> Self {
         guard data.count <= 8 * 1024 * 1024 else { throw LexiconError.invalid("JSON 超過 8 MiB") }
         try JSONPreflight.validate(data)
+        try validateKeys(data)
         let result = try JSONDecoder().decode(Self.self, from: data)
         guard result.format == "ai-bopomofo.lexicon", result.schema_version == "1.0.0",
               ["review", "approved"].contains(result.document_type),
@@ -117,6 +122,36 @@ public struct LexiconDocument: Codable, Sendable, Equatable {
         for entry in result.entries { try entry.validated() }
         return result
     }
+    private static func validateKeys(_ data: Data) throws {
+        func check(_ object: Any?, allowed: Set<String>) throws {
+            guard let object = object as? [String: Any] else { return }
+            guard Set(object.keys).isSubset(of: allowed) else { throw LexiconError.invalid("JSON 含不支援的欄位") }
+        }
+        let root = try JSONSerialization.jsonObject(with: data)
+        try check(root, allowed: ["format", "schema_version", "document_type", "dictionary_version", "entries"])
+        for entry in (root as? [String: Any])?["entries"] as? [[String: Any]] ?? [] {
+            try check(entry, allowed: ["entry_id", "term_type", "reading", "text", "source", "usage", "review", "model_suggestion", "category", "annotation", "sources", "policy"])
+            try check(entry["usage"], allowed: ["commit_count", "manual_selection_count"])
+            try check(entry["review"], allowed: ["status", "user_confirmed"])
+            try check(entry["model_suggestion"], allowed: ["suggestion_id", "origin_entry_id", "reason", "model_id", "model_version", "suggested_annotation", "suggested_category"])
+        }
+    }
+    /// 相同身分的原始觀察保留事實欄位；推測提示放在獨立 model_suggestion 中。
+    public static func mergedReviewEntries(_ values: [LexiconEntry]) -> [LexiconEntry] {
+        var result: [LexiconEntry] = []; var index: [String: Int] = [:]
+        for entry in values.sorted(by: { ($0.model_suggestion == nil ? 0 : 1) < ($1.model_suggestion == nil ? 0 : 1) }) {
+            if let i = index[entry.entry_id] {
+                if let suggestion = entry.model_suggestion { result[i].model_suggestion = suggestion }
+            } else { index[entry.entry_id] = result.count; result.append(entry) }
+        }
+        return result
+    }
+    /// 匯出檔也遵循匯入限制，避免產生無法重新校對匯回的交換檔。
+    public func exchangeData() throws -> Data {
+        let data = try encoded()
+        _ = try Self.decode(data)
+        return data
+    }
     public func encoded() throws -> Data {
         let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         return try encoder.encode(self)
@@ -124,8 +159,8 @@ public struct LexiconDocument: Codable, Sendable, Equatable {
 }
 
 /// JSONDecoder 會默默接受重複欄位，先做有界結構掃描，避免審核與部署看到不同值。
-enum JSONPreflight {
-    static func validate(_ data: Data) throws {
+public enum JSONPreflight {
+    public static func validate(_ data: Data) throws {
         var scanner = Scanner(bytes: Array(data)); try scanner.value(depth: 0); scanner.space()
         guard scanner.i == scanner.bytes.count else { throw LexiconError.invalid("JSON 尾端有多餘資料") }
     }

@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/edwardhome/AI-Bopomofo/schemas/lexicon-v1.schema.json",
+  "title": "AI-Bopomofo Lexicon v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schema_version",
+    "document_type",
+    "dictionary_version",
+    "entries"
+  ],
+  "properties": {
+    "format": {
+      "const": "ai-bopomofo.lexicon"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "document_type": {
+      "enum": [
+        "review",
+        "approved"
+      ]
+    },
+    "dictionary_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entry_id",
+          "term_type",
+          "reading",
+          "text",
+          "source",
+          "review"
+        ],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "term_type": {
+            "enum": [
+              "zh_phrase",
+              "english_term",
+              "technical_alias",
+              "unicode_mapping"
+            ]
+          },
+          "reading": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "user_confirmed"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "observed",
+                  "proposed",
+                  "approved",
+                  "rejected"
+                ]
+              },
+              "user_confirmed": {
+                "type": "boolean"
+              }
+            }
+          },
+          "usage": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "commit_count",
+              "manual_selection_count"
+            ],
+            "properties": {
+              "commit_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "manual_selection_count": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "model_suggestion": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "required": [
+              "suggestion_id",
+              "origin_entry_id",
+              "reason",
+              "model_id"
+            ],
+            "properties": {
+              "suggestion_id": {
+                "type": "string",
+                "maxLength": 80
+              },
+              "origin_entry_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "model_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "model_version": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 128
+              },
+              "suggested_annotation": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "suggested_category": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "annotation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "sources": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 16,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          },
+          "policy": {
+            "enum": [
+              "candidate_only",
+              null
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "term_type": {
+                  "const": "zh_phrase"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "reading": {
+                  "pattern": "^[ㄅ-ㄙ]?[ㄧㄨㄩ]?[ㄚ-ㄦ]?[ˊˇˋ˙]?(-[ㄅ-ㄙ]?[ㄧㄨㄩ]?[ㄚ-ㄦ]?[ˊˇˋ˙]?){0,7}$"
+                },
+                "text": {
+                  "maxLength": 8
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "reading": {
+                  "minLength": 2,
+                  "maxLength": 64,
+                  "pattern": "^[!-~]+$"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
