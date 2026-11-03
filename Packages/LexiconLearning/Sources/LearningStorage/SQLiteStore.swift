@@ -110,6 +110,10 @@ public actor SQLiteStore {
                   manual_selection_count=min(manual_selection_count+excluded.manual_selection_count,2147483647),
                   user_confirmed=max(user_confirmed,excluded.user_confirmed),last_seen_at=max(last_seen_at,excluded.last_seen_at)
                   """, [e.entry_id,e.term_type.rawValue,e.reading,e.text,payload,String(commit),String(manual),String(confirmed),String(day),String(day)])
+                if confirmed == 1 {
+                    // 記住本身不算提交，仍須讓零次數的新詞進入待整理。
+                    try connection.run("UPDATE observed_terms SET organized_count=-1,attempts=0,retry_at=0 WHERE entry_key=?", [e.entry_id])
+                }
             }
             try prune(now)
             try beforeCommit()

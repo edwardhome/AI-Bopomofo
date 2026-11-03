@@ -59,10 +59,12 @@ extension InputState {
     @objc(InputStateASCII)
     class ASCII: Inputting, CandidateProvider {
         let composition: ASCIIComposition
+        let sessionLexicon: TechnicalLexicon
         let prediction: String?
         let predictionSuppressed: Bool
 
         @objc init(text: String, cursor: UInt) {
+            sessionLexicon = MixedInputHandler.lexicon
             composition = ASCIIComposition(raw: text, cursor: Int(cursor), lexicon: MixedInputHandler.lexicon)
             prediction = nil
             predictionSuppressed = false
@@ -70,7 +72,8 @@ extension InputState {
             tooltip = NSLocalizedString("ASCII: Tab selects, Enter commits, Esc restores or cancels", comment: "")
         }
 
-        init(composition: ASCIIComposition, prediction: String? = nil, predictionSuppressed: Bool = false) {
+        init(composition: ASCIIComposition, prediction: String? = nil, predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon = MixedInputHandler.lexicon) {
+            self.sessionLexicon = sessionLexicon
             self.composition = composition
             self.prediction = prediction
             self.predictionSuppressed = predictionSuppressed
@@ -81,13 +84,13 @@ extension InputState {
 
         /// 所有編輯／預測都經由這裡複製，避免把 Shift 啟動方式遺失。
         func replacing(composition: ASCIIComposition, prediction: String? = nil,
-                       predictionSuppressed: Bool = false) -> ASCII {
+                       predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon? = nil) -> ASCII {
             if let shifted = self as? ShiftASCII {
                 return ShiftASCII(composition: composition, mode: shifted.mode,
-                    prediction: prediction, predictionSuppressed: predictionSuppressed)
+                    prediction: prediction, predictionSuppressed: predictionSuppressed, sessionLexicon: sessionLexicon ?? self.sessionLexicon)
             }
             return ASCII(composition: composition, prediction: prediction,
-                         predictionSuppressed: predictionSuppressed)
+                         predictionSuppressed: predictionSuppressed, sessionLexicon: sessionLexicon ?? self.sessionLexicon)
         }
 
         var candidateCount: Int { prediction == nil ? composition.candidates.count : 2 }
@@ -111,10 +114,10 @@ extension InputState {
             self.init(composition: ASCIIComposition(raw: shiftText, cursor: Int(cursor), lexicon: MixedInputHandler.lexicon), mode: .initial)
         }
         init(composition: ASCIIComposition, mode: ShiftLetterSession.Mode,
-             prediction: String? = nil, predictionSuppressed: Bool = false) {
+             prediction: String? = nil, predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon = MixedInputHandler.lexicon) {
             self.mode = mode
             super.init(composition: composition, prediction: prediction,
-                       predictionSuppressed: predictionSuppressed || mode != .word)
+                       predictionSuppressed: predictionSuppressed || mode != .word, sessionLexicon: sessionLexicon)
             tooltip = NSLocalizedString("Shift English: Space or Enter commits; Esc cancels", comment: "")
         }
     }
@@ -146,7 +149,7 @@ extension InputState {
     private static func insert(_ text: String, state: InputState.QuickSymbols,
                                stateCallback: (InputState) -> Void) {
         if let original = state.editingComposition {
-            if case .updated(let composition) = original.applying(.insert(text), lexicon: MixedInputHandler.lexicon) {
+            if case .updated(let composition) = original.applying(.insert(text), lexicon: state.originalASCII?.sessionLexicon ?? MixedInputHandler.lexicon) {
                 update(composition, state: state, stateCallback: stateCallback)
             }
         } else {
@@ -202,7 +205,7 @@ extension InputState {
 
     @objc static func acceptPrediction(state: InputState.ASCII, stateCallback: (InputState) -> Void) {
         guard let prediction = state.prediction else { return }
-        stateCallback(state.replacing(composition: ASCIIComposition(raw: prediction, lexicon: lexicon)))
+        stateCallback(state.replacing(composition: ASCIIComposition(raw: prediction, lexicon: state.sessionLexicon)))
     }
 
     /// 只轉換 Shift 英文來源。F 等待／分層是外層包裝，不能在放開 Shift 時取消 F。
@@ -211,7 +214,7 @@ extension InputState {
             guard shifted.mode != .word else { return nil }
             switch shifted.session.releasingShift() {
             case .updated(let next):
-                return (nil, InputState.ShiftASCII(composition: next.composition, mode: next.mode))
+                return (nil, InputState.ShiftASCII(composition: next.composition, mode: next.mode, sessionLexicon: shifted.sessionLexicon))
             case .commit(let text): return (text, InputState.EmptyIgnoringPreviousState())
             default: return nil
             }
@@ -242,7 +245,7 @@ extension InputState {
 
     static func reloadingLexicon(state: InputState) -> InputState {
         if let ascii = state as? InputState.ASCII {
-            return ascii.replacing(composition: ascii.composition.rebuilding(lexicon: lexicon), predictionSuppressed: true)
+            return ascii.replacing(composition: ascii.composition.rebuilding(lexicon: lexicon), predictionSuppressed: true, sessionLexicon: lexicon)
         }
         if let pending = state as? InputState.PendingF {
             return InputState.PendingF(original: reloadingLexicon(state: pending.original))
@@ -257,7 +260,12 @@ extension InputState {
         return state
     }
 
+    private static var approvedTerms: EngineeringLexicon?
+    static func setApprovedTerms(_ terms: EngineeringLexicon?) {
+        approvedTerms = terms; lexicon = lexicon.withApproved(terms); lexiconRevision &+= 1
+    }
     static func reloadUserTerms() {
+        defer { lexicon = lexicon.withApproved(approvedTerms) }
         lexiconRevision &+= 1
         let path = LanguageModelManager.userPhrasesDataPathMcBopomofo
         guard let size = (try? FileManager.default.attributesOfItem(atPath: path)[.size]) as? NSNumber,
@@ -301,13 +309,13 @@ extension InputState {
 
         if let shifted = state as? InputState.ShiftASCII {
             switch shifted.session.applying(action, shiftHeld: input.isShiftHold,
-                repeating: input.isARepeat, lexicon: lexicon) {
+                repeating: input.isARepeat, lexicon: state.sessionLexicon) {
             case .updated(let next):
                 stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode,
-                    predictionSuppressed: input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight))
+                    predictionSuppressed: input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight, sessionLexicon: shifted.sessionLexicon))
             case .commitAndContinue(let text, let next):
                 stateCallback(InputState.Committing(poppedText: text))
-                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode))
+                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode, sessionLexicon: shifted.sessionLexicon))
             case .commit(let text):
                 stateCallback(InputState.Committing(poppedText: text))
                 stateCallback(InputState.EmptyIgnoringPreviousState())
@@ -322,7 +330,7 @@ extension InputState {
             return true
         }
 
-        switch state.composition.applying(action, lexicon: lexicon) {
+        switch state.composition.applying(action, lexicon: state.sessionLexicon) {
         case .updated(let composition):
             let navigated = input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight || input.isHome || input.isEnd
             stateCallback(state.replacing(composition: composition, predictionSuppressed: navigated))

@@ -11,7 +11,7 @@ private struct TextSuggestions {
 }
 #endif
 
-public struct AppleTextAssistance: CorrectionProvider {
+public struct InProcessAppleTextAssistance: CorrectionProvider {
     public init() {}
     public func suggest(_ request: CorrectionRequest) async throws -> [String] {
         guard request.isValid else { throw AssistanceError.invalidRequest }

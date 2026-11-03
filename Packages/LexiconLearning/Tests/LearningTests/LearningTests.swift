@@ -175,6 +175,10 @@ private func temporary() throws -> URL {
         try await store.ingest([Observation(entry: term(), kind: .explicitRemember)])
         #expect(try await store.entries()[0].review.user_confirmed)
         #expect(try await store.entries()[0].usage?.commit_count == 0)
+        let remembered = try await store.entries(pendingOnly: true)
+        #expect(remembered.count == 1)
+        try await store.finishBatch(remembered, suggestions: [])
+        #expect(try await store.entries(pendingOnly: true).isEmpty)
     }
     @Test func failedOpenAndCorruption() throws {
         let root = try temporary(); defer { try? FileManager.default.removeItem(at: root) }

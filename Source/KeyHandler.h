@@ -33,6 +33,7 @@ extern InputMode InputModeBopomofo;
 extern InputMode InputModePlainBopomofo;
 
 @class KeyHandler;
+@class ApprovedLearningIndex;
 
 @protocol KeyHandlerDelegate <NSObject>
 - (id)candidateControllerForKeyHandler:(KeyHandler *)keyHandler;
@@ -54,6 +55,8 @@ extern InputMode InputModePlainBopomofo;
 @end
 
 @interface KeyHandler : NSObject
+- (void)setApprovedLearningIndex:(nullable ApprovedLearningIndex *)index;
+- (BOOL)selectApprovedReading:(NSString *)reading value:(NSString *)value start:(NSUInteger)start length:(NSUInteger)length;
 
 - (BOOL)handleInput:(KeyHandlerInput *)input
               state:(InputState *)state

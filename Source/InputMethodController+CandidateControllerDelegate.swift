@@ -68,14 +68,21 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
                 return
             }
             keyHandler.clear()
-            handle(state: .Committing(poppedText: state.candidate(at: Int(index))), client: client)
+            if case .updated(let selected) = state.composition.applying(.select(Int(index)), lexicon: state.sessionLexicon) {
+                handle(state: LearningCommittingState(text: state.candidate(at: Int(index)), origin: state.replacing(composition: selected)), client: client)
+            } else { handle(state: .Committing(poppedText: state.candidate(at: Int(index))), client: client) }
             handle(state: .Empty(), client: client)
         case let state as InputState.ChoosingCandidate:
             let selectedCandidate = state.candidates[Int(index)]
+            if let approved = selectedCandidate as? ApprovedLearningCandidate {
+                guard keyHandler.selectApprovedReading(approved.reading, value: approved.value,
+                                                      start: approved.start, length: approved.length) else { return }
+            } else {
             keyHandler.fixNode(
                 reading: selectedCandidate.reading, value: selectedCandidate.value,
                 originalCursorIndex: Int(state.originalCursorIndex),
                 useMoveCursorAfterSelectionSetting: true)
+            }
 
             guard let inputting = keyHandler.buildInputtingState() as? InputState.Inputting else {
                 return
@@ -85,7 +92,7 @@ extension McBopomofoInputMethodController: CandidateControllerDelegate {
             case .plainBopomofo:
                 keyHandler.clear()
                 let composingBuffer = inputting.composingBuffer
-                handle(state: .Committing(poppedText: composingBuffer), client: client)
+                handle(state: LearningCommittingState(text: composingBuffer, origin: inputting), client: client)
                 if Preferences.associatedPhrasesEnabled,
                     let associatePhrases = keyHandler.buildAssociatedPhrasePlainState(
                         withReading: selectedCandidate.reading, value: selectedCandidate.value,

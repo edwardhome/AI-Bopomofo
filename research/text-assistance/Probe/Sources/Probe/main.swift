@@ -16,7 +16,7 @@ actor RecordingProvider: CorrectionProvider {
     private var raw: [String] = []
     func suggest(_ request: CorrectionRequest) async throws -> [String] {
         raw = []
-        let result = try await AppleTextAssistance().suggest(request)
+        let result = try await InProcessAppleTextAssistance().suggest(request)
         raw = result
         return result
     }

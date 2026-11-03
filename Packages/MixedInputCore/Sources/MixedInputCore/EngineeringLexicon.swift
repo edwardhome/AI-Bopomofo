@@ -3,7 +3,7 @@ import Foundation
 
 /// 顯示註解不屬於輸出文字；保留來源供候選排序與預測仲裁使用。
 public struct TechnicalCandidate: Sendable, Equatable {
-    public enum Source: Sendable { case original, technical, engineering }
+    public enum Source: Sendable { case original, technical, engineering, approved }
     public let text: String
     public let annotation: String?
     public let source: Source
@@ -35,11 +35,11 @@ public struct EngineeringLexicon: Sendable {
         return EngineeringLexicon(data: data)
     }()
 
-    public init(data: Data) {
+    public init(data: Data, maximumTerms: Int = 1000) {
         struct Catalog: Decodable { let version: Int; let terms: [EngineeringTerm] }
-        let catalog = data.count <= 1_048_576 ? try? JSONDecoder().decode(Catalog.self, from: data) : nil
+        let catalog = data.count <= (maximumTerms > 1000 ? 8_388_608 : 1_048_576) ? try? JSONDecoder().decode(Catalog.self, from: data) : nil
         let decoded = catalog?.terms ?? []
-        let valid = catalog?.version == 1 && decoded.count <= 1000
+        let valid = catalog?.version == 1 && decoded.count <= min(maximumTerms, 20_000)
             && Set(decoded.map(\.id)).count == decoded.count
             && decoded.allSatisfy { term in
                 !term.id.isEmpty && !term.category.isEmpty && !term.annotation.isEmpty
@@ -85,7 +85,7 @@ public struct EngineeringLexicon: Sendable {
         let exactSet = Set(exact)
         let prefix = (prefixIndex[lower] ?? []).filter { !exactSet.contains($0) }
         func candidates(_ indices: [Int], exactMatch: Bool) -> [TechnicalCandidate] {
-            indices.sorted { left, right in
+            Array(indices.prefix(64)).sorted { left, right in
                 func caseMatches(_ index: Int) -> Bool {
                     terms[index].aliases.contains { exactMatch ? $0 == query : $0.hasPrefix(query) }
                 }

@@ -64,9 +64,27 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     Formosa::Gramambular2::ReadingGrid::WalkResult _latestWalk;
 
     NSString *_inputMode;
+    NSDictionary<NSString *, NSArray<NSString *> *> *_approvedLearningEntries;
+    std::vector<std::pair<Formosa::Gramambular2::ReadingGrid::NodePtr, std::string>> _manualLearningNodes;
+    BOOL _automaticLearningSelection;
 }
 
 @synthesize delegate = _delegate;
+
+- (void)setApprovedLearningIndex:(ApprovedLearningIndex *)index {
+    _approvedLearningEntries = index.entries;
+}
+- (BOOL)selectApprovedReading:(NSString *)reading value:(NSString *)value start:(NSUInteger)start length:(NSUInteger)length {
+    if (![_approvedLearningEntries[reading] containsObject:value]) return NO;
+    if (!_grid->selectExternalCandidate(start, length, reading.UTF8String, value.UTF8String)) return NO;
+    [self _walk];
+    auto selected = _latestWalk.findNodeAt(start);
+    if (selected != _latestWalk.nodes.end()) {
+        if (_manualLearningNodes.size() >= 64) _manualLearningNodes.erase(_manualLearningNodes.begin());
+        _manualLearningNodes.emplace_back(*selected, value.UTF8String);
+    }
+    return YES;
+}
 
 - (NSString *)inputMode
 {
@@ -192,6 +210,10 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
         return;
     }
     Formosa::Gramambular2::ReadingGrid::NodePtr currentNode = *nodeIter;
+    if (!_automaticLearningSelection && currentNode) {
+        if (_manualLearningNodes.size() >= 64) _manualLearningNodes.erase(_manualLearningNodes.begin());
+        _manualLearningNodes.emplace_back(currentNode, value.UTF8String);
+    }
     if (currentNode != nullptr && currentNode->currentUnigram().score() > -8) {
         _userOverrideModel->observe(prevWalk, _latestWalk, self.actualCandidateCursorIndex, [NSDate date].timeIntervalSince1970);
     }
@@ -297,6 +319,7 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
 
 - (void)clear
 {
+    _manualLearningNodes.clear();
     _bpmfReadingBuffer->clear();
     _grid->clear();
     _latestWalk = Formosa::Gramambular2::ReadingGrid::WalkResult {};
@@ -2176,7 +2199,9 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
         if (shouldAutoSelectCandidate) {
             NSUInteger candidateIndex = [gCurrentCandidateController candidateIndexAtKeyLabelIndex:0];
             if (candidateIndex != NSUIntegerMax) {
+                _automaticLearningSelection = YES;
                 [self.delegate keyHandler:self didSelectCandidateAtIndex:candidateIndex candidateController:gCurrentCandidateController];
+                _automaticLearningSelection = NO;
                 [self clear];
                 InputStateEmptyIgnoringPreviousState *empty = [[InputStateEmptyIgnoringPreviousState alloc] init];
                 stateCallback(empty);
@@ -2687,7 +2712,24 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
     NSString *tail = @(tailStr.c_str());
     NSString *composedText = [head stringByAppendingString:[reading stringByAppendingString:tail]];
     NSInteger cursorIndex = head.length + reading.length;
-    InputStateInputting *newState = [[InputStateInputting alloc] initWithComposingBuffer:composedText cursorIndex:cursorIndex];
+    NSMutableArray *learningTerms = [NSMutableArray array];
+    if (Preferences.lexiconObservationEnabled && !Preferences.chineseConversionEnabled
+        && !Preferences.phraseReplacementEnabled && !bopomofoAnnotationUsed
+        && _bpmfReadingBuffer->composedString().empty()) {
+        NSUInteger location = 0;
+        for (const auto& node : _latestWalk.nodes) {
+            NSString *text = @(node->value().c_str());
+            NSString *termReading = @(node->reading().c_str());
+            if (learningTerms.count < 64 && node->spanningLength() <= 8 && ![termReading hasPrefix:@"_"]
+                && text.length <= 16 && McBopomofo::CodePointCount(node->value()) == node->spanningLength()) {
+                BOOL manual = std::any_of(_manualLearningNodes.begin(), _manualLearningNodes.end(),
+                    [&node](const auto& selection) { return selection.first == node && selection.second == node->value(); });
+                [learningTerms addObject:[[LearningTermSnapshot alloc] initWithReading:termReading text:text location:location manual:manual]];
+            }
+            location += text.length;
+        }
+    }
+    InputStateInputting *newState = [[LearningInputtingState alloc] initWithComposingBuffer:composedText cursorIndex:cursorIndex terms:learningTerms];
     newState.tooltip = tooltip;
     return newState;
 }
@@ -2726,7 +2768,31 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
         [candidatesArray addObject:candidate];
     }
 
-    InputStateChoosingCandidate *state = [[InputStateChoosingCandidate alloc] initWithComposingBuffer:inputting.composingBuffer cursorIndex:inputting.cursorIndex candidates:candidatesArray useVerticalMode:useVerticalMode];
+    if (_grid->length() > 0 && !Preferences.chineseConversionEnabled && !Preferences.phraseReplacementEnabled) {
+        size_t cursor = std::min(static_cast<size_t>(self.actualCandidateCursorIndex), _grid->length()-1);
+        size_t first = cursor > 7 ? cursor - 7 : 0;
+        for (size_t start = first; start <= cursor; ++start) {
+            std::string reading;
+            for (size_t length = 1; length <= 8 && start + length <= _grid->length(); ++length) {
+                if (length > 1) reading += "-";
+                reading += _grid->readings()[start + length - 1];
+                if (start + length <= cursor) continue;
+                NSString *r = @(reading.c_str());
+                NSUInteger inspected = 0;
+                for (NSString *text in _approvedLearningEntries[r]) {
+                    if (++inspected > 64 || candidatesArray.count >= 512) break;
+                    BOOL duplicate = NO;
+                    for (InputStateCandidate *old in candidatesArray) {
+                        if ([old.reading isEqual:r] && [old.value isEqual:text]) { duplicate = YES; break; }
+                    }
+                    if (!duplicate && candidatesArray.count < 512) {
+                        [candidatesArray addObject:[[ApprovedLearningCandidate alloc] initWithReading:r value:text start:start length:length]];
+                    }
+                }
+            }
+        }
+    }
+    InputStateChoosingCandidate *state = [[LearningChoosingState alloc] initWithInputting:inputting candidates:candidatesArray useVerticalMode:useVerticalMode];
     return state;
 }
 

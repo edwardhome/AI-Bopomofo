@@ -953,4 +953,40 @@ TEST(ReadingGridTest, CopyWithFixedNodesMustNotContainDanglingUnigramIter) {
   EXPECT_EQ(val, "司");  // should be the overriden one, not the default "斯"
 }
 
+
+// 已核准詞只在使用者明確選取之後加入本次組字；不可污染自動候選。
+TEST(ReadingGridTest, ExternalCandidateIsExplicitAndTemporary) {
+  auto lm = std::make_shared<SimpleLM>(kSampleData);
+  ReadingGrid grid(lm);
+  ASSERT_TRUE(grid.insertReading("ㄍㄠ"));
+  ASSERT_TRUE(grid.insertReading("ㄎㄜ"));
+  auto original = grid.walk().valuesAsStrings();
+  auto copied = grid.walk().copyWithFixedNodes();
+  ASSERT_FALSE(grid.selectExternalCandidate(0, 2, "ㄎㄜ-ㄍㄠ", "測詞"));
+  ASSERT_EQ(grid.walk().valuesAsStrings(), original);
+  ASSERT_TRUE(grid.selectExternalCandidate(0, 2, "ㄍㄠ-ㄎㄜ", "測詞"));
+  ASSERT_EQ(grid.walk().valuesAsStrings(), (std::vector<std::string>{"測詞"}));
+  ASSERT_EQ(copied.valuesAsStrings(), original);
+  for (const auto& candidate : grid.candidatesAt(1)) ASSERT_NE(candidate.value, "測詞");
+  ASSERT_TRUE(grid.overrideCandidate(1, "科"));
+  ASSERT_NE(grid.walk().valuesAsStrings(), (std::vector<std::string>{"測詞"}));
+  grid.clear();
+  ASSERT_TRUE(grid.insertReading("ㄍㄠ"));
+  ASSERT_TRUE(grid.insertReading("ㄎㄜ"));
+  ASSERT_EQ(grid.walk().valuesAsStrings(), original);
+}
+TEST(ReadingGridTest, ExternalCandidateEditAndBoundary) {
+  ReadingGrid grid(std::make_shared<SimpleLM>(kSampleData));
+  ASSERT_FALSE(grid.selectExternalCandidate(0, 1, "ㄍㄠ", "測"));
+  ASSERT_TRUE(grid.insertReading("ㄍㄠ"));
+  ASSERT_TRUE(grid.insertReading("ㄎㄜ"));
+  ASSERT_TRUE(grid.selectExternalCandidate(0, 2, "ㄍㄠ-ㄎㄜ", "測詞"));
+  auto copy = grid.walk().copyWithFixedNodes();
+  ASSERT_EQ(copy.valuesAsStrings(), (std::vector<std::string>{"測詞"}));
+  ASSERT_TRUE(grid.deleteReadingBeforeCursor());
+  ASSERT_EQ(grid.walk().valuesAsStrings(), (std::vector<std::string>{"高"}));
+  ASSERT_TRUE(grid.insertReading("ㄎㄜ"));
+  ASSERT_NE(grid.walk().valuesAsStrings(), (std::vector<std::string>{"測詞"}));
+}
+
 }  // namespace Formosa::Gramambular2

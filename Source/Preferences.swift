@@ -215,6 +215,12 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "LexiconObservationEnabled", defaultValue: true)
+    @objc static var lexiconObservationEnabled: Bool
+    @UserDefault(key: "LexiconOrganizerEnabled", defaultValue: true)
+    @objc static var lexiconOrganizerEnabled: Bool
+    @UserDefault(key: "ApprovedLexiconEnabled", defaultValue: true)
+    @objc static var approvedLexiconEnabled: Bool
     @UserDefault(key: "EngineeringLexiconEnabled", defaultValue: true)
     @objc static var engineeringLexiconEnabled: Bool
     @UserDefault(key: "EnglishPredictionEnabled", defaultValue: true)

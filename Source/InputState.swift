@@ -63,6 +63,7 @@ import SystemCharacterInfo
 /// - Choosing Candidate: The candidate window is open to let the user to choose
 ///   one among the candidates.
 class InputState: NSObject {
+    @objc var learningTerms: [LearningTermSnapshot] { [] }
 
     /// Represents that the input controller is deactivated.
     @objc(InputStateDeactivated)
@@ -117,9 +118,9 @@ class InputState: NSObject {
     class Committing: InputState {
         @objc private(set) var poppedText: String = ""
 
-        @objc convenience init(poppedText: String) {
-            self.init()
+        @objc init(poppedText: String) {
             self.poppedText = poppedText
+            super.init()
         }
 
         override var description: String {

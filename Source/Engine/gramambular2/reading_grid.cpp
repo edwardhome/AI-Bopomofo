@@ -368,6 +368,28 @@ void ReadingGrid::update(size_t loc, EditType editType) {
   }
 }
 
+bool ReadingGrid::selectExternalCandidate(size_t start, size_t length,
+                                         const std::string& reading, const std::string& value) {
+  if (length == 0 || length > kMaximumSpanLength || start > readings_.size()
+      || length > readings_.size() - start || value.empty()) return false;
+  std::string actual;
+  for (size_t i = start; i < start + length; ++i) {
+    if (i > start) actual += separator_;
+    actual += readings_[i];
+  }
+  if (actual != reading) return false;
+  auto node = spans_[start].nodeOf(length);
+  if (!node) {
+    node = std::make_shared<Node>(reading, length, std::vector<LanguageModel::Unigram>{});
+    spans_[start].add(node);
+  }
+  for (size_t i = start; i < start + length; ++i) {
+    for (auto& other : overlappingNodesAt(i)) other.node->reset();
+  }
+  node->selectExternalValue(value);
+  return true;
+}
+
 bool ReadingGrid::overrideCandidate(
     size_t loc, const std::string* reading, const std::string& value,
     ReadingGrid::Node::OverrideType overrideType) {
@@ -447,14 +469,18 @@ std::vector<ReadingGrid::NodeInSpan> ReadingGrid::overlappingNodesAt(
 }
 
 LanguageModel::Unigram ReadingGrid::Node::currentUnigram() const {
+  if (externalValue_) return LanguageModel::Unigram(*externalValue_, kOverridingScore);
   return unigrams_.empty() ? LanguageModel::Unigram{} : *unigramIter_;
 }
 
 std::string ReadingGrid::Node::value() const {
+  if (externalValue_) return *externalValue_;
   return unigrams_.empty() ? "" : unigramIter_->value();
 }
 
 double ReadingGrid::Node::score() const {
+  if (externalValue_) return kOverridingScore;
+  if (externalOnly_) return -std::numeric_limits<double>::infinity();
   if (unigrams_.empty()) {
     return 0;
   }
@@ -471,10 +497,11 @@ double ReadingGrid::Node::score() const {
 }
 
 bool ReadingGrid::Node::isOverridden() const {
-  return overrideType_ != OverrideType::kNone;
+  return externalValue_.has_value() || overrideType_ != OverrideType::kNone;
 }
 
 void ReadingGrid::Node::reset() {
+  externalValue_.reset();
   unigramIter_ = unigrams_.begin();
   overrideType_ = OverrideType::kNone;
 }
@@ -484,6 +511,7 @@ bool ReadingGrid::Node::selectOverrideUnigram(
   assert(type != ReadingGrid::Node::OverrideType::kNone);
   for (auto it = unigrams_.begin(), end = unigrams_.end(); it != end; ++it) {
     if (value == it->value()) {
+      externalValue_.reset();
       unigramIter_ = it;
       overrideType_ = type;
       return true;

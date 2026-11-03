@@ -25,6 +25,7 @@ import CandidateUI
 import Carbon
 import CoreGraphics
 import MixedInputCore
+import LexiconDeployment
 import Cocoa
 import InputMethodKit
 import InputSourceHelper
@@ -59,6 +60,8 @@ class McBopomofoInputMethodController: IMKInputController {
     var keyHandler: KeyHandler = KeyHandler()
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
+    var learningSnapshot = LexiconSnapshot()
+    var learningAppliedToken: String?
     private var shiftGesture = DoubleShiftGesture()
     private var lastInputModifiers: NSEvent.ModifierFlags?
     // Explicitly enabled, bounded diagnostics. Never record text or key codes.
@@ -104,6 +107,7 @@ class McBopomofoInputMethodController: IMKInputController {
             withTitle: NSLocalizedString("Shift + Letter Starts English", comment: ""),
             action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
         mixedItem.state = Preferences.mixedEnglishEnabled.state
+        if Thread.isMainThread { MainActor.assumeIsolated { addLearningMenu(to: menu) } }
         let engineeringItem = menu.addItem(withTitle: NSLocalizedString("Engineering and Science Lexicon", comment: ""),
                                           action: #selector(toggleEngineeringLexicon(_:)), keyEquivalent: "")
         engineeringItem.state = Preferences.engineeringLexiconEnabled.state
@@ -595,6 +599,10 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func handle(_ maybeEvent: NSEvent!, client: Any!) -> Bool {
+        if Thread.isMainThread { MainActor.assumeIsolated {
+            LearningRuntime.shared.noteActivity(secure: IsSecureEventInputEnabled())
+            refreshLearningSnapshotIfIdle()
+        } }
         // nil may be passed, applefeedback://FB11472618
         guard let event = maybeEvent else {
             recordShiftDiagnostic(.missingEvent)
@@ -933,7 +941,7 @@ extension McBopomofoInputMethodController {
         textAssistant.schedulePrediction(state: state, controller: self)
     }
 
-    private func commit(text: String, client: Any!) {
+    private func commit(text: String, client: Any!, observationState: InputState? = nil) {
 
         func convertToSimplifiedChineseIfRequired(_ text: String) -> String {
             if !Preferences.chineseConversionEnabled {
@@ -949,8 +957,11 @@ extension McBopomofoInputMethodController {
         if buffer.isEmpty {
             return
         }
-        (client as? IMKTextInput)?.insertText(
-            buffer, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+        guard let receiver = client as? IMKTextInput else { return }
+        receiver.insertText(buffer, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+        if buffer == text, let observationState, Thread.isMainThread {
+            MainActor.assumeIsolated { observeCommitted(text, previous: observationState) }
+        }
     }
 
     private func handle(state: InputState.Deactivated, previous: InputState, client: Any?) {
@@ -966,7 +977,7 @@ extension McBopomofoInputMethodController {
 
         switch previous {
         case let previous as InputState.NotEmpty:
-            commit(text: previous.composingBuffer, client: client)
+            commit(text: previous.composingBuffer, client: client, observationState: previous)
         case is InputState.Big5,
             is InputState.Number,
             is InputState.IcuTransform:
@@ -991,7 +1002,7 @@ extension McBopomofoInputMethodController {
         }
 
         if let previous = previous as? InputState.NotEmpty {
-            commit(text: previous.composingBuffer, client: client)
+            commit(text: previous.composingBuffer, client: client, observationState: previous)
         }
         client.setMarkedText(
             "", selectionRange: NSMakeRange(0, 0),
@@ -1023,7 +1034,7 @@ extension McBopomofoInputMethodController {
 
         let poppedText = state.poppedText
         if !poppedText.isEmpty {
-            commit(text: poppedText, client: client)
+            commit(text: poppedText, client: client, observationState: (state as? LearningCommittingState)?.origin ?? previous)
         }
         client.setMarkedText(
             "", selectionRange: NSMakeRange(0, 0),
@@ -1253,7 +1264,7 @@ extension McBopomofoInputMethodController {
         }
 
         if let previous = previous as? InputState.NotEmpty {
-            commit(text: previous.composingBuffer, client: client)
+            commit(text: previous.composingBuffer, client: client, observationState: previous)
         }
         client.setMarkedText(
             composingBuffer, selectionRange: NSMakeRange(composingBuffer.utf16.count, 0),
@@ -1271,7 +1282,7 @@ extension McBopomofoInputMethodController {
         }
 
         if let previous = previous as? InputState.NotEmpty {
-            commit(text: previous.composingBuffer, client: client)
+            commit(text: previous.composingBuffer, client: client, observationState: previous)
         }
         // the selection range is where the cursor is, with the length being 0 and replacement range NSNotFound,
         // i.e. the client app needs to take care of where to put this composing buffer

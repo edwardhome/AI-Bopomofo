@@ -33,6 +33,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <optional>
 
 #include "language_model.h"
 
@@ -120,7 +121,7 @@ class ReadingGrid {
           unigramIter_(
               std::next(unigrams_.begin(),
                         std::distance(o.unigrams_.begin(), o.unigramIter_))),
-          overrideType_(o.overrideType_) {}
+          overrideType_(o.overrideType_), externalValue_(o.externalValue_), externalOnly_(o.externalOnly_) {}
 
     [[nodiscard]] const std::string& reading() const { return reading_; }
 
@@ -140,6 +141,10 @@ class ReadingGrid {
     [[nodiscard]] bool isOverridden() const;
 
     void reset();
+    // 明確選取的擴充詞只影響當次節點，不加入語言模型或基礎候選。
+    void selectExternalValue(const std::string& value) {
+      externalValue_ = value; externalOnly_ = unigrams_.empty();
+    }
 
     bool selectOverrideUnigram(const std::string& value, OverrideType type);
 
@@ -162,6 +167,8 @@ class ReadingGrid {
     const std::vector<LanguageModel::Unigram> unigrams_;
     std::vector<LanguageModel::Unigram>::const_iterator unigramIter_;
     OverrideType overrideType_;
+    std::optional<std::string> externalValue_;
+    bool externalOnly_ = false;
   };
 
   using NodePtr = std::shared_ptr<Node>;
@@ -238,6 +245,10 @@ class ReadingGrid {
   bool overrideCandidate(size_t loc, const std::string& candidate,
                          Node::OverrideType overrideType =
                              Node::OverrideType::kOverrideValueWithHighScore);
+
+  // 僅供使用者明確選取已核准詞呼叫；未選取時不建立節點。
+  bool selectExternalCandidate(size_t start, size_t length,
+                               const std::string& reading, const std::string& value);
 
   // A span is a collection of nodes that share the same starting location.
   class Span {

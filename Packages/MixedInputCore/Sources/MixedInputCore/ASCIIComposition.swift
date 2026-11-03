@@ -9,6 +9,10 @@ public struct TechnicalLexicon: Sendable {
     ]
     public let words: [String]
     private let engineering: EngineeringLexicon?
+    private var approved: EngineeringLexicon? = nil
+    public func withApproved(_ lexicon: EngineeringLexicon?) -> Self {
+        var copy = self; copy.approved = lexicon; return copy
+    }
 
     public init(custom: [String] = [], engineeringEnabled: Bool = true,
                 engineering: EngineeringLexicon = .bundled) {
@@ -43,10 +47,14 @@ public struct TechnicalLexicon: Sendable {
         guard prefix.count >= 2, !prefix.contains(where: \.isWhitespace) else { return [] }
         let lower = prefix.lowercased()
         let matches = engineering?.matches(prefix) ?? (exact: [], prefix: [])
+        let additional = approved?.matches(prefix) ?? (exact: [], prefix: [])
+        func approvedItems(_ items: [TechnicalCandidate]) -> [TechnicalCandidate] {
+            items.map { TechnicalCandidate(text: $0.text, annotation: $0.annotation, source: .approved) }
+        }
         let legacy = words.lazy.filter { $0.lowercased().hasPrefix(lower) && $0 != prefix }
             .prefix(8).map { TechnicalCandidate(text: $0, source: .technical) }
         var seen: Set<String> = [prefix]
-        return Array((matches.exact + legacy + matches.prefix).filter { seen.insert($0.text).inserted }.prefix(8))
+        return Array((matches.exact + approvedItems(additional.exact) + legacy + matches.prefix + approvedItems(additional.prefix)).filter { seen.insert($0.text).inserted }.prefix(8))
     }
 
 }
@@ -57,7 +65,7 @@ public struct ASCIIComposition: Sendable {
     public let selectedIndex: Int
     public let candidates: [String]
     public let candidateItems: [TechnicalCandidate]
-    public var hasEngineeringCandidates: Bool { candidateItems.contains { $0.source == .engineering } }
+    public var hasEngineeringCandidates: Bool { candidateItems.contains { $0.source == .engineering || $0.source == .approved } }
 
     public init(raw: String = "", cursor: Int? = nil, selectedIndex: Int = 0,
                 lexicon: TechnicalLexicon = TechnicalLexicon()) {

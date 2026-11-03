@@ -105,6 +105,14 @@
 		D4F0BBE1279AF8B30071253C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F0BBE0279AF8B30071253C /* AppDelegate.swift */; };
 		D4F0BBE4279B08900071253C /* BundleTranslocate.m in Sources */ = {isa = PBXBuildFile; fileRef = D4F0BBE3279B08900071253C /* BundleTranslocate.m */; };
 		D4F0BBE7279B14C20071253C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = D4F0BBE9279B14C20071253C /* Credits.rtf */; };
+		AD0000000000000000000011 = {isa = PBXBuildFile; fileRef = AD0000000000000000000001; };
+		AD0000000000000000000012 = {isa = PBXBuildFile; fileRef = AD0000000000000000000002; };
+		AD0000000000000000000013 = {isa = PBXBuildFile; fileRef = AD0000000000000000000003; };
+AD0000000000000000000032 = {isa = PBXBuildFile; productRef = AD0000000000000000000031; };
+AE0000000000000000000011 = {isa = PBXBuildFile; fileRef = AE0000000000000000000001; };
+AE0000000000000000000012 = {isa = PBXBuildFile; productRef = AE0000000000000000000031; };
+AE0000000000000000000013 = {isa = PBXBuildFile; productRef = AE0000000000000000000032; };
+AE0000000000000000000014 = {isa = PBXBuildFile; fileRef = AE0000000000000000000002; settings = {ATTRIBUTES = (CodeSignOnCopy,RemoveHeadersOnCopy,);}; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +138,10 @@
 			remoteInfo = McBopomofo;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+AE0000000000000000000023 = {isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = "Contents/XPCServices"; dstSubfolderSpec = 1; files = (AE0000000000000000000014,); name = "Embed Model Service"; runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AC0000000000000000000012 /* CandidateRanking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CandidateRanking; path = Packages/CandidateRanking; sourceTree = "<group>"; };
@@ -268,6 +280,12 @@
 		D4F0BBE8279B14C20071253C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		D4F0BBEA279B14CB0071253C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		D4F0BBEB279B14D00071253C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "zh-Hant"; path = "zh-Hant.lproj/Credits.rtf"; sourceTree = "<group>"; };
+		AD0000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningInput.swift; sourceTree = "<group>"; };
+		AD0000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningRuntime.swift; sourceTree = "<group>"; };
+		AD0000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningManagement.swift; sourceTree = "<group>"; };
+AD0000000000000000000030 = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LexiconLearning; path = Packages/LexiconLearning; sourceTree = "<group>"; };
+AE0000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ModelServiceMain; path = Source/ModelService/main.swift; sourceTree = SOURCE_ROOT; };
+AE0000000000000000000002 = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; path = ModelService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +301,7 @@
 				D48F853E2EACDB6C00C2FDAB /* RomanNumbers in Frameworks */,
 				AB0000000000000000000011 /* MixedInputCore in Frameworks */,
 				AC0000000000000000000011 /* CandidateRanking in Frameworks */,
+AD0000000000000000000032,
 				D4E7917A2B52CDE500676A68 /* ChineseNumbers in Frameworks */,
 				D427F76A278C9E29004A2160 /* CandidateUI in Frameworks */,
 				D40EFFA22EB669F900C1728A /* InfoCollector in Frameworks */,
@@ -307,6 +326,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+AE0000000000000000000022 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (AE0000000000000000000012,AE0000000000000000000013,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -324,6 +344,7 @@
 		6A0D4EA315FC0D2D00ABF4B3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+AE0000000000000000000002,
 				6A0D4EA215FC0D2D00ABF4B3 /* McBopomofo.app */,
 				6ACA41CB15FC1D7500935EF6 /* McBopomofoInstaller.app */,
 				D485D3B62796A8A000657FF3 /* McBopomofoTests.xctest */,
@@ -356,6 +377,9 @@
 				D44FB74427915555003C80A6 /* Preferences.swift */,
 				AB0000000000000000000002 /* MixedInput.swift */,
 				AC0000000000000000000002 /* TextAssistance.swift */,
+				AD0000000000000000000003,
+				AD0000000000000000000002,
+				AD0000000000000000000001,
 				D47F7DCF278C0897002F9DD7 /* NonModalAlertWindowController.swift */,
 				D41B626D2B87B5C100583148 /* ServiceProviderInputHelper.h */,
 				D41B626E2B87B5C100583148 /* ServiceProviderInputHelper.mm */,
@@ -510,6 +534,8 @@
 				D48F853C2EACCDE900C2FDAB /* RomanNumbers */,
 				AB0000000000000000000012 /* MixedInputCore */,
 				AC0000000000000000000012 /* CandidateRanking */,
+AD0000000000000000000030,
+AE0000000000000000000001,
 				D427F768278C9D0D004A2160 /* CandidateUI */,
 				D427F7A727905E43004A2160 /* TooltipUI */,
 				D427F7AC27907B7E004A2160 /* NotifierUI */,
@@ -573,11 +599,13 @@
 				6A0D4E9E15FC0D2D00ABF4B3 /* Sources */,
 				6A0D4E9F15FC0D2D00ABF4B3 /* Frameworks */,
 				6A0D4EA015FC0D2D00ABF4B3 /* Resources */,
+AE0000000000000000000023,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				6A38BC2615FC131100A8A51F /* PBXTargetDependency */,
+AE0000000000000000000041,
 			);
 			name = McBopomofo;
 			packageProductDependencies = (
@@ -594,6 +622,7 @@
 				D48F853D2EACDB6C00C2FDAB /* RomanNumbers */,
 				AB0000000000000000000013 /* MixedInputCore */,
 				AC0000000000000000000013 /* CandidateRanking */,
+AD0000000000000000000031,
 				D40EFFA12EB669F900C1728A /* InfoCollector */,
 			);
 			productName = McBopomofo;
@@ -639,6 +668,7 @@
 			productReference = D485D3B62796A8A000657FF3 /* McBopomofoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+AE0000000000000000000040 = {isa = PBXNativeTarget; buildConfigurationList = AE0000000000000000000050; buildPhases = (AE0000000000000000000021,AE0000000000000000000022,); buildRules = (); dependencies = (); name = ModelService; packageProductDependencies = (AE0000000000000000000031,AE0000000000000000000032,); productName = ModelService; productReference = AE0000000000000000000002; productType = "com.apple.product-type.xpc-service"; };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -678,6 +708,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+AE0000000000000000000040,
 				6A0D4EA115FC0D2D00ABF4B3 /* McBopomofo */,
 				6ACA41CA15FC1D7500935EF6 /* McBopomofoInstaller */,
 				6A38BC2115FC12FD00A8A51F /* Data */,
@@ -762,6 +793,9 @@
 				D44FB74527915565003C80A6 /* Preferences.swift in Sources */,
 				AB0000000000000000000001 /* MixedInput.swift in Sources */,
 				AC0000000000000000000001 /* TextAssistance.swift in Sources */,
+				AD0000000000000000000013,
+				AD0000000000000000000012,
+				AD0000000000000000000011,
 				6A660A702EAF371000D53D7B /* ByteBlockBackedDictionary.cpp in Sources */,
 				6A833E522F0A0FB30086AD0C /* VariantAnnotator.cpp in Sources */,
 				D4314F0D2ED3690F0071DD71 /* NumberInputHelper.swift in Sources */,
@@ -815,6 +849,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+AE0000000000000000000021 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (AE0000000000000000000011,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -833,6 +868,7 @@
 			target = 6A0D4EA115FC0D2D00ABF4B3 /* McBopomofo */;
 			targetProxy = D485D3BA2796A8A000657FF3 /* PBXContainerItemProxy */;
 		};
+AE0000000000000000000041 = {isa = PBXTargetDependency; target = AE0000000000000000000040; };
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1431,6 +1467,8 @@
 			};
 			name = Release;
 		};
+AE0000000000000000000051 = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; DEVELOPMENT_TEAM = ""; PRODUCT_BUNDLE_IDENTIFIER = org.aibopomofo.inputmethod.AIBopomofo.ModelService; PRODUCT_NAME = ModelService; INFOPLIST_FILE = Source/ModelService/Info.plist; GENERATE_INFOPLIST_FILE = NO; MACOSX_DEPLOYMENT_TARGET = 13.0; SDKROOT = macosx; SKIP_INSTALL = YES; SWIFT_VERSION = 6.0; SWIFT_OBJC_BRIDGING_HEADER = ""; GCC_PREFIX_HEADER = ""; GCC_PRECOMPILE_PREFIX_HEADER = NO; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)","@executable_path/../Frameworks","@executable_path/../../../../Frameworks",); }; name = Debug; };
+AE0000000000000000000052 = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; DEVELOPMENT_TEAM = ""; PRODUCT_BUNDLE_IDENTIFIER = org.aibopomofo.inputmethod.AIBopomofo.ModelService; PRODUCT_NAME = ModelService; INFOPLIST_FILE = Source/ModelService/Info.plist; GENERATE_INFOPLIST_FILE = NO; MACOSX_DEPLOYMENT_TARGET = 13.0; SDKROOT = macosx; SKIP_INSTALL = YES; SWIFT_VERSION = 6.0; SWIFT_OBJC_BRIDGING_HEADER = ""; GCC_PREFIX_HEADER = ""; GCC_PRECOMPILE_PREFIX_HEADER = NO; SWIFT_OPTIMIZATION_LEVEL = "-O"; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)","@executable_path/../Frameworks","@executable_path/../../../../Frameworks",); }; name = Release; };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1479,6 +1517,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+AE0000000000000000000050 = {isa = XCConfigurationList; buildConfigurations = (AE0000000000000000000051,AE0000000000000000000052,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1536,6 +1575,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ChineseNumbers;
 		};
+AD0000000000000000000031 = {isa = XCSwiftPackageProductDependency; productName = LexiconLearning; };
+AE0000000000000000000031 = {isa = XCSwiftPackageProductDependency; productName = LexiconLearning; };
+AE0000000000000000000032 = {isa = XCSwiftPackageProductDependency; productName = CandidateRanking; };
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6A0D4E9415FC0CFA00ABF4B3 /* Project object */;
