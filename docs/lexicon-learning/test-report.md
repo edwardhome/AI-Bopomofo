@@ -111,4 +111,6 @@ scripts/verify-package.sh dist/0.6.13-dev.1
 
 GitHub 交付目標是 `edwardhome/AI-Bopomofo` 的 `feature/lexicon-learning-v1`，不是 main。未建立 Release 或標籤。
 
+遠端交付目前待授權：HTTPS 推送被 GitHub 拒絕，原因是目前 gh OAuth 登入沒有 `workflow` scope，不能更新 `.github/workflows/ai-bopomofo-headless.yml`。分支尚未出現在遠端；原 main 與工程功能分支 SHA 核對未變。原始碼與分階段提交保存在本機。使用者完成 `gh auth refresh -h github.com -s workflow` 後即可續推；不需要交出密碼或權杖。
+
 更新時間：2026-11-04T02:49:54+08:00
