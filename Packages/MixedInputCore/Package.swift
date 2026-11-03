@@ -6,7 +6,7 @@ let package = Package(
     platforms: [.macOS(.v13)],
     products: [.library(name: "MixedInputCore", targets: ["MixedInputCore"])],
     targets: [
-        .target(name: "MixedInputCore"),
+        .target(name: "MixedInputCore", resources: [.process("Resources")]),
         .testTarget(name: "MixedInputCoreTests", dependencies: ["MixedInputCore"]),
         .executableTarget(name: "MixedInputBenchmark", dependencies: ["MixedInputCore"]),
     ]

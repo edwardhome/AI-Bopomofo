@@ -2,9 +2,17 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`，目前程式版本為 0.6.11。** 0.6.11 尚待擁有者手動發布；已有 [0.6.10 開發測試版](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.10) 可下載。主線程式碼、版本標籤和 Release 安裝附件是不同的交付項目，請以各 Release 頁標示的版本為準。
+**主線固定為 `main`；此功能分支為 0.6.12 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
+
+## 0.6.12 新增：工程與自然科學候選詞庫
+
+預載 103 個整理後詞條，預設啟用；第一層選單「工程與自然科學詞庫」可獨立關閉。用 Shift 英文單字或選單 ASCII 組字，輸入 `sio2` 可選 `SiO₂`／`SiO2`，`i2c` 可選 `I²C`／`I2C`，`lambda` 可選 `λ`，並附繁體中文提示。
+
+三字元起展開前綴；兩字元只做完整比對，例如 `si` 只新增 `Si`，到 `sio` 才展開 `SiO₂`。**原文始終第一候選，明確選取才轉換**；有工程候選時不讓英文 AI 預測蓋過候選。雙擊 Shift 的直接英文與連續大寫行為不變。
+
+原報告 97 列已逐列審核，其中 31 列修正，複雜且無法可靠表示的公式保留材料簡稱。這是實用輸入對照表，不是官方學術名詞認證；不自動更正文件，也不把預載資料寫入私人詞庫。[操作與實鍵驗收](docs/science-terms.md) · [完整對照表](docs/science-terms-catalog.md) · [審核紀錄](docs/science-terms-review.json)
 
 ## 0.6.11 修正：快速打「其、去」不再搶進符號層
 
@@ -29,6 +37,7 @@
 | 連續大寫 | 持續按住 Shift，第二個新字母確認連續大寫；放開 Shift 回注音 |
 | 小寫單位 | Shift＋M 放開後可退格刪空，再輸入 `mm`；刪空不強制退出英文單字模式 |
 | 整句 ASCII 組字 | 從選單進入，保留大小寫、數字與符號，Enter 送出 |
+| 工程與自然科學詞庫 | 三字元前綴、兩字元完整吻合；可選 Unicode 及一般文字，中文只作提示 |
 | 專業詞候選 | 匯入英文技術詞，以前綴比對補全；原文優先，不擅自替換 |
 | 全形／半形標點 | 關閉「使用半形標點符號」後，Shift＋逗號為 `，`、Shift＋句點為 `。` |
 | 本機文字協助 | 檢查目前未送出的中文／英文組字，或提供英文續字；由使用者明確接受 |
@@ -97,11 +106,11 @@ scripts/build.sh Release > artifacts/release.log 2>&1
 打包前確認原始碼已提交，再選尚未使用的包名，例如：
 
 ```bash
-scripts/package.sh 0.6.11-local.1 Release
-scripts/verify-package.sh dist/0.6.11-local.1
+scripts/package.sh 0.6.12-local.1 Release
+scripts/verify-package.sh dist/0.6.12-local.1
 ```
 
-版本前三段必須與 Info.plist 相同；打包不會自動修改 app 版本，也不會自動安裝。這次 F 修正的本機無介面檢查為 **232 項通過、2 項跳過**，整合測試僅編譯；實際 GitHub CI 狀態請看 [Actions](https://github.com/edwardhome/AI-Bopomofo/actions)。
+版本前三段必須與 Info.plist 相同；打包不會自動修改 app 版本，也不會自動安裝。無介面測試與實鍵驗收分開記錄，整合測試僅編譯；實際 GitHub CI 狀態請看 [Actions](https://github.com/edwardhome/AI-Bopomofo/actions)。
 
 [修改與編譯指南](docs/development.md) · [Mermaid 架構與依賴圖](docs/architecture.md) · [GitHub 命令列指南](docs/github-workflow.md) · [測試回報](docs/testing.md) · [專案規則](AGENTS.md)
 

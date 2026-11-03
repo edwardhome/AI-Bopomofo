@@ -104,6 +104,9 @@ class McBopomofoInputMethodController: IMKInputController {
             withTitle: NSLocalizedString("Shift + Letter Starts English", comment: ""),
             action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
         mixedItem.state = Preferences.mixedEnglishEnabled.state
+        let engineeringItem = menu.addItem(withTitle: NSLocalizedString("Engineering and Science Lexicon", comment: ""),
+                                          action: #selector(toggleEngineeringLexicon(_:)), keyEquivalent: "")
+        engineeringItem.state = Preferences.engineeringLexiconEnabled.state
         let checkItem = menu.addItem(withTitle: NSLocalizedString("Check Spelling / Chinese Typos", comment: ""),
                                     action: #selector(checkTextAssistance(_:)), keyEquivalent: "")
         checkItem.isEnabled = keyHandler.canBeginAssistance(with: state)
@@ -418,6 +421,15 @@ class McBopomofoInputMethodController: IMKInputController {
 
     @objc private func toggleMixedEnglish(_ sender: Any?) {
         Preferences.mixedEnglishEnabled.toggle()
+    }
+
+    @objc func toggleEngineeringLexicon(_ sender: Any?) {
+        guard !IsSecureEventInputEnabled() else { return }
+        Preferences.engineeringLexiconEnabled.toggle()
+        textAssistant.cancel()
+        MixedInputHandler.reloadUserTerms()
+        // 不提交預覽候選，也不停止 F 放開監聽；只重建當前組字的候選。
+        handle(state: MixedInputHandler.reloadingLexicon(state: state), client: currentClient)
     }
 
     @objc private func toggleBacktickMenu(_ sender: Any?) {

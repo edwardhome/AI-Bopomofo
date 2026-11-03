@@ -40,6 +40,58 @@ struct MixedInputTests {
         }
     }
 
+    @Test func engineeringCandidateAnnotationNeverCommits() throws {
+        let previous = MixedInputHandler.lexicon
+        MixedInputHandler.lexicon = TechnicalLexicon()
+        defer { MixedInputHandler.lexicon = previous }
+        let s = Session()
+        s.begin(); s.type("sio2")
+        let raw = try #require(s.state as? InputState.ASCII)
+        #expect(raw.candidate(at: 0) == "sio2")
+        #expect(raw.candidate(at: 1) == "SiO₂")
+        #expect(raw.reading(at: 1) == "二氧化矽")
+        s.key("\t", code: 48)
+        s.key("x")
+        #expect((s.state as? InputState.ASCII)?.composition.raw == "SiO₂x")
+        s.key("\r")
+        #expect(s.committed == "SiO₂x")
+    }
+
+    @Test func engineeringCandidatesRejectPredictionButOrdinaryEnglishStillWorks() {
+        let previous = MixedInputHandler.lexicon
+        MixedInputHandler.lexicon = TechnicalLexicon()
+        defer { MixedInputHandler.lexicon = previous }
+        let term = InputState.ASCII(text: "fin", cursor: 3)
+        let blocked = MixedInputHandler.withPrediction("finally", state: term)
+        #expect(blocked === term)
+        #expect(blocked.prediction == nil)
+        #expect(blocked.composition.candidates.contains("FinFET"))
+        let ordinary = InputState.ASCII(text: "hel", cursor: 3)
+        #expect(MixedInputHandler.withPrediction("hello", state: ordinary).prediction == "hello")
+    }
+
+    @Test func lexiconRefreshPreservesWrappedShiftAndFState() throws {
+        let previous = MixedInputHandler.lexicon
+        defer { MixedInputHandler.lexicon = previous }
+        let raw = ASCIIComposition(raw: "sio2", lexicon: TechnicalLexicon())
+        let index = try #require(raw.candidates.firstIndex(of: "SiO₂"))
+        guard case .updated(let selected) = raw.applying(.select(index)) else { Issue.record("Missing selection"); return }
+        let shifted = InputState.ShiftASCII(composition: selected, mode: .word, prediction: "stale")
+        let held = InputState.QuickSymbols(held: true, originalASCII: shifted)
+        let pending = InputState.PendingF(original: held)
+        MixedInputHandler.lexicon = TechnicalLexicon(engineeringEnabled: false)
+        let restored = try #require(MixedInputHandler.reloadingLexicon(state: pending) as? InputState.PendingF)
+        let restoredHeld = try #require(restored.original as? InputState.QuickSymbols)
+        let restoredShift = try #require(restoredHeld.originalASCII as? InputState.ShiftASCII)
+        #expect(restoredHeld.held)
+        #expect(restoredShift.mode == .word)
+        #expect(restoredShift.composition.raw == "sio2")
+        #expect(restoredShift.composition.selectedIndex == 0)
+        #expect(!restoredShift.composition.hasEngineeringCandidates)
+        #expect(restoredShift.prediction == nil)
+        #expect(restoredShift.predictionSuppressed)
+    }
+
     @Test func phoneticFChordQueryDoesNotChangeComposition() {
         let s = Session()
         for next: UInt16 in [117, 109] { // u、m

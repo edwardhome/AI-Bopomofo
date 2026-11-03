@@ -1,0 +1,1642 @@
+{
+  "version": 1,
+  "terms": [
+    {
+      "id": "1.1.1",
+      "category": "electronics",
+      "aliases": [
+        "i2c",
+        "I2C"
+      ],
+      "outputs": [
+        "I²C",
+        "I2C"
+      ],
+      "annotation": "內部整合電路匯流排",
+      "sources": [
+        "report-row:1.1",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nxp.com/docs/en/user-guide/UM10204.pdf"
+      ]
+    },
+    {
+      "id": "1.2.1",
+      "category": "electronics",
+      "aliases": [
+        "i3c",
+        "I3C"
+      ],
+      "outputs": [
+        "I³C",
+        "I3C"
+      ],
+      "annotation": "改良型內部整合電路匯流排",
+      "sources": [
+        "report-row:1.2",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.mipi.org/resources/I3C-frequently-asked-questions"
+      ]
+    },
+    {
+      "id": "1.3.1",
+      "category": "electronics",
+      "aliases": [
+        "mosfet"
+      ],
+      "outputs": [
+        "MOSFET"
+      ],
+      "annotation": "金屬氧化物半導體場效電晶體",
+      "sources": [
+        "report-row:1.3",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.4.1",
+      "category": "electronics",
+      "aliases": [
+        "finfet"
+      ],
+      "outputs": [
+        "FinFET"
+      ],
+      "annotation": "鰭式場效電晶體",
+      "sources": [
+        "report-row:1.4",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://wwwpoc.cld.tsmc.com/english/dedicatedFoundry/services/university_program"
+      ]
+    },
+    {
+      "id": "1.5.1",
+      "category": "electronics",
+      "aliases": [
+        "gaafet"
+      ],
+      "outputs": [
+        "GAAFET"
+      ],
+      "annotation": "全環繞閘極場效電晶體",
+      "sources": [
+        "report-row:1.5",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://semiconductor.samsung.com/foundry/process-technology/logic-node/"
+      ]
+    },
+    {
+      "id": "1.6.1",
+      "category": "electronics",
+      "aliases": [
+        "cmos"
+      ],
+      "outputs": [
+        "CMOS"
+      ],
+      "annotation": "互補式金屬氧化物半導體",
+      "sources": [
+        "report-row:1.6",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://semiconductor.samsung.com/foundry/process-technology/logic-node/"
+      ]
+    },
+    {
+      "id": "1.7.1",
+      "category": "electronics",
+      "aliases": [
+        "bjt"
+      ],
+      "outputs": [
+        "BJT"
+      ],
+      "annotation": "雙極性接面電晶體",
+      "sources": [
+        "report-row:1.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.8.1",
+      "category": "electronics",
+      "aliases": [
+        "opamp"
+      ],
+      "outputs": [
+        "Op-Amp"
+      ],
+      "annotation": "運算放大器",
+      "sources": [
+        "report-row:1.8",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.9.1",
+      "category": "electronics",
+      "aliases": [
+        "pcb"
+      ],
+      "outputs": [
+        "PCB"
+      ],
+      "annotation": "印刷電路板",
+      "sources": [
+        "report-row:1.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.10.1",
+      "category": "electronics",
+      "aliases": [
+        "s11"
+      ],
+      "outputs": [
+        "S₁₁",
+        "S11"
+      ],
+      "annotation": "散射參數：輸入反射",
+      "sources": [
+        "report-row:1.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.10.2",
+      "category": "electronics",
+      "aliases": [
+        "s21"
+      ],
+      "outputs": [
+        "S₂₁",
+        "S21"
+      ],
+      "annotation": "散射參數：順向傳輸",
+      "sources": [
+        "report-row:1.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.11.1",
+      "category": "electronics",
+      "aliases": [
+        "z0",
+        "Z0"
+      ],
+      "outputs": [
+        "Z₀",
+        "Z0"
+      ],
+      "annotation": "特徵阻抗",
+      "sources": [
+        "report-row:1.11",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.12.1",
+      "category": "electronics",
+      "aliases": [
+        "rdson"
+      ],
+      "outputs": [
+        "R_DS(on)"
+      ],
+      "annotation": "汲極－源極導通電阻（純文字下標）",
+      "sources": [
+        "report-row:1.12",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.13.1",
+      "category": "electronics",
+      "aliases": [
+        "vcc"
+      ],
+      "outputs": [
+        "V_CC",
+        "VCC"
+      ],
+      "annotation": "集極供電電壓標記",
+      "sources": [
+        "report-row:1.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.13.2",
+      "category": "electronics",
+      "aliases": [
+        "vdd"
+      ],
+      "outputs": [
+        "V_DD",
+        "VDD"
+      ],
+      "annotation": "汲極供電電壓標記",
+      "sources": [
+        "report-row:1.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "1.13.3",
+      "category": "electronics",
+      "aliases": [
+        "vss"
+      ],
+      "outputs": [
+        "V_SS",
+        "VSS"
+      ],
+      "annotation": "源極供電電壓標記",
+      "sources": [
+        "report-row:1.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.1.1",
+      "category": "optics",
+      "aliases": [
+        "laser"
+      ],
+      "outputs": [
+        "Laser",
+        "LASER"
+      ],
+      "annotation": "雷射",
+      "sources": [
+        "report-row:2.1",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.2.1",
+      "category": "optics",
+      "aliases": [
+        "na",
+        "NA"
+      ],
+      "outputs": [
+        "NA"
+      ],
+      "annotation": "數值孔徑",
+      "sources": [
+        "report-row:2.2",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.3.1",
+      "category": "optics",
+      "aliases": [
+        "difflim"
+      ],
+      "outputs": [
+        "Diffraction Limit"
+      ],
+      "annotation": "繞射極限",
+      "sources": [
+        "report-row:2.3",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.4.1",
+      "category": "optics",
+      "aliases": [
+        "spr"
+      ],
+      "outputs": [
+        "SPR"
+      ],
+      "annotation": "表面電漿共振",
+      "sources": [
+        "report-row:2.4",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.5.1",
+      "category": "optics",
+      "aliases": [
+        "M2",
+        "msq"
+      ],
+      "outputs": [
+        "M²",
+        "M2"
+      ],
+      "annotation": "光束傳輸因子",
+      "sources": [
+        "report-row:2.5",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.6.1",
+      "category": "optics",
+      "aliases": [
+        "tem00"
+      ],
+      "outputs": [
+        "TEM₀₀",
+        "TEM00"
+      ],
+      "annotation": "基模橫電磁波",
+      "sources": [
+        "report-row:2.6",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.7.1",
+      "category": "optics",
+      "aliases": [
+        "fbg"
+      ],
+      "outputs": [
+        "FBG"
+      ],
+      "annotation": "光纖布拉格光柵",
+      "sources": [
+        "report-row:2.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.8.1",
+      "category": "optics",
+      "aliases": [
+        "fwhm"
+      ],
+      "outputs": [
+        "FWHM"
+      ],
+      "annotation": "半高全寬",
+      "sources": [
+        "report-row:2.8",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.9.1",
+      "category": "optics",
+      "aliases": [
+        "lambda"
+      ],
+      "outputs": [
+        "λ"
+      ],
+      "annotation": "希臘字母 lambda／波長",
+      "sources": [
+        "report-row:2.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.10.1",
+      "category": "optics",
+      "aliases": [
+        "cm-1"
+      ],
+      "outputs": [
+        "cm⁻¹",
+        "cm^-1"
+      ],
+      "annotation": "波數單位：每公分",
+      "sources": [
+        "report-row:2.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "2.11.1",
+      "category": "optics",
+      "aliases": [
+        "thetab"
+      ],
+      "outputs": [
+        "θ_B",
+        "theta_B"
+      ],
+      "annotation": "布魯斯特角（純文字下標）",
+      "sources": [
+        "report-row:2.11",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.1.1",
+      "category": "ict",
+      "aliases": [
+        "iphone"
+      ],
+      "outputs": [
+        "iPhone"
+      ],
+      "annotation": "智慧型手機品牌",
+      "sources": [
+        "report-row:3.1",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.apple.com/legal/intellectual-property/trademark/appletmlist.html"
+      ]
+    },
+    {
+      "id": "3.2.1",
+      "category": "ict",
+      "aliases": [
+        "macos"
+      ],
+      "outputs": [
+        "macOS"
+      ],
+      "annotation": "Mac 作業系統",
+      "sources": [
+        "report-row:3.2",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.apple.com/legal/intellectual-property/trademark/appletmlist.html"
+      ]
+    },
+    {
+      "id": "3.3.1",
+      "category": "ict",
+      "aliases": [
+        "ios"
+      ],
+      "outputs": [
+        "iOS"
+      ],
+      "annotation": "行動作業系統",
+      "sources": [
+        "report-row:3.3",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.apple.com/legal/intellectual-property/trademark/appletmlist.html"
+      ]
+    },
+    {
+      "id": "3.4.1",
+      "category": "ict",
+      "aliases": [
+        "ebay"
+      ],
+      "outputs": [
+        "eBay"
+      ],
+      "annotation": "電子商務平台",
+      "sources": [
+        "report-row:3.4",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.5.1",
+      "category": "ict",
+      "aliases": [
+        "wifi"
+      ],
+      "outputs": [
+        "Wi-Fi"
+      ],
+      "annotation": "無線網路",
+      "sources": [
+        "report-row:3.5",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.6.1",
+      "category": "ict",
+      "aliases": [
+        "ethernet"
+      ],
+      "outputs": [
+        "Ethernet"
+      ],
+      "annotation": "乙太網路",
+      "sources": [
+        "report-row:3.6",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.7.1",
+      "category": "ict",
+      "aliases": [
+        "ipv4"
+      ],
+      "outputs": [
+        "IPv4"
+      ],
+      "annotation": "網際網路通訊協定第四版",
+      "sources": [
+        "report-row:3.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.8.1",
+      "category": "ict",
+      "aliases": [
+        "ipv6"
+      ],
+      "outputs": [
+        "IPv6"
+      ],
+      "annotation": "網際網路通訊協定第六版",
+      "sources": [
+        "report-row:3.8",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.9.1",
+      "category": "ict",
+      "aliases": [
+        "wifi6"
+      ],
+      "outputs": [
+        "Wi-Fi 6"
+      ],
+      "annotation": "無線網路世代",
+      "sources": [
+        "report-row:3.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.9.2",
+      "category": "ict",
+      "aliases": [
+        "wifi7"
+      ],
+      "outputs": [
+        "Wi-Fi 7"
+      ],
+      "annotation": "無線網路世代",
+      "sources": [
+        "report-row:3.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.10.1",
+      "category": "ict",
+      "aliases": [
+        "mqtt"
+      ],
+      "outputs": [
+        "MQTT"
+      ],
+      "annotation": "訊息佇列遙測傳輸協定",
+      "sources": [
+        "report-row:3.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.11.1",
+      "category": "ict",
+      "aliases": [
+        "grpc"
+      ],
+      "outputs": [
+        "gRPC"
+      ],
+      "annotation": "遠端程序呼叫框架",
+      "sources": [
+        "report-row:3.11",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.12.1",
+      "category": "ict",
+      "aliases": [
+        "github"
+      ],
+      "outputs": [
+        "GitHub"
+      ],
+      "annotation": "程式碼託管平台",
+      "sources": [
+        "report-row:3.12",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.13.1",
+      "category": "ict",
+      "aliases": [
+        "qos"
+      ],
+      "outputs": [
+        "QoS"
+      ],
+      "annotation": "服務品質",
+      "sources": [
+        "report-row:3.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "3.14.1",
+      "category": "ict",
+      "aliases": [
+        "poe"
+      ],
+      "outputs": [
+        "PoE"
+      ],
+      "annotation": "乙太網路供電",
+      "sources": [
+        "report-row:3.14",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "4.1.1",
+      "category": "physics",
+      "aliases": [
+        "hbar"
+      ],
+      "outputs": [
+        "ℏ",
+        "hbar"
+      ],
+      "annotation": "約化普朗克常數",
+      "sources": [
+        "report-row:4.1",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.2.1",
+      "category": "physics",
+      "aliases": [
+        "planck"
+      ],
+      "outputs": [
+        "h"
+      ],
+      "annotation": "普朗克常數符號",
+      "sources": [
+        "report-row:4.2",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.3.1",
+      "category": "physics",
+      "aliases": [
+        "kb",
+        "boltzmann"
+      ],
+      "outputs": [
+        "k_B",
+        "kB"
+      ],
+      "annotation": "波茲曼常數（純文字下標）",
+      "sources": [
+        "report-row:4.3",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.4.1",
+      "category": "physics",
+      "aliases": [
+        "epsilon0"
+      ],
+      "outputs": [
+        "ε₀",
+        "epsilon_0"
+      ],
+      "annotation": "真空介電常數",
+      "sources": [
+        "report-row:4.4",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.5.1",
+      "category": "physics",
+      "aliases": [
+        "mu0"
+      ],
+      "outputs": [
+        "μ₀",
+        "mu_0"
+      ],
+      "annotation": "真空磁導率",
+      "sources": [
+        "report-row:4.5",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.6.1",
+      "category": "physics",
+      "aliases": [
+        "ohm",
+        "omega"
+      ],
+      "outputs": [
+        "Ω"
+      ],
+      "annotation": "歐姆／希臘大寫 omega",
+      "sources": [
+        "report-row:4.6",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.7.1",
+      "category": "physics",
+      "aliases": [
+        "uf",
+        "uF"
+      ],
+      "outputs": [
+        "µF",
+        "uF"
+      ],
+      "annotation": "微法拉",
+      "sources": [
+        "report-row:4.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.7.2",
+      "category": "physics",
+      "aliases": [
+        "ua",
+        "uA"
+      ],
+      "outputs": [
+        "µA",
+        "uA"
+      ],
+      "annotation": "微安培",
+      "sources": [
+        "report-row:4.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.8.1",
+      "category": "physics",
+      "aliases": [
+        "angstrom"
+      ],
+      "outputs": [
+        "Å"
+      ],
+      "annotation": "埃：長度單位",
+      "sources": [
+        "report-row:4.8",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.9.1",
+      "category": "physics",
+      "aliases": [
+        "degc"
+      ],
+      "outputs": [
+        "°C",
+        "degC"
+      ],
+      "annotation": "攝氏度",
+      "sources": [
+        "report-row:4.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.10.1",
+      "category": "physics",
+      "aliases": [
+        "ev",
+        "eV"
+      ],
+      "outputs": [
+        "eV"
+      ],
+      "annotation": "電子伏特",
+      "sources": [
+        "report-row:4.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.11.1",
+      "category": "physics",
+      "aliases": [
+        "m2",
+        "meter2"
+      ],
+      "outputs": [
+        "m²",
+        "m2"
+      ],
+      "annotation": "平方公尺：面積",
+      "sources": [
+        "report-row:4.11",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.12.1",
+      "category": "physics",
+      "aliases": [
+        "m3",
+        "meter3"
+      ],
+      "outputs": [
+        "m³",
+        "m3"
+      ],
+      "annotation": "立方公尺：體積",
+      "sources": [
+        "report-row:4.12",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "4.13.1",
+      "category": "physics",
+      "aliases": [
+        "s-1",
+        "sec-1"
+      ],
+      "outputs": [
+        "s⁻¹",
+        "s^-1"
+      ],
+      "annotation": "每秒",
+      "sources": [
+        "report-row:4.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+        "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using"
+      ]
+    },
+    {
+      "id": "5.1.1",
+      "category": "materials",
+      "aliases": [
+        "si"
+      ],
+      "outputs": [
+        "Si"
+      ],
+      "annotation": "矽",
+      "sources": [
+        "report-row:5.1",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.2.1",
+      "category": "materials",
+      "aliases": [
+        "ge"
+      ],
+      "outputs": [
+        "Ge"
+      ],
+      "annotation": "鍺",
+      "sources": [
+        "report-row:5.2",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.3.1",
+      "category": "materials",
+      "aliases": [
+        "gaas"
+      ],
+      "outputs": [
+        "GaAs"
+      ],
+      "annotation": "砷化鎵",
+      "sources": [
+        "report-row:5.3",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.4.1",
+      "category": "materials",
+      "aliases": [
+        "gan"
+      ],
+      "outputs": [
+        "GaN"
+      ],
+      "annotation": "氮化鎵",
+      "sources": [
+        "report-row:5.4",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.5.1",
+      "category": "materials",
+      "aliases": [
+        "inp"
+      ],
+      "outputs": [
+        "InP"
+      ],
+      "annotation": "磷化銦",
+      "sources": [
+        "report-row:5.5",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.6.1",
+      "category": "materials",
+      "aliases": [
+        "ingaas"
+      ],
+      "outputs": [
+        "InGaAs"
+      ],
+      "annotation": "砷化銦鎵（材料簡稱）",
+      "sources": [
+        "report-row:5.6",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.7.1",
+      "category": "materials",
+      "aliases": [
+        "algan"
+      ],
+      "outputs": [
+        "AlGaN"
+      ],
+      "annotation": "氮化鋁鎵（材料簡稱）",
+      "sources": [
+        "report-row:5.7",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.8.1",
+      "category": "materials",
+      "aliases": [
+        "alingap"
+      ],
+      "outputs": [
+        "AlInGaP"
+      ],
+      "annotation": "磷化鋁銦鎵",
+      "sources": [
+        "report-row:5.8",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.9.1",
+      "category": "materials",
+      "aliases": [
+        "insb"
+      ],
+      "outputs": [
+        "InSb"
+      ],
+      "annotation": "銻化銦",
+      "sources": [
+        "report-row:5.9",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.10.1",
+      "category": "materials",
+      "aliases": [
+        "cdte"
+      ],
+      "outputs": [
+        "CdTe"
+      ],
+      "annotation": "碲化鎘",
+      "sources": [
+        "report-row:5.10",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.11.1",
+      "category": "materials",
+      "aliases": [
+        "znse"
+      ],
+      "outputs": [
+        "ZnSe"
+      ],
+      "annotation": "硒化鋅",
+      "sources": [
+        "report-row:5.11",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.12.1",
+      "category": "materials",
+      "aliases": [
+        "mct",
+        "hgcdte"
+      ],
+      "outputs": [
+        "MCT",
+        "HgCdTe"
+      ],
+      "annotation": "碲鎘汞（材料簡稱）",
+      "sources": [
+        "report-row:5.12",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.13.1",
+      "category": "materials",
+      "aliases": [
+        "sic"
+      ],
+      "outputs": [
+        "SiC"
+      ],
+      "annotation": "碳化矽",
+      "sources": [
+        "report-row:5.13",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.14.1",
+      "category": "materials",
+      "aliases": [
+        "ga2o3"
+      ],
+      "outputs": [
+        "Ga₂O₃",
+        "Ga2O3"
+      ],
+      "annotation": "氧化鎵（不指定晶相）",
+      "sources": [
+        "report-row:5.14",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.15.1",
+      "category": "materials",
+      "aliases": [
+        "diamond"
+      ],
+      "outputs": [
+        "Diamond",
+        "C"
+      ],
+      "annotation": "鑽石／碳",
+      "sources": [
+        "report-row:5.15",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.16.1",
+      "category": "materials",
+      "aliases": [
+        "graphene"
+      ],
+      "outputs": [
+        "Graphene"
+      ],
+      "annotation": "石墨烯",
+      "sources": [
+        "report-row:5.16",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.17.1",
+      "category": "materials",
+      "aliases": [
+        "sio2"
+      ],
+      "outputs": [
+        "SiO₂",
+        "SiO2"
+      ],
+      "annotation": "二氧化矽",
+      "sources": [
+        "report-row:5.17",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.18.1",
+      "category": "materials",
+      "aliases": [
+        "si3n4"
+      ],
+      "outputs": [
+        "Si₃N₄",
+        "Si3N4"
+      ],
+      "annotation": "氮化矽",
+      "sources": [
+        "report-row:5.18",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.19.1",
+      "category": "materials",
+      "aliases": [
+        "al2o3"
+      ],
+      "outputs": [
+        "Al₂O₃",
+        "Al2O3"
+      ],
+      "annotation": "氧化鋁（不指定晶相）",
+      "sources": [
+        "report-row:5.19",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.20.1",
+      "category": "materials",
+      "aliases": [
+        "hfo2"
+      ],
+      "outputs": [
+        "HfO₂",
+        "HfO2"
+      ],
+      "annotation": "二氧化鉿",
+      "sources": [
+        "report-row:5.20",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.21.1",
+      "category": "materials",
+      "aliases": [
+        "zro2"
+      ],
+      "outputs": [
+        "ZrO₂",
+        "ZrO2"
+      ],
+      "annotation": "二氧化鋯",
+      "sources": [
+        "report-row:5.21",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.22.1",
+      "category": "materials",
+      "aliases": [
+        "tio2"
+      ],
+      "outputs": [
+        "TiO₂",
+        "TiO2"
+      ],
+      "annotation": "二氧化鈦",
+      "sources": [
+        "report-row:5.22",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.23.1",
+      "category": "materials",
+      "aliases": [
+        "ta2o5"
+      ],
+      "outputs": [
+        "Ta₂O₅",
+        "Ta2O5"
+      ],
+      "annotation": "五氧化二鉭",
+      "sources": [
+        "report-row:5.23",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.24.1",
+      "category": "materials",
+      "aliases": [
+        "ito"
+      ],
+      "outputs": [
+        "ITO"
+      ],
+      "annotation": "氧化銦錫（材料簡稱）",
+      "sources": [
+        "report-row:5.24",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.25.1",
+      "category": "materials",
+      "aliases": [
+        "fto"
+      ],
+      "outputs": [
+        "FTO"
+      ],
+      "annotation": "摻氟氧化錫（材料簡稱）",
+      "sources": [
+        "report-row:5.25",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.26.1",
+      "category": "materials",
+      "aliases": [
+        "mos2"
+      ],
+      "outputs": [
+        "MoS₂",
+        "MoS2"
+      ],
+      "annotation": "二硫化鉬",
+      "sources": [
+        "report-row:5.26",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.27.1",
+      "category": "materials",
+      "aliases": [
+        "wse2"
+      ],
+      "outputs": [
+        "WSe₂",
+        "WSe2"
+      ],
+      "annotation": "二硒化鎢",
+      "sources": [
+        "report-row:5.27",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.28.1",
+      "category": "materials",
+      "aliases": [
+        "hbn"
+      ],
+      "outputs": [
+        "h-BN"
+      ],
+      "annotation": "六方氮化硼",
+      "sources": [
+        "report-row:5.28",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.29.1",
+      "category": "materials",
+      "aliases": [
+        "licoo2"
+      ],
+      "outputs": [
+        "LiCoO₂",
+        "LiCoO2"
+      ],
+      "annotation": "鈷酸鋰",
+      "sources": [
+        "report-row:5.29",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.30.1",
+      "category": "materials",
+      "aliases": [
+        "lifepo4"
+      ],
+      "outputs": [
+        "LiFePO₄",
+        "LiFePO4"
+      ],
+      "annotation": "磷酸鐵鋰",
+      "sources": [
+        "report-row:5.30",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.31.1",
+      "category": "materials",
+      "aliases": [
+        "limn2o4"
+      ],
+      "outputs": [
+        "LiMn₂O₄",
+        "LiMn2O4"
+      ],
+      "annotation": "錳酸鋰",
+      "sources": [
+        "report-row:5.31",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.32.1",
+      "category": "materials",
+      "aliases": [
+        "lto",
+        "li4ti5o12"
+      ],
+      "outputs": [
+        "Li₄Ti₅O₁₂",
+        "Li4Ti5O12",
+        "LTO"
+      ],
+      "annotation": "鈦酸鋰",
+      "sources": [
+        "report-row:5.32",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.33.1",
+      "category": "materials",
+      "aliases": [
+        "ybco"
+      ],
+      "outputs": [
+        "YBCO"
+      ],
+      "annotation": "釔鋇銅氧（材料簡稱）",
+      "sources": [
+        "report-row:5.33",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.34.1",
+      "category": "materials",
+      "aliases": [
+        "mapbi3"
+      ],
+      "outputs": [
+        "MAPbI₃",
+        "CH₃NH₃PbI₃",
+        "MAPbI3",
+        "CH3NH3PbI3"
+      ],
+      "annotation": "甲基銨碘化鉛",
+      "sources": [
+        "report-row:5.34",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.35.1",
+      "category": "materials",
+      "aliases": [
+        "sih4"
+      ],
+      "outputs": [
+        "SiH₄",
+        "SiH4"
+      ],
+      "annotation": "矽烷",
+      "sources": [
+        "report-row:5.35",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.36.1",
+      "category": "materials",
+      "aliases": [
+        "nh3"
+      ],
+      "outputs": [
+        "NH₃",
+        "NH3"
+      ],
+      "annotation": "氨",
+      "sources": [
+        "report-row:5.36",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.37.1",
+      "category": "materials",
+      "aliases": [
+        "sf6"
+      ],
+      "outputs": [
+        "SF₆",
+        "SF6"
+      ],
+      "annotation": "六氟化硫",
+      "sources": [
+        "report-row:5.37",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.38.1",
+      "category": "materials",
+      "aliases": [
+        "cf4"
+      ],
+      "outputs": [
+        "CF₄",
+        "CF4"
+      ],
+      "annotation": "四氟化碳",
+      "sources": [
+        "report-row:5.38",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.39.1",
+      "category": "materials",
+      "aliases": [
+        "hf"
+      ],
+      "outputs": [
+        "HF"
+      ],
+      "annotation": "氟化氫／氫氟酸化學式",
+      "sources": [
+        "report-row:5.39",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.40.1",
+      "category": "materials",
+      "aliases": [
+        "h2o2"
+      ],
+      "outputs": [
+        "H₂O₂",
+        "H2O2"
+      ],
+      "annotation": "過氧化氫",
+      "sources": [
+        "report-row:5.40",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.41.1",
+      "category": "materials",
+      "aliases": [
+        "li+"
+      ],
+      "outputs": [
+        "Li⁺",
+        "Li+"
+      ],
+      "annotation": "鋰離子",
+      "sources": [
+        "report-row:5.41",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.42.1",
+      "category": "materials",
+      "aliases": [
+        "oh-"
+      ],
+      "outputs": [
+        "OH⁻",
+        "OH-"
+      ],
+      "annotation": "氫氧根離子",
+      "sources": [
+        "report-row:5.42",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.43.1",
+      "category": "materials",
+      "aliases": [
+        "h+"
+      ],
+      "outputs": [
+        "H⁺",
+        "H+"
+      ],
+      "annotation": "氫離子",
+      "sources": [
+        "report-row:5.43",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.43.2",
+      "category": "materials",
+      "aliases": [
+        "h3o+"
+      ],
+      "outputs": [
+        "H₃O⁺",
+        "H3O+"
+      ],
+      "annotation": "水合氫離子",
+      "sources": [
+        "report-row:5.43",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.44.1",
+      "category": "materials",
+      "aliases": [
+        "so42-"
+      ],
+      "outputs": [
+        "SO₄²⁻",
+        "SO4^2-"
+      ],
+      "annotation": "硫酸根離子",
+      "sources": [
+        "report-row:5.44",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.45.1",
+      "category": "materials",
+      "aliases": [
+        "co32-"
+      ],
+      "outputs": [
+        "CO₃²⁻",
+        "CO3^2-"
+      ],
+      "annotation": "碳酸根離子",
+      "sources": [
+        "report-row:5.45",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    },
+    {
+      "id": "5.46.1",
+      "category": "materials",
+      "aliases": [
+        "cu2+"
+      ],
+      "outputs": [
+        "Cu²⁺",
+        "Cu^2+"
+      ],
+      "annotation": "二價銅離子",
+      "sources": [
+        "report-row:5.46",
+        "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt"
+      ]
+    }
+  ]
+}

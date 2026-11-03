@@ -95,7 +95,10 @@ extension InputState {
             if let prediction { return index == 1 ? prediction : composition.raw }
             return composition.candidates.indices.contains(index) ? composition.candidates[index] : ""
         }
-        func reading(at index: Int) -> String? { nil }
+        func reading(at index: Int) -> String? {
+            guard prediction == nil, composition.candidateItems.indices.contains(index) else { return nil }
+            return composition.candidateItems[index].annotation
+        }
         override var description: String { "<InputState.ASCII>" }
     }
 
@@ -105,7 +108,7 @@ extension InputState {
         let mode: ShiftLetterSession.Mode
         var session: ShiftLetterSession { .init(composition: composition, mode: mode) }
         @objc convenience init(shiftText: String, cursor: UInt) {
-            self.init(composition: ASCIIComposition(raw: shiftText, cursor: Int(cursor)), mode: .initial)
+            self.init(composition: ASCIIComposition(raw: shiftText, cursor: Int(cursor), lexicon: MixedInputHandler.lexicon), mode: .initial)
         }
         init(composition: ASCIIComposition, mode: ShiftLetterSession.Mode,
              prediction: String? = nil, predictionSuppressed: Bool = false) {
@@ -185,10 +188,11 @@ extension InputState {
 }
 
 @objc class MixedInputHandler: NSObject {
-    static var lexicon = TechnicalLexicon()
+    static var lexicon = TechnicalLexicon(engineeringEnabled: Preferences.engineeringLexiconEnabled)
+    static private(set) var lexiconRevision: UInt64 = 0
 
     @objc static func withPrediction(_ text: String, state: InputState.ASCII) -> InputState.ASCII {
-        guard state.composition.selectedIndex == 0, !state.predictionSuppressed,
+        guard !state.composition.hasEngineeringCandidates, state.composition.selectedIndex == 0, !state.predictionSuppressed,
               state.composition.cursor == state.composition.raw.utf16.count else { return state }
         let request = CorrectionRequest(revision: 0, text: state.composition.raw, mode: .prediction,
                                         isEnglish: true, protectedWords: lexicon.words)
@@ -236,15 +240,34 @@ extension InputState {
         return true
     }
 
+    static func reloadingLexicon(state: InputState) -> InputState {
+        if let ascii = state as? InputState.ASCII {
+            return ascii.replacing(composition: ascii.composition.rebuilding(lexicon: lexicon), predictionSuppressed: true)
+        }
+        if let pending = state as? InputState.PendingF {
+            return InputState.PendingF(original: reloadingLexicon(state: pending.original))
+        }
+        if let symbols = state as? InputState.QuickSymbols, let original = symbols.originalASCII,
+           let refreshed = reloadingLexicon(state: original) as? InputState.ASCII {
+            return InputState.QuickSymbols(held: symbols.held, originalASCII: refreshed)
+        }
+        if let assistance = state as? InputState.Assistance {
+            return reloadingLexicon(state: assistance.original)
+        }
+        return state
+    }
+
     static func reloadUserTerms() {
+        lexiconRevision &+= 1
         let path = LanguageModelManager.userPhrasesDataPathMcBopomofo
         guard let size = (try? FileManager.default.attributesOfItem(atPath: path)[.size]) as? NSNumber,
               size.intValue <= 4 * 1024 * 1024,
               let phrases = try? String(contentsOfFile: path, encoding: .utf8) else {
-            lexicon = TechnicalLexicon()
+            lexicon = TechnicalLexicon(engineeringEnabled: Preferences.engineeringLexiconEnabled)
             return
         }
-        lexicon = TechnicalLexicon(custom: TechnicalLexicon.userTerms(from: phrases))
+        lexicon = TechnicalLexicon(custom: TechnicalLexicon.userTerms(from: phrases),
+                                   engineeringEnabled: Preferences.engineeringLexiconEnabled)
     }
 
     @objc static func handle(

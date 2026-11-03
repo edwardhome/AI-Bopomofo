@@ -14,6 +14,10 @@ flowchart TD
     Controller --> Bridge[KeyHandler Objective-C++ 橋接]
     Bridge --> Mixed[MixedInput.swift 英文與符號處理]
     Mixed --> Core[MixedInputCore 英文編輯與技術詞]
+    Engineering[預載工程詞 JSON] --> Index[一次載入的完整碼與前綴索引]
+    Index --> Core
+    Core --> CandidateMetadata[輸出文字與中文註解分離]
+    CandidateMetadata --> PredictionGate[工程候選優先於英文預測]
     Bridge --> Engine[C++ Mandarin 與 gramambular2]
     Engine --> LM[McBopomofoLM 傳統詞頻模型]
     Manager[LanguageModelManager 詞庫載入橋接] --> LM
@@ -173,3 +177,25 @@ flowchart TD
 ```
 
 小修改先找對應純 Swift 套件與測試。只有注音演算法問題才進 C++ 引擎；詞庫內容修改另讀 [Source/Data/AGENTS.md](../Source/Data/AGENTS.md)。編譯、封裝與推送原始碼都不等於安裝；`build-for-testing` 只編譯整合測試，不能宣稱已完成實鍵驗收。
+
+## 工程與自然科學候選資料流
+
+```mermaid
+flowchart LR
+    Report[97 列來源報告] --> Review[逐列審核與碼點修正]
+    Review --> JSON[103 個結構化詞條]
+    JSON --> Bundle[MixedInputCore 套件資源]
+    Bundle --> Index[一次建立記憶體索引]
+    Raw[目前整個組字] --> Lookup[兩字元完整碼或三字元前綴]
+    Index --> Lookup
+    Preference[詞庫開關] --> Lookup
+    Lookup --> Candidates[原文加最多八個候選]
+    Candidates --> Notes[中文註解只供顯示]
+    Candidates --> Selection[明確選取]
+    Selection --> Unicode[完整字元編輯與 UTF-16 游標]
+    Unicode --> Commit[提交文字]
+```
+
+`TechnicalCandidate` 將輸出、註解與來源分開，原有字串候選介面保留。`EngineeringLexicon` 負責資源驗證與查詢；`TechnicalLexicon` 合併既有詞庫並去重。預載資料不寫入使用者 `data.txt`；資源失效回退原本詞庫。
+
+偏好切換時增加詞庫修訂號、取消文字協助，並保留原文重建目前組字；F 等待與分層包裝不拆除。預測排程與回呼檢查修訂號及目前狀態，工程候選不會被延遲模型回應取代。操作與限制見 [工程詞庫說明](science-terms.md)。

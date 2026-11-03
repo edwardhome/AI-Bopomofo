@@ -28,6 +28,16 @@ import Testing
 @Suite("Preference Tests", .serialized)
 final class PreferencesTests {
 
+    @Test func engineeringLexiconDefaultsOnAndPersistsOff() {
+        let snapshot = makeSnapshot()
+        defer { restore(from: snapshot) }
+        UserDefaults.standard.removeObject(forKey: "EngineeringLexiconEnabled")
+        #expect(Preferences.engineeringLexiconEnabled)
+        Preferences.engineeringLexiconEnabled = false
+        #expect(!Preferences.engineeringLexiconEnabled)
+        #expect(Preferences.allKeys.contains("EngineeringLexiconEnabled"))
+    }
+
     func reset() {
         Preferences.allKeys.forEach {
             UserDefaults.standard.removeObject(forKey: $0)
