@@ -23,7 +23,9 @@ jobs:
           xcodebuild -version
           swift --version
       - name: Test pure logic and compile hosted tests without launching an IME
-        run: scripts/test-headless.sh
+        run: |
+          python3 -m pip install -r research/lexicon-learning/requirements.txt
+          scripts/test-headless.sh
       - name: Build local unsigned release
         run: scripts/build.sh Release
       - name: Package and validate

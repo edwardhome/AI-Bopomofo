@@ -218,3 +218,16 @@ defaults export org.aibopomofo.inputmethod.AIBopomofo artifacts/manual-backup/pr
 ## 分享給朋友
 
 先完成檢查與手動驗收，保留小麥注音作者署名、MIT 授權與第三方授權。把 pkg、校驗檔與說明一起交付即可；原始碼／發布到 GitHub 是另一個明確步驟。此專案產物使用 ad-hoc 簽章，沒有 Developer ID 簽署或 Apple 公證，不能宣稱已通過 Apple 公證。
+
+## 詞彙學習開發與驗證
+
+學習模組位於 `Packages/LexiconLearning`；XPC 模型服務位於 `Source/ModelService`。正常開發不需執行或安裝輸入法。先安裝只供驗證使用的 Python 相依：
+
+```sh
+python3 -m venv build/lexicon-schema-env
+build/lexicon-schema-env/bin/python -m pip install -r research/lexicon-learning/requirements.txt
+AI_BOPOMOFO_SCHEMA_PYTHON="$PWD/build/lexicon-schema-env/bin/python" scripts/test-headless.sh
+scripts/build.sh Release
+```
+
+若既有預編譯快取過期，可設定 `AI_BOPOMOFO_DERIVED_DATA` 使用獨立建置目錄，`AI_BOPOMOFO_PACKAGE_CACHE` 指向可重用的 SourcePackages；封裝也要使用相同 `AI_BOPOMOFO_DERIVED_DATA`。不要刪除其他工作的快取或修改私人輸入資料來排除建置問題。

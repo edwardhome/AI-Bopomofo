@@ -35,5 +35,14 @@ if tuple(map(int, info["CFBundleShortVersionString"].split("."))) >= (0, 6, 12):
     assert catalog["version"] == 1 and catalog["terms"], 'Invalid engineering lexicon'
     assert any(t["outputs"] == ["SiO₂", "SiO2"] for t in catalog["terms"])
     print(f'PASS: bundled engineering lexicon: {len(catalog["terms"])} terms')
+if tuple(map(int, info["CFBundleShortVersionString"].split("."))) >= (0, 6, 13):
+    service = app / "Contents/XPCServices/ModelService.xpc"
+    service_info = plistlib.loads((service / "Contents/Info.plist").read_bytes())
+    assert service_info["CFBundleIdentifier"] == identifier + ".ModelService"
+    assert service_info["CFBundlePackageType"] == "XPC!"
+    assert (service / "Contents/MacOS/ModelService").is_file()
+    subprocess.run(["codesign", "--verify", "--strict", str(service)], check=True)
+    assert not list(app.rglob("learning.sqlite")), 'Private learning database must not ship'
+    print('PASS: isolated model service and no private learning database')
 subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
 print(f"PASS: identity, modes, connection, dictionary resources, signature: {app}")

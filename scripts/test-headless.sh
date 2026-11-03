@@ -7,10 +7,12 @@ cmake --build build/engine -j 4
 ctest --test-dir build/engine --output-on-failure
 swift test --package-path Packages/MixedInputCore
 swift test --package-path Packages/CandidateRanking
+swift test --package-path Packages/LexiconLearning
 python3 -m unittest discover -s research/apple-fm -p 'test_corpus.py'
 python3 -m unittest discover -s research/text-assistance -p 'test_*.py'
 python3 -m unittest discover -s research/science-terms -p 'test_*.py'
+"${AI_BOPOMOFO_SCHEMA_PYTHON:-python3}" -m unittest discover -s research/lexicon-learning -p 'test_*.py'
 make -C Source/Data check
 xcodebuild -project McBopomofo.xcodeproj -scheme McBopomofo -configuration Debug \
-  -derivedDataPath build/DerivedData -onlyUsePackageVersionsFromResolvedFile \
+  -derivedDataPath "${AI_BOPOMOFO_DERIVED_DATA:-build/DerivedData}" -clonedSourcePackagesDirPath "${AI_BOPOMOFO_PACKAGE_CACHE:-${AI_BOPOMOFO_DERIVED_DATA:-build/DerivedData}/SourcePackages}" -onlyUsePackageVersionsFromResolvedFile \
   CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= build-for-testing

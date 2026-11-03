@@ -9,7 +9,7 @@ if [[ -e "$out" ]]; then
   echo "Refusing to overwrite preserved artifact: $out" >&2
   exit 1
 fi
-app="build/DerivedData/Build/Products/$configuration/AI-Bopomofo.app"
+app="${AI_BOPOMOFO_DERIVED_DATA:-build/DerivedData}/Build/Products/$configuration/AI-Bopomofo.app"
 python3 scripts/verify-bundle.py "$app"
 bundle_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
 [[ "$bundle_version" == "${version%%-*}" ]] || { echo 'Package and bundle versions differ.' >&2; exit 1; }

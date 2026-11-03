@@ -2,9 +2,17 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；此功能分支為 0.6.12 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
+**主線固定為 `main`；此功能分支為 0.6.13 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
+
+## 0.6.13 開發版：長期詞彙學習與核准擴充詞庫
+
+背景累積已送出的可靠候選，以本機 SQLite 彙總；Apple FM 僅在閒置時提出整理建議。觀察與背景整理預設開啟、可分別關閉。新增「AI 詞庫管理」可記住目前詞、篩選匯出 JSON、預覽校對結果、明確核准、停用及回復版本。未核准資料不進入正式候選；第一版只支援 `candidate_only`。
+
+已核准詞庫可透過 JSON 更新，不必重新編譯輸入法。中文仍由原有引擎自動組句；擴充詞只有明確選取才影響當次組字，工程符號仍維持原文第一。模型使用獨立 XPC 服務，SQLite 與模型失效不作為正常輸入的必要依賴。
+
+這是尚待實機驗收的開發分支，沒有自動合併、安裝或發布。詳見 [操作](docs/lexicon-learning/user-guide.md)、[規格](docs/lexicon-learning/spec.md)、[架構](docs/lexicon-learning/architecture.md)、[交換格式](docs/lexicon-learning/schema.md)、[測試與限制](docs/lexicon-learning/test-report.md)。
 
 ## 0.6.12 新增：工程與自然科學候選詞庫
 
@@ -86,7 +94,7 @@ STM32
 
 例如 `我喝了500ML的水` 可建議 `我喝了500mL的水`，`我在去一次` 可建議 `我再去一次`。數字、技術詞、網址與程式碼受保護；模型仍可能漏判或誤判，不能當成自動改寫整份文件的工具。
 
-不讀取整份文件、不保存已送出的輸入歷史、不上傳文字。F 只在手勢期間被動監聽 F 放開，立即略過非 F 鍵。選用的短期 Shift 診斷不記錄一般打字內容。詳見 [文字協助](docs/text-assistance.md) 與 [隱私說明](docs/privacy.md)。
+不讀取整份文件、不保存逐句或逐鍵輸入歷史、不上傳文字。0.6.13 的可停用詞彙觀察另在本機保存可靠詞彙的彙總次數；匯出前請檢視敏感項目。F 只在手勢期間被動監聽 F 放開，立即略過非 F 鍵。選用的短期 Shift 診斷不記錄一般打字內容。詳見 [文字協助](docs/text-assistance.md) 與 [隱私說明](docs/privacy.md)。
 
 ## 開發與版本管理
 
@@ -98,6 +106,7 @@ STM32
 需要 Xcode 26 以上與 macOS 26 以上；內部 target／module 保留 `McBopomofo`，產品識別為 `org.aibopomofo.inputmethod.AIBopomofo`。使用無介面檢查，不啟動 hosted IME／GUI 測試：
 
 ```bash
+python3 -m pip install -r research/lexicon-learning/requirements.txt
 mkdir -p artifacts
 scripts/test-headless.sh > artifacts/headless.log 2>&1
 scripts/build.sh Release > artifacts/release.log 2>&1
@@ -106,8 +115,8 @@ scripts/build.sh Release > artifacts/release.log 2>&1
 打包前確認原始碼已提交，再選尚未使用的包名，例如：
 
 ```bash
-scripts/package.sh 0.6.12-local.1 Release
-scripts/verify-package.sh dist/0.6.12-local.1
+scripts/package.sh 0.6.13-local.1 Release
+scripts/verify-package.sh dist/0.6.13-local.1
 ```
 
 版本前三段必須與 Info.plist 相同；打包不會自動修改 app 版本，也不會自動安裝。無介面測試與實鍵驗收分開記錄，整合測試僅編譯；實際 GitHub CI 狀態請看 [Actions](https://github.com/edwardhome/AI-Bopomofo/actions)。
