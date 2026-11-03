@@ -145,20 +145,21 @@ private final class TextAssistantSession {
     func schedulePrediction(state: InputState, controller: McBopomofoInputMethodController) {
         guard Preferences.englishPredictionEnabled, !IsSecureEventInputEnabled(),
               controller.currentClient != nil, let ascii = state as? InputState.ASCII,
-              ascii.prediction == nil, !ascii.predictionSuppressed,
+              ascii.prediction == nil, !ascii.predictionSuppressed, !ascii.composition.hasEngineeringCandidates,
               ascii.composition.selectedIndex == 0,
               ascii.composition.cursor == ascii.composition.raw.utf16.count else { return }
         let request = CorrectionRequest(revision: revision, text: ascii.composition.raw,
             mode: .prediction, isEnglish: true, protectedWords: MixedInputHandler.lexicon.words)
         guard request.isValid else { return }
         let scheduledRevision = revision
+        let lexiconRevision = MixedInputHandler.lexiconRevision
         debounce = Task { [weak self, weak controller] in
             do { try await Task.sleep(for: .milliseconds(350)) } catch { return }
-            guard let self, let controller, self.revision == scheduledRevision,
+            guard let self, let controller, self.revision == scheduledRevision, MixedInputHandler.lexiconRevision == lexiconRevision,
                   controller.state === ascii, Preferences.englishPredictionEnabled,
                   !IsSecureEventInputEnabled() else { return }
             let fallback = await SystemSpelling.suggestions(for: request)
-            guard self.revision == scheduledRevision, controller.state === ascii,
+            guard self.revision == scheduledRevision, MixedInputHandler.lexiconRevision == lexiconRevision, controller.state === ascii,
                   Preferences.englishPredictionEnabled, !IsSecureEventInputEnabled(), !Task.isCancelled else { return }
             // Show the fast system suggestion without waiting for the slower Foundation Model.
             // Publishing an immutable state normally cancels debounce; this task is already awake.
@@ -175,10 +176,15 @@ private final class TextAssistantSession {
             Self.coordinator.submit(owner: self.owner, request: request, fallback: fallback,
                 isCurrent: { [weak controller] in
                     guard let controller else { return false }
-                    return controller.state === predictionState && controller.currentClient != nil
+                    return MixedInputHandler.lexiconRevision == lexiconRevision
+                        && !predictionState.composition.hasEngineeringCandidates
+                        && controller.state === predictionState && controller.currentClient != nil
                         && Preferences.englishPredictionEnabled && !IsSecureEventInputEnabled()
                 }, completion: { [weak controller] result in
-                    guard let controller, let suggestion = result.suggestions.first,
+                    guard MixedInputHandler.lexiconRevision == lexiconRevision,
+                          let controller, controller.state === predictionState,
+                          !IsSecureEventInputEnabled(), Preferences.englishPredictionEnabled,
+                          let suggestion = result.suggestions.first,
                           suggestion != predictionState.prediction else { return }
                     controller.keyHandler.publishPrediction(suggestion, state: predictionState) {
                         controller.handle(state: $0, client: controller.currentClient)

@@ -215,6 +215,8 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "EngineeringLexiconEnabled", defaultValue: true)
+    @objc static var engineeringLexiconEnabled: Bool
     @UserDefault(key: "EnglishPredictionEnabled", defaultValue: true)
     @objc static var englishPredictionEnabled: Bool
     @UserDefault(key: "BacktickOpensPunctuationList", defaultValue: false)
@@ -238,6 +240,7 @@ class Preferences: NSObject {
             "FHoldSymbolsEnabled",
             "FHoldDelayMilliseconds",
             "EnglishPredictionEnabled",
+            "EngineeringLexiconEnabled",
             "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",
             kLetterBehaviorKey,

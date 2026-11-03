@@ -1,0 +1,1111 @@
+{
+  "schemaVersion": 1,
+  "sourceSHA256": "a604b453c39eff7434aed61b809e96db8d8e057df487f275c5d82f96f994b72b",
+  "sourceRows": 97,
+  "scope": "僅審核候選詞形、提示與碼點；並非學術術語認證或物性資料庫。中文為本專案說明性短提示，不宣稱全部經 NAER 審定。",
+  "sources": {
+    "unicode": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+    "nxp": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+    "mipi": "https://www.mipi.org/resources/I3C-frequently-asked-questions",
+    "apple": "https://www.apple.com/legal/intellectual-property/trademark/appletmlist.html",
+    "nist": "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-6-rules-and-style-conventions-printing-and-using",
+    "finfet": "https://wwwpoc.cld.tsmc.com/english/dedicatedFoundry/services/university_program",
+    "gaa": "https://semiconductor.samsung.com/foundry/process-technology/logic-node/"
+  },
+  "rows": [
+    {
+      "row": "1.1",
+      "status": "修正",
+      "reason": "保留 I2C 與 I²C，刪除禁止 ASCII 的斷言。",
+      "termIDs": [
+        "1.1.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nxp"
+      ]
+    },
+    {
+      "row": "1.2",
+      "status": "修正",
+      "reason": "保留 I3C 與 I³C，中文僅為說明性譯名。",
+      "termIDs": [
+        "1.2.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "mipi"
+      ]
+    },
+    {
+      "row": "1.3",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.3.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.4",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.4.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "finfet"
+      ]
+    },
+    {
+      "row": "1.5",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.5.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "gaa"
+      ]
+    },
+    {
+      "row": "1.6",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.6.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "gaa"
+      ]
+    },
+    {
+      "row": "1.7",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.7.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.8",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.8.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.9",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.9.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.10",
+      "status": "修正",
+      "reason": "拆開 S11 與 S21，避免一個觸發碼對應錯誤參數。",
+      "termIDs": [
+        "1.10.1",
+        "1.10.2"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.11",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "1.11.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.12",
+      "status": "修正",
+      "reason": "不以小型大寫或修飾字母偽造 DS(on) 下標，提供 R_DS(on)。",
+      "termIDs": [
+        "1.12.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "1.13",
+      "status": "修正",
+      "reason": "拆分三個供電標記；不偽造大寫 Unicode 下標。",
+      "termIDs": [
+        "1.13.1",
+        "1.13.2",
+        "1.13.3"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.1",
+      "status": "修正",
+      "reason": "不把 Laser 的大小寫或中文譯名宣稱為法定唯一寫法。",
+      "termIDs": [
+        "2.1.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.2",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.2.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.3",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.3.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.4",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.4.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.5",
+      "status": "修正",
+      "reason": "以 M2 與 msq 查詢光束因子；與 m2 面積候選並存。",
+      "termIDs": [
+        "2.5.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.6",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.6.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.7",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.7.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.8",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.8.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.9",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.9.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.10",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "2.10.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "2.11",
+      "status": "修正",
+      "reason": "保留可讀的 θ_B，不偽造下標 B；刪除報告偏振機制敘述。",
+      "termIDs": [
+        "2.11.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.1",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.1.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "apple"
+      ]
+    },
+    {
+      "row": "3.2",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.2.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "apple"
+      ]
+    },
+    {
+      "row": "3.3",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.3.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "apple"
+      ]
+    },
+    {
+      "row": "3.4",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.4.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.5",
+      "status": "修正",
+      "reason": "提示改為無線網路，不收錄 Wireless Fidelity Alliance 展開。",
+      "termIDs": [
+        "3.5.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.6",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.6.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.7",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.7.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.8",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.8.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.9",
+      "status": "修正",
+      "reason": "分開 Wi-Fi 6 與 Wi-Fi 7，不混用世代技術特徵。",
+      "termIDs": [
+        "3.9.1",
+        "3.9.2"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.10",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.10.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.11",
+      "status": "修正",
+      "reason": "保留 gRPC 品牌拼法，不擅自展開為 Google Remote Procedure Call。",
+      "termIDs": [
+        "3.11.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.12",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.12.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.13",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.13.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "3.14",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "3.14.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "4.1",
+      "status": "修正",
+      "reason": "改用 U+210F ℏ，不把 U+0127 ħ 的字元名稱當成普朗克常數。",
+      "termIDs": [
+        "4.1.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.2",
+      "status": "修正",
+      "reason": "新增 planck 觸發碼，不以單字元 h 展開。",
+      "termIDs": [
+        "4.2.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.3",
+      "status": "修正",
+      "reason": "U+2097 是下標 l；只提供 k_B 與 kB。",
+      "termIDs": [
+        "4.3.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.4",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.4.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.5",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.5.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.6",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.6.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.7",
+      "status": "修正",
+      "reason": "拆分微法拉與微安培；保留 MICRO SIGN U+00B5，不與 Greek mu 混同。",
+      "termIDs": [
+        "4.7.1",
+        "4.7.2"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.8",
+      "status": "修正",
+      "reason": "使用 U+00C5 Å；修正其名稱是 LATIN CAPITAL LETTER A WITH RING ABOVE。",
+      "termIDs": [
+        "4.8.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.9",
+      "status": "修正",
+      "reason": "採 °C 兩字元寫法，不使用相容性單字元 ℃，不附帶舊溫標定義。",
+      "termIDs": [
+        "4.9.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.10",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.10.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.11",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.11.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.12",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.12.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "4.13",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "4.13.1"
+      ],
+      "sourceKeys": [
+        "unicode",
+        "nist"
+      ]
+    },
+    {
+      "row": "5.1",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.1.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.2",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.2.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.3",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.3.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.4",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.4.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.5",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.5.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.6",
+      "status": "修正",
+      "reason": "只收錄 InGaAs 材料簡稱，未指定合金比例。",
+      "termIDs": [
+        "5.6.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.7",
+      "status": "修正",
+      "reason": "只收錄 AlGaN 材料簡稱，未指定合金比例。",
+      "termIDs": [
+        "5.7.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.8",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.8.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.9",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.9.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.10",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.10.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.11",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.11.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.12",
+      "status": "修正",
+      "reason": "只收錄 MCT／HgCdTe 簡稱，省略可變比例的排版公式。",
+      "termIDs": [
+        "5.12.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.13",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.13.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.14",
+      "status": "修正",
+      "reason": "不由一般 ga2o3 觸發碼推定 β 晶相。",
+      "termIDs": [
+        "5.14.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.15",
+      "status": "修正",
+      "reason": "提供 Diamond 與 C，不將單一 C 視為晶相的完整識別。",
+      "termIDs": [
+        "5.15.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.16",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.16.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.17",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.17.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.18",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.18.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.19",
+      "status": "修正",
+      "reason": "提示只寫氧化鋁，不能把所有 Al2O3 等同藍寶石。",
+      "termIDs": [
+        "5.19.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.20",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.20.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.21",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.21.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.22",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.22.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.23",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.23.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.24",
+      "status": "修正",
+      "reason": "只收錄 ITO 簡稱，不把摻雜比例不明的表示法視為固定化學式。",
+      "termIDs": [
+        "5.24.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.25",
+      "status": "修正",
+      "reason": "只收錄 FTO 簡稱，不把摻雜比例不明的表示法視為固定化學式。",
+      "termIDs": [
+        "5.25.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.26",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.26.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.27",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.27.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.28",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.28.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.29",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.29.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.30",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.30.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.31",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.31.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.32",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.32.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.33",
+      "status": "修正",
+      "reason": "只收錄 YBCO；暫緩含變動氧含量公式，原報告以 U+1D5F 修飾字母偽裝下標 delta。",
+      "termIDs": [
+        "5.33.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.34",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.34.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.35",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.35.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.36",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.36.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.37",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.37.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.38",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.38.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.39",
+      "status": "修正",
+      "reason": "區分氟化氫與其水溶液名稱，不聲稱 HF 本身就是溶液。",
+      "termIDs": [
+        "5.39.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.40",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.40.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.41",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.41.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.42",
+      "status": "收錄",
+      "reason": "收錄詞形與簡短名稱；不採用報告的用途、數值或強制規範敘述。",
+      "termIDs": [
+        "5.42.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.43",
+      "status": "修正",
+      "reason": "分開 H+ 與 H3O+ 的名稱及觸發碼。",
+      "termIDs": [
+        "5.43.1",
+        "5.43.2"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.44",
+      "status": "修正",
+      "reason": "ASCII 使用 SO4^2- 明示電荷，避免 SO42- 公式歧義；後者只作觸發碼。",
+      "termIDs": [
+        "5.44.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.45",
+      "status": "修正",
+      "reason": "ASCII 使用 CO3^2- 明示電荷，避免 CO32- 公式歧義；後者只作觸發碼。",
+      "termIDs": [
+        "5.45.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    },
+    {
+      "row": "5.46",
+      "status": "修正",
+      "reason": "ASCII 使用 Cu^2+ 明示電荷；cu2+ 僅作觸發碼。",
+      "termIDs": [
+        "5.46.1"
+      ],
+      "sourceKeys": [
+        "unicode"
+      ]
+    }
+  ]
+}

@@ -28,5 +28,12 @@ assert "UpdateInfoEndpoint" not in info
 assert (app / "Contents/MacOS" / info["CFBundleExecutable"]).is_file()
 for name in ("data.txt", "data-plain-bpmf.txt", "associated-phrases-v2.txt"):
     assert (app / "Contents/Resources" / name).stat().st_size > 0, name
+if tuple(map(int, info["CFBundleShortVersionString"].split("."))) >= (0, 6, 12):
+    catalogs = list((app / "Contents/Resources").rglob("engineering-terms.json"))
+    assert len(catalogs) == 1, 'Missing or duplicate bundled engineering lexicon'
+    catalog = json.loads(catalogs[0].read_text())
+    assert catalog["version"] == 1 and catalog["terms"], 'Invalid engineering lexicon'
+    assert any(t["outputs"] == ["SiO₂", "SiO2"] for t in catalog["terms"])
+    print(f'PASS: bundled engineering lexicon: {len(catalog["terms"])} terms')
 subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], check=True)
 print(f"PASS: identity, modes, connection, dictionary resources, signature: {app}")
