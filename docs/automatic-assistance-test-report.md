@@ -68,6 +68,19 @@ python3 research/text-assistance/run-xpc-probe.py \
 - 沒有測量完整按鍵 P95、模型長時間記憶體消耗或跨應用穩定性。這些不能由單元測試或 CLI 模型探測替代。
 - 提示預設原文，普通鍵仍輸入原文；模型可能慢、無建議或判斷錯誤。技術公式的字面身分相同不代表學術語意已被查證。
 - 已送出文字記憶只寫了提案，沒有新增保存、文件擷取或上下文外傳。
-- 不安裝、不重啟、不合併 main、不建立標籤或 GitHub Release。套件與遠端交付結果另補記。
+- 不安裝、不重啟、不合併 main、不建立標籤或 GitHub Release。套件與遠端交付結果如下。
 
-更新時間：2026-11-05T00:02:47+08:00
+## 開發交付
+
+- 安裝包來源提交：`e72cfc9e`。後續提交只補充交付紀錄。
+- `scripts/verify-package.sh` 通過，pkg 解開後 86 檔與保存 app 一致；ZIP 另行解開核對 86 檔並通過嚴格簽章驗證。
+- 打包過程仍出現 `write: Permission denied` 診斷，工具最終成功，兩種封裝均未發現內容缺漏；原始紀錄保留於忽略版控的 `artifacts/automatic-assistance/package.log`。
+- 僅將 pkg 與 app ZIP 複製到 `/Users/defu/Documents/AI Bopomofo/0.6.14-dev.1/`，來源與目的 SHA-256 相同。iCloud 雲端與 MacBook Air 同步狀態未驗證。
+- 已推送 `edwardhome/AI-Bopomofo` 的 `feature/automatic-composition-assistance`，沒有合併 main 或建立 Release。
+
+| 附件 | SHA-256 |
+| --- | --- |
+| AI-Bopomofo-0.6.14-dev.1.pkg | 41148dbd3855fdae95b458f988c6b9270b30479005189953fc86921b21daba7b |
+| AI-Bopomofo-0.6.14-dev.1.zip | 5ea644a999df105ae79a6188ab35d6a2300ea76d29d4e4747270e81636199665 |
+
+更新時間：2026-11-05T00:05:01+08:00
