@@ -2,9 +2,15 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；此功能分支為 0.6.13 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
+**主線固定為 `main`；此功能分支為 0.6.14 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
+
+## 0.6.14 開發版：停頓後自動建議
+
+預設啟用組字旁的 AI 副駕駛：完整中文組字停頓後嘗試校正，未知英文／技術碼可取得拼字或 Unicode 排版候選。原文預設選中，Tab 選取、Enter 確認；繼續打字、退格、方向鍵與 F 都保留原本操作。模型失敗不改字，既有工程詞庫先回應。
+
+只處理尚未送出的組字，不新增句子記憶。[操作與限制](docs/automatic-assistance.md) · [驗證報告](docs/automatic-assistance-test-report.md) · [未來語境規劃，尚未實作](docs/context-assistance-proposal.md)
 
 ## 0.6.13 開發版：長期詞彙學習與核准擴充詞庫
 
