@@ -2,11 +2,11 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；此功能分支為 0.6.14 開發版。** 工程與自然科學候選詞庫尚未合併或發布，下載版本請以 [Release 頁面](https://github.com/edwardhome/AI-Bopomofo/releases) 的附件為準。推送程式碼不會自動發布安裝包。
+**主線固定為 `main`；目前版本為 0.6.14。** 本版整合自動 AI 建議、工程與自然科學候選詞庫及核准式長期詞庫管理。[下載 0.6.14](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.14) · [更新內容與已知限制](docs/releases/0.6.14.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
-## 0.6.14 開發版：停頓後自動建議
+## 0.6.14：停頓後自動建議
 
 預設啟用組字旁的 AI 副駕駛：完整中文組字停頓後嘗試校正，未知英文／技術碼可取得拼字或 Unicode 排版候選。原文預設選中，Tab 選取、Enter 確認；繼續打字、退格、方向鍵與 F 都保留原本操作。模型失敗不改字，既有工程詞庫先回應。
 
@@ -18,7 +18,7 @@
 
 已核准詞庫可透過 JSON 更新，不必重新編譯輸入法。中文仍由原有引擎自動組句；擴充詞只有明確選取才影響當次組字，工程符號仍維持原文第一。模型使用獨立 XPC 服務，SQLite 與模型失效不作為正常輸入的必要依賴。
 
-這是尚待實機驗收的開發分支，沒有自動合併、安裝或發布。詳見 [操作](docs/lexicon-learning/user-guide.md)、[規格](docs/lexicon-learning/spec.md)、[架構](docs/lexicon-learning/architecture.md)、[交換格式](docs/lexicon-learning/schema.md)、[測試與限制](docs/lexicon-learning/test-report.md)。
+此功能已納入 0.6.14；完整管理介面與實鍵驗收仍需依文件逐項確認。詳見 [操作](docs/lexicon-learning/user-guide.md)、[規格](docs/lexicon-learning/spec.md)、[架構](docs/lexicon-learning/architecture.md)、[交換格式](docs/lexicon-learning/schema.md)、[測試與限制](docs/lexicon-learning/test-report.md)。
 
 ## 0.6.12 新增：工程與自然科學候選詞庫
 
