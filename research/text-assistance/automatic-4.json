@@ -1,0 +1,6 @@
+[
+  {"id":"auto-zh-again","category":"correction","text":"我在去一次","expected":["我再去一次"],"isEnglish":false,"protectedWords":[]},
+  {"id":"auto-zh-place","category":"correction","text":"我再德國","expected":["我在德國"],"isEnglish":false,"protectedWords":[]},
+  {"id":"auto-technical","category":"technical","text":"al2o3","expected":["Al₂O₃","Al2O3"],"isEnglish":true,"protectedWords":[]},
+  {"id":"auto-no-change","category":"correction","text":"我跑得快","expected":[],"isEnglish":false,"protectedWords":[]}
+]

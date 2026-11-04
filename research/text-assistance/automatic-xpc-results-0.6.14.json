@@ -1,0 +1,93 @@
+{
+  "availability" : "available",
+  "completed" : true,
+  "model" : "ModelService.xpc (on-device)",
+  "notes" : "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.",
+  "rows" : [
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.062125,
+      "category" : "correction",
+      "expected" : [
+        "我再去一次"
+      ],
+      "id" : "auto-zh-again",
+      "milliseconds" : 3062.173583,
+      "raw" : [
+        "我再去一次"
+      ],
+      "source" : "我在去一次",
+      "status" : "ready",
+      "suggestions" : [
+        "我再去一次"
+      ],
+      "totalRequestMilliseconds" : 3062.2357079999997
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.002833,
+      "category" : "correction",
+      "expected" : [
+        "我在德國"
+      ],
+      "id" : "auto-zh-place",
+      "milliseconds" : 855.342833,
+      "raw" : [
+        "我在德國"
+      ],
+      "source" : "我再德國",
+      "status" : "ready",
+      "suggestions" : [
+        "我在德國"
+      ],
+      "totalRequestMilliseconds" : 855.345666
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 81.7185,
+      "category" : "technical",
+      "expected" : [
+        "Al₂O₃",
+        "Al2O3"
+      ],
+      "id" : "auto-technical",
+      "milliseconds" : 900.417459,
+      "raw" : [
+        "Al₂O₃"
+      ],
+      "source" : "al2o3",
+      "status" : "ready",
+      "suggestions" : [
+        "Al₂O₃"
+      ],
+      "totalRequestMilliseconds" : 982.135959
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.001375,
+      "category" : "correction",
+      "expected" : [
+
+      ],
+      "id" : "auto-no-change",
+      "milliseconds" : 862.278917,
+      "raw" : [
+
+      ],
+      "source" : "我跑得快",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 862.280292
+    }
+  ]
+}

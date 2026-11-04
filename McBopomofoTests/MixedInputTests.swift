@@ -40,6 +40,37 @@ struct MixedInputTests {
         }
     }
 
+    @Test func automaticSuggestionDoesNotConsumeTypingOrDeletion() {
+        for (key, code, expected): (String, UInt16, String) in [("1", 18, "helo1"), ("f", 3, "helof"), ("\u{7f}", 51, "hel")] {
+            let session = Session()
+            let original = InputState.ASCII(text: "helo", cursor: 4)
+            session.state = InputState.AutomaticAssistance(original: original, suggestions: ["hello"], message: "test")
+            session.key(key, code: code)
+            #expect(session.committed.isEmpty)
+            #expect((session.state as? InputState.ASCII)?.composition.raw == expected)
+        }
+    }
+
+    @Test func automaticSuggestionRequiresExplicitSelectionBeforeEnter() {
+        for selected in [false, true] {
+            let session = Session()
+            let original = InputState.ASCII(text: "helo", cursor: 4)
+            session.state = InputState.AutomaticAssistance(original: original, suggestions: ["hello"], message: "test")
+            if selected { session.key("\t", code: 48) }
+            session.key("\r", code: 36)
+            #expect(session.committed == (selected ? "hello" : "helo"))
+        }
+    }
+
+    @Test func automaticEscapeRestoresTheExactComposition() {
+        let session = Session()
+        let original = InputState.ASCII(text: "helo", cursor: 4)
+        session.state = InputState.AutomaticAssistance(original: original, suggestions: ["hello"], message: "test")
+        session.key("\u{1b}", code: 53)
+        #expect(session.state === original)
+        #expect(session.committed.isEmpty)
+    }
+
     @Test func engineeringCandidateAnnotationNeverCommits() throws {
         let previous = MixedInputHandler.lexicon
         MixedInputHandler.lexicon = TechnicalLexicon()

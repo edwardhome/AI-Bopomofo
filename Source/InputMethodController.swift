@@ -26,6 +26,7 @@ import Carbon
 import CoreGraphics
 import MixedInputCore
 import LexiconDeployment
+import CandidateRanking
 import Cocoa
 import InputMethodKit
 import InputSourceHelper
@@ -60,6 +61,10 @@ class McBopomofoInputMethodController: IMKInputController {
     var keyHandler: KeyHandler = KeyHandler()
     var state: InputState = InputState.Empty()
     let textAssistant = TextAssistant()
+    var allowsAutomaticAssistance: Bool {
+        !directEnglish && fHoldGesture.phase == .idle
+            && (lastInputModifiers ?? []).intersection([.shift, .command, .control, .option, .function, .capsLock]).isEmpty
+    }
     var learningSnapshot = LexiconSnapshot()
     var learningAppliedToken: String?
     private var shiftGesture = DoubleShiftGesture()
@@ -113,7 +118,10 @@ class McBopomofoInputMethodController: IMKInputController {
         engineeringItem.state = Preferences.engineeringLexiconEnabled.state
         let checkItem = menu.addItem(withTitle: NSLocalizedString("Check Spelling / Chinese Typos", comment: ""),
                                     action: #selector(checkTextAssistance(_:)), keyEquivalent: "")
-        checkItem.isEnabled = keyHandler.canBeginAssistance(with: state)
+        checkItem.isEnabled = keyHandler.canBeginAssistance(with: (state as? InputState.AutomaticAssistance)?.original ?? state)
+        let automaticItem = menu.addItem(withTitle: NSLocalizedString("Automatic Suggestions After Pausing", comment: ""),
+                                         action: #selector(toggleAutomaticTextAssistance(_:)), keyEquivalent: "")
+        automaticItem.state = Preferences.automaticTextAssistanceEnabled.state
         let predictionItem = menu.addItem(withTitle: NSLocalizedString("English Prediction (Tab to Accept)", comment: ""),
                                          action: #selector(toggleEnglishPrediction(_:)), keyEquivalent: "")
         predictionItem.state = Preferences.englishPredictionEnabled.state
@@ -611,6 +619,18 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
+        // 副駕駛提示不得攔住 F 手勢或快捷鍵；先恢復原組字再走既有流程。
+        if let automatic = state as? InputState.AutomaticAssistance {
+            let shortcut = !event.modifierFlags.intersection([.command, .control, .option, .function]).isEmpty
+            let key: AutomaticSuggestionKey = event.keyCode == 48 ? (event.modifierFlags.contains(.shift) ? .backTab : .tab)
+                : (event.keyCode == 36 || event.keyCode == 76) ? .enter : event.keyCode == 53 ? .escape : .ordinary
+            if IsSecureEventInputEnabled() || event.type == .flagsChanged
+                || (event.type == .keyDown && AutomaticSuggestionInteraction.action(key: key,
+                    selected: automatic.selectedIndex, count: automatic.candidateCount, shortcut: shortcut) == .replayOriginal) {
+                handle(state: automatic.original, client: client)
+            }
+        }
+
         if event.type == .keyDown || event.type == .keyUp || event.type == .flagsChanged {
             lastInputModifiers = event.modifierFlags
             releaseShiftCompositionIfNeeded(client: client)
@@ -938,7 +958,7 @@ extension McBopomofoInputMethodController {
         default:
             break
         }
-        textAssistant.schedulePrediction(state: state, controller: self)
+        textAssistant.schedule(state: state, controller: self)
     }
 
     private func commit(text: String, client: Any!, observationState: InputState? = nil) {
@@ -1396,7 +1416,7 @@ extension McBopomofoInputMethodController {
         gCurrentCandidateController?.keyLabels = keyLabels.map {
             CandidateKeyLabel(key: String($0), displayedText: keyLabelFormat(String($0)))
         }
-        if state is InputState.ASCII || state is InputState.QuickSymbols {
+        if state is InputState.ASCII || state is InputState.QuickSymbols || state is InputState.AutomaticAssistance {
             // Digits remain literal; selection uses Tab/arrows or a pointer.
             gCurrentCandidateController?.keyLabels = keyLabels.map { _ in
                 CandidateKeyLabel(key: "", displayedText: "")
@@ -1410,7 +1430,10 @@ extension McBopomofoInputMethodController {
         var lineHeightRect = NSMakeRect(0.0, 0.0, 16.0, 16.0)
         var cursor: Int = 0
 
-        if let state = state as? InputState.NotEmpty {
+        if let automatic = state as? InputState.AutomaticAssistance {
+            cursor = Int(automatic.original.cursorIndex)
+            if cursor == automatic.original.composingBuffer.utf16.count && cursor > 0 { cursor -= 1 }
+        } else if let state = state as? InputState.NotEmpty {
             cursor = Int(state.cursorIndex)
             if cursor == state.composingBuffer.count && cursor != 0 {
                 cursor -= 1

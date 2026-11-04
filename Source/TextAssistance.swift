@@ -33,12 +33,34 @@ extension InputState {
         }
         func reading(at index: Int) -> String? { nil }
     }
+    /// 自動提示是獨立狀態，普通文字與游標鍵不會變成候選快捷鍵。
+    final class AutomaticAssistance: Assistance {
+        override func selecting(_ index: Int) -> Assistance {
+            AutomaticAssistance(original: original, suggestions: suggestions, selectedIndex: index,
+                                message: message)
+        }
+        override func candidate(at index: Int) -> String {
+            guard values.indices.contains(index) else { return "" }
+            return NSLocalizedString(index == 0 ? "Original" : "AI Suggestion", comment: "") + ": " + values[index]
+        }
+    }
 }
 
 @objc class AssistanceKeyHandler: NSObject {
     /// Return false to restore the original state and re-process a normal typing/shortcut key.
     @objc static func handle(input: KeyHandlerInput, state: InputState.Assistance,
                              stateCallback: (InputState) -> Void) -> Bool {
+        if state is InputState.AutomaticAssistance {
+            let key: AutomaticSuggestionKey = input.isTab ? (input.isShiftHold ? .backTab : .tab)
+                : (input.charCode == 13 || input.isEnter) ? .enter : input.charCode == 27 ? .escape : .ordinary
+            switch AutomaticSuggestionInteraction.action(key: key, selected: state.selectedIndex,
+                    count: state.candidateCount, shortcut: input.isCommandHold || input.isOptionHold || input.isControlHold) {
+            case .select(let index): stateCallback(state.selecting(index)); return true
+            case .accept(let index): accept(index: index, state: state, stateCallback: stateCallback); return true
+            case .dismiss: stateCallback(state.original); return true
+            case .replayOriginal: return false
+            }
+        }
         if input.charCode == 27 { stateCallback(state.original); return true }
         if input.isCommandHold || input.isOptionHold || input.isControlHold { return false }
         if input.charCode == 13 || input.isEnter {
@@ -77,8 +99,8 @@ final class TextAssistant {
     }
     func cancel() { use { $0.cancel() } }
     func check(controller: McBopomofoInputMethodController) { use { $0.check(controller: controller) } }
-    func schedulePrediction(state: InputState, controller: McBopomofoInputMethodController) {
-        use { $0.schedulePrediction(state: state, controller: controller) }
+    func schedule(state: InputState, controller: McBopomofoInputMethodController) {
+        use { $0.schedule(state: state, controller: controller) }
     }
 }
 
@@ -89,12 +111,64 @@ private final class TextAssistantSession {
     private let owner = UUID()
     private var revision: UInt64 = 0
     private var debounce: Task<Void, Never>?
+    private var automaticGate = AutomaticAssistanceGate()
 
     func cancel() {
         revision &+= 1
         debounce?.cancel(); debounce = nil
         Self.coordinator.invalidate(owner: owner)
     }
+    func schedule(state: InputState, controller: McBopomofoInputMethodController) {
+        if state is InputState.Empty || state is InputState.EmptyIgnoringPreviousState || state is InputState.Deactivated {
+            automaticGate.resetComposition()
+        }
+        guard Preferences.automaticTextAssistanceEnabled, controller.allowsAutomaticAssistance,
+              !IsSecureEventInputEnabled(), controller.currentClient != nil,
+              controller.keyHandler.canBeginAssistance(with: state),
+              let original = state as? InputState.Inputting else {
+            schedulePrediction(state: state, controller: controller); return
+        }
+        let ascii = original as? InputState.ASCII
+        guard let mode = AutomaticAssistancePolicy.mode(text: original.composingBuffer, english: ascii != nil,
+            cursorAtEnd: original.cursorIndex == original.composingBuffer.utf16.count,
+            hasCandidates: (ascii?.composition.candidateItems.count ?? 0) > 1,
+            suppressed: ascii.map { $0.predictionSuppressed || $0.prediction != nil || $0.composition.selectedIndex != 0 } ?? false) else {
+            schedulePrediction(state: state, controller: controller); return
+        }
+        let request = CorrectionRequest(revision: revision, text: original.composingBuffer, mode: mode,
+            isEnglish: ascii != nil, protectedWords: MixedInputHandler.lexicon.words)
+        guard request.isValid else { return }
+        let currentRevision = revision, lexiconRevision = MixedInputHandler.lexiconRevision
+        let key = "\(mode.rawValue):\(lexiconRevision):\(request.text)"
+        let delay = automaticGate.delay(now: ProcessInfo.processInfo.systemUptime)
+        debounce = Task { [weak self, weak controller] in
+            do { try await Task.sleep(for: .seconds(delay)) } catch { return }
+            guard let self, let controller, self.revision == currentRevision,
+                  controller.state === original, controller.currentClient != nil,
+                  Preferences.automaticTextAssistanceEnabled, controller.allowsAutomaticAssistance,
+                  !IsSecureEventInputEnabled(), MixedInputHandler.lexiconRevision == lexiconRevision,
+                  self.automaticGate.begin(key: key, now: ProcessInfo.processInfo.systemUptime) else { return }
+            self.debounce = nil
+            // 不發布「檢查中」狀態，讓原候選與組字在推論期間完全保留。
+            Self.coordinator.submit(owner: self.owner, request: request,
+                isCurrent: { [weak controller, weak self] in
+                    guard let controller, let self else { return false }
+                    return self.revision == currentRevision && controller.state === original
+                        && controller.currentClient != nil && controller.allowsAutomaticAssistance
+                        && Preferences.automaticTextAssistanceEnabled && !IsSecureEventInputEnabled()
+                        && MixedInputHandler.lexiconRevision == lexiconRevision
+                }, completion: { [weak self, weak controller] result in
+                    guard let self, let controller else { return }
+                    if !result.suggestions.isEmpty {
+                        self.publish(InputState.AutomaticAssistance(original: original, suggestions: result.suggestions,
+                            message: NSLocalizedString("AI: Tab selects, Enter confirms; typing keeps your original", comment: "")), controller: controller)
+                    } else if ascii != nil {
+                        self.schedulePrediction(state: original, controller: controller)
+                    }
+                })
+        }
+    }
+
     func check(controller: McBopomofoInputMethodController) {
         cancel()
         guard !IsSecureEventInputEnabled(), controller.currentClient != nil,
@@ -195,7 +269,19 @@ private final class TextAssistantSession {
 }
 
 extension McBopomofoInputMethodController {
-    @objc func checkTextAssistance(_ sender: Any?) { textAssistant.check(controller: self) }
+    @objc func checkTextAssistance(_ sender: Any?) {
+        if let automatic = state as? InputState.AutomaticAssistance { handle(state: automatic.original, client: currentClient) }
+        textAssistant.check(controller: self)
+    }
+    @objc func toggleAutomaticTextAssistance(_ sender: Any?) {
+        Preferences.automaticTextAssistanceEnabled.toggle()
+        textAssistant.cancel()
+        if let automatic = state as? InputState.AutomaticAssistance {
+            handle(state: automatic.original, client: currentClient)
+        } else if Preferences.automaticTextAssistanceEnabled {
+            textAssistant.schedule(state: state, controller: self)
+        }
+    }
     @objc func toggleEnglishPrediction(_ sender: Any?) {
         Preferences.englishPredictionEnabled.toggle()
         textAssistant.cancel()

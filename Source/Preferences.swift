@@ -223,6 +223,8 @@ class Preferences: NSObject {
     @objc static var approvedLexiconEnabled: Bool
     @UserDefault(key: "EngineeringLexiconEnabled", defaultValue: true)
     @objc static var engineeringLexiconEnabled: Bool
+    @UserDefault(key: "AutomaticTextAssistanceEnabled", defaultValue: true)
+    @objc static var automaticTextAssistanceEnabled: Bool
     @UserDefault(key: "EnglishPredictionEnabled", defaultValue: true)
     @objc static var englishPredictionEnabled: Bool
     @UserDefault(key: "BacktickOpensPunctuationList", defaultValue: false)

@@ -405,3 +405,8 @@
 "背景整理已取消；正常輸入與統計繼續" = "背景整理已取消；正常輸入與統計繼續";
 "核准版本已保存，但學習資料庫的查閱鏡本更新失敗" = "核准版本已保存，但學習資料庫的查閱鏡本更新失敗";
 "Added %d, changed %d, existing %d, duplicates %d, conflicts %d, proposals %d." = "新增 %d、修改 %d、已有 %d、重複 %d、同碼多詞 %d、模型推測 %d。";
+
+// Automatic composition assistance
+"Automatic Suggestions After Pausing" = "停頓後自動提供 AI 建議";
+"AI Suggestion" = "AI 建議";
+"AI: Tab selects, Enter confirms; typing keeps your original" = "AI：Tab 選取、Enter 確認；繼續打字保留原文";

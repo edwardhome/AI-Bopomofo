@@ -1,0 +1,93 @@
+{
+  "availability" : "available",
+  "completed" : true,
+  "model" : "SystemLanguageModel.default (on-device)",
+  "notes" : "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.",
+  "rows" : [
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.044666,
+      "category" : "correction",
+      "expected" : [
+        "我再去一次"
+      ],
+      "id" : "auto-zh-again",
+      "milliseconds" : 2037.4955,
+      "raw" : [
+        "我再去一次"
+      ],
+      "source" : "我在去一次",
+      "status" : "ready",
+      "suggestions" : [
+        "我再去一次"
+      ],
+      "totalRequestMilliseconds" : 2037.540166
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.012542,
+      "category" : "correction",
+      "expected" : [
+        "我在德國"
+      ],
+      "id" : "auto-zh-place",
+      "milliseconds" : 2947.509,
+      "raw" : [
+        "我在德國"
+      ],
+      "source" : "我再德國",
+      "status" : "ready",
+      "suggestions" : [
+        "我在德國"
+      ],
+      "totalRequestMilliseconds" : 2947.521542
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 68.944708,
+      "category" : "technical",
+      "expected" : [
+        "Al₂O₃",
+        "Al2O3"
+      ],
+      "id" : "auto-technical",
+      "milliseconds" : 1117.62025,
+      "raw" : [
+        "Al₂O₃"
+      ],
+      "source" : "al2o3",
+      "status" : "ready",
+      "suggestions" : [
+        "Al₂O₃"
+      ],
+      "totalRequestMilliseconds" : 1186.564958
+    },
+    {
+      "baseline" : [
+
+      ],
+      "baselineMilliseconds" : 0.001792,
+      "category" : "correction",
+      "expected" : [
+
+      ],
+      "id" : "auto-no-change",
+      "milliseconds" : 1260.940333,
+      "raw" : [
+        "我跑得快"
+      ],
+      "source" : "我跑得快",
+      "status" : "ready",
+      "suggestions" : [
+
+      ],
+      "totalRequestMilliseconds" : 1260.942125
+    }
+  ]
+}

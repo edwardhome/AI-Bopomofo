@@ -16,7 +16,12 @@ actor RecordingProvider: CorrectionProvider {
     private var raw: [String] = []
     func suggest(_ request: CorrectionRequest) async throws -> [String] {
         raw = []
-        let result = try await InProcessAppleTextAssistance().suggest(request)
+        let result: [String]
+        if ProcessInfo.processInfo.environment["AI_BOPOMOFO_PROBE_XPC"] == "1" {
+            result = try await AppleTextAssistance().suggest(request)
+        } else {
+            result = try await InProcessAppleTextAssistance().suggest(request)
+        }
         raw = result
         return result
     }
@@ -40,7 +45,7 @@ let coordinator = AssistanceCoordinator(provider: systemOnly ? NoModel() : provi
 var rows: [Row] = []
 var completed = true
 for (index, example) in examples.enumerated() {
-    let mode: AssistanceMode = example.category == "prediction" ? .prediction : .correction
+    let mode: AssistanceMode = example.category == "prediction" ? .prediction : example.category == "technical" ? .technical : .correction
     let request = CorrectionRequest(revision: UInt64(index), text: example.text, mode: mode,
         isEnglish: example.isEnglish, protectedWords: example.protectedWords)
     let totalStart = ContinuousClock.now
@@ -68,7 +73,7 @@ for (index, example) in examples.enumerated() {
     if coordinator.isRunning { completed = false; break }
     if (index + 1) % 25 == 0 { FileHandle.standardError.write(Data("Evaluated \(index + 1)/\(examples.count)\n".utf8)) }
 }
-let report = Report(model: systemOnly ? "NSSpellChecker only" : "SystemLanguageModel.default (on-device)", availability: String(describing: model.availability),
+let report = Report(model: systemOnly ? "NSSpellChecker only" : (ProcessInfo.processInfo.environment["AI_BOPOMOFO_PROBE_XPC"] == "1" ? "ModelService.xpc (on-device)" : "SystemLanguageModel.default (on-device)"), availability: String(describing: model.availability),
     completed: completed, notes: "Synthetic individually authored corpus, not independently human-reviewed. milliseconds measures provider time; totalRequestMilliseconds includes asynchronous system-spelling baseline. Excludes typing debounce, IMK, and candidate rendering. No typing or GUI tests.", rows: rows)
 let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
 try encoder.encode(report).write(to: URL(fileURLWithPath: arguments[2]), options: .atomic)
