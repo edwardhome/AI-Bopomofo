@@ -2,7 +2,7 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；目前版本為 0.6.14。** 本版整合自動 AI 建議、工程與自然科學候選詞庫及核准式長期詞庫管理。[下載 0.6.14](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.14) · [更新內容與已知限制](docs/releases/0.6.14.md)
+**主線固定為 `main`；目前版本為 0.6.15。** 本版發布與 AI 新酷音共用的詞庫交換契約、跨平台回歸測試與操作文件，沿用既有 AI 建議、工程候選及核准式詞庫管理。[下載 0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15) · [更新內容與已知限制](docs/releases/0.6.15.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
