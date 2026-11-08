@@ -63,6 +63,18 @@ scripts/build.sh Release
 
 Windows 已有的驗證紀錄位於 `chewing-kanata-lab/docs/verification/runs/RUN-20261108-SHARED-LEXICON.md`：270 項通過、1 項略過；Rust → Mac Swift → Rust 的 7 筆完整 JSON 欄位一致；原生與設定程式 Release 編譯及完整 nested patch 重播通過。這是 Windows 端提供的可核對紀錄，本文件不把它當成 Mac GUI 驗收。
 
+## 主線與開發套件交付
+
+使用者本輪明確要求整合。已以遠端 Git ref 核對：
+
+- Mac `main` 已包含 `af141734`（跨平台回歸測試與文件）與 `b15beeb6`（設計交接）；後續本文件的交付補記只改文件。
+- Windows `main` 已包含 `3d331c7e0890105ed8ce436db914c3a3346fe42c`。見 [Windows 整合驗證紀錄](https://github.com/edwardhome/chewing-kanata-lab/blob/3d331c7e0890105ed8ce436db914c3a3346fe42c/docs/verification/runs/RUN-20261108-SHARED-LEXICON.md)。
+- Windows 開發套件為 `1.1.1-dev.shared.20261108`，位於 WorkstationX 的 `C:\Users\Defu\Documents\AI-Chewing\1.1.1-dev.shared.20261108`，未發布為 GitHub Release。
+- Windows 最終版本測試維持 270 通過／1 略過；另有 23 項 package guard 通過。原生 31、設定程式 9 份 patch 完整重播；203 個追蹤來源檔與實際建置副本逐 byte 相同，前端輸出與公開字典雜湊亦通過比對。
+- 初次封裝來源比對發現 Windows 換行差異，已保留失敗 clone，改用 `core.autocrlf=false` 的新 clone 重做並通過，未繞過套件檢查。
+
+以上 Windows 套件與測試由負責該專案的 Codex 執行，Mac 整合端核對其提交、報告與遠端 main。兩邊都未執行安裝、重啟輸入法、建立標籤或發布 Release。
+
 ## 已知限制
 
 - 中文別名尚未納入 1.0.0；兩端共同升級與 Mac 候選支援仍待後續工作。
