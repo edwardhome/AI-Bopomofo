@@ -18,6 +18,8 @@
 
 已核准詞庫可透過 JSON 更新，不必重新編譯輸入法。中文仍由原有引擎自動組句；擴充詞只有明確選取才影響當次組字，工程符號仍維持原文第一。模型使用獨立 XPC 服務，SQLite 與模型失效不作為正常輸入的必要依賴。
 
+與 AI 新酷音的開發整合沿用 Lexicon JSON 1.0.0；Mac 可使用既有管理選單匯入／匯出選定詞條。共用的是完整交換檔，各機器仍需預覽核准；不共用運作中的資料庫，不自動同步。中文別名與傳統私人中文詞庫自動匯出尚不支援。參見 [跨平台交換操作、驗證與限制](docs/lexicon-learning/shared-integration.md)。
+
 此功能已納入 0.6.14；完整管理介面與實鍵驗收仍需依文件逐項確認。詳見 [操作](docs/lexicon-learning/user-guide.md)、[規格](docs/lexicon-learning/spec.md)、[架構](docs/lexicon-learning/architecture.md)、[交換格式](docs/lexicon-learning/schema.md)、[測試與限制](docs/lexicon-learning/test-report.md)。
 
 ## 0.6.12 新增：工程與自然科學候選詞庫

@@ -1,0 +1,92 @@
+{
+  "format": "ai-bopomofo.lexicon",
+  "schema_version": "1.0.0",
+  "document_type": "review",
+  "dictionary_version": "cross-platform-fixture-1",
+  "entries": [
+    {
+      "entry_id": "beb0a4e394a7253b8cdc90d6d526f1ecb602bbce327126e7ff2fef9d30141d63",
+      "term_type": "zh_phrase",
+      "reading": "ㄌㄟˇ-ㄐㄧㄥ",
+      "text": "磊晶",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "013cbaa0ebed3c5c3f613859adf91afe48284ead0d9755d6190e6bcc982acaf8",
+      "term_type": "unicode_mapping",
+      "reading": "H2O",
+      "text": "H₂O",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "c6a19b4dce7fd5c3bef1743d5336d9d293d3c5ae1bb4257b3211f958af56ba4e",
+      "term_type": "unicode_mapping",
+      "reading": "H2O",
+      "text": "H2O",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "fc771010cad24485a5a3380ed65f71bc0f8ee06a4d63734a7ca05364f5b44b33",
+      "term_type": "technical_alias",
+      "reading": "SiO2",
+      "text": "SiO₂",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "2a3d20dad5126796530cd70b5a9abd70b7774a1e06b744832a61316d3ca11b5a",
+      "term_type": "english_term",
+      "reading": "finfet",
+      "text": "FinFET",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "5524cdccd380837b1d197b50c689a4e0be1f0d2aba0c021e51f92a0beb47b359",
+      "term_type": "english_term",
+      "reading": "FinFET",
+      "text": "FinFET",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    },
+    {
+      "entry_id": "7518b9eff2d5a5e2ecff7e0b1822412f99baa88e9bd3b923a30ed3fa94777c8d",
+      "term_type": "unicode_mapping",
+      "reading": "CH4",
+      "text": "CH₄",
+      "source": "cross_platform_fixture",
+      "review": {
+        "status": "proposed",
+        "user_confirmed": false
+      },
+      "policy": "candidate_only"
+    }
+  ]
+}
