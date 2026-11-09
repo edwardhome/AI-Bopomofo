@@ -86,7 +86,7 @@ extension InputState {
         func replacing(composition: ASCIIComposition, prediction: String? = nil,
                        predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon? = nil) -> ASCII {
             if let shifted = self as? ShiftASCII {
-                return ShiftASCII(composition: composition, mode: shifted.mode,
+                return ShiftASCII(session: shifted.session.replacing(composition: composition),
                     prediction: prediction, predictionSuppressed: predictionSuppressed, sessionLexicon: sessionLexicon ?? self.sessionLexicon)
             }
             return ASCII(composition: composition, prediction: prediction,
@@ -108,16 +108,24 @@ extension InputState {
     /// 與選單啟動的 ASCII 分開，Shift 放開不會影響手動英文或雙 Shift 模式。
     @objc(InputStateShiftASCII)
     class ShiftASCII: ASCII {
-        let mode: ShiftLetterSession.Mode
-        var session: ShiftLetterSession { .init(composition: composition, mode: mode) }
+        let session: ShiftLetterSession
+        var mode: ShiftLetterSession.Mode { session.mode }
         @objc convenience init(shiftText: String, cursor: UInt) {
             self.init(composition: ASCIIComposition(raw: shiftText, cursor: Int(cursor), lexicon: MixedInputHandler.lexicon), mode: .initial)
         }
         init(composition: ASCIIComposition, mode: ShiftLetterSession.Mode,
              prediction: String? = nil, predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon = MixedInputHandler.lexicon) {
-            self.mode = mode
+            session = ShiftLetterSession(composition: composition, mode: mode)
             super.init(composition: composition, prediction: prediction,
                        predictionSuppressed: predictionSuppressed || mode != .word, sessionLexicon: sessionLexicon)
+            tooltip = NSLocalizedString("Shift English: Space or Enter commits; Esc cancels", comment: "")
+        }
+        init(session: ShiftLetterSession, prediction: String? = nil, predictionSuppressed: Bool = false,
+             sessionLexicon: TechnicalLexicon = MixedInputHandler.lexicon) {
+            self.session = session
+            super.init(composition: session.composition, prediction: prediction,
+                       predictionSuppressed: predictionSuppressed || session.mode != .word,
+                       sessionLexicon: sessionLexicon)
             tooltip = NSLocalizedString("Shift English: Space or Enter commits; Esc cancels", comment: "")
         }
     }
@@ -214,7 +222,7 @@ extension InputState {
             guard shifted.mode != .word else { return nil }
             switch shifted.session.releasingShift() {
             case .updated(let next):
-                return (nil, InputState.ShiftASCII(composition: next.composition, mode: next.mode, sessionLexicon: shifted.sessionLexicon))
+                return (nil, InputState.ShiftASCII(session: next, sessionLexicon: shifted.sessionLexicon))
             case .commit(let text): return (text, InputState.EmptyIgnoringPreviousState())
             default: return nil
             }
@@ -311,11 +319,11 @@ extension InputState {
             switch shifted.session.applying(action, shiftHeld: input.isShiftHold,
                 repeating: input.isARepeat, lexicon: state.sessionLexicon) {
             case .updated(let next):
-                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode,
+                stateCallback(InputState.ShiftASCII(session: next,
                     predictionSuppressed: input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight, sessionLexicon: shifted.sessionLexicon))
             case .commitAndContinue(let text, let next):
                 stateCallback(InputState.Committing(poppedText: text))
-                stateCallback(InputState.ShiftASCII(composition: next.composition, mode: next.mode, sessionLexicon: shifted.sessionLexicon))
+                stateCallback(InputState.ShiftASCII(session: next, sessionLexicon: shifted.sessionLexicon))
             case .commit(let text):
                 stateCallback(InputState.Committing(poppedText: text))
                 stateCallback(InputState.EmptyIgnoringPreviousState())

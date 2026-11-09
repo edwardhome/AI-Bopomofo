@@ -53,7 +53,7 @@ struct ShiftLetterTests {
         let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
         let repeated = try updated(initial.applying(.insert("S"), shiftHeld: true, repeating: true))
         #expect(repeated.mode == .initial)
-        #expect(repeated.composition.raw == "SS")
+        #expect(repeated.composition.raw == "s")
         if case .passThrough(let text) = initial.applying(.shortcut, shiftHeld: true) { #expect(text == "S") }
         else { Issue.record("Shortcut must pass through") }
     }
@@ -72,4 +72,33 @@ struct ShiftLetterTests {
         #expect(next.composition.raw == "iP")
         #expect(next.mode == .word)
     }
+    @Test func heldInitialLetterLowercasesOnceAfterShiftRelease() throws {
+        var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
+        session = try updated(session.releasingShift())
+        for _ in 0..<10 {
+            session = try updated(session.applying(.insert("s"), shiftHeld: false, repeating: true))
+            #expect(session.composition.raw == "s")
+        }
+        session = try updated(session.applying(.insert("wift"), shiftHeld: false))
+        #expect(session.composition.raw == "swift")
+        #expect(session.heldInitialLetter == nil)
+    }
+
+    @Test func laterLetterRepeatAndFreshSameLetterKeepOriginalBehavior() throws {
+        var session = try updated(ShiftLetterSession(composition: ASCIIComposition(raw: "M")).releasingShift())
+        session = try updated(session.applying(.insert("m"), shiftHeld: false))
+        session = try updated(session.applying(.insert("m"), shiftHeld: false, repeating: true))
+        #expect(session.composition.raw == "Mmm")
+        #expect(session.heldInitialLetter == nil)
+    }
+
+    @Test func heldInitialLetterDoesNotChangeUppercaseContinuation() throws {
+        let session = try updated(ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
+            .applying(.insert("S"), shiftHeld: true, repeating: true))
+        if case .commitAndContinue(let text, let next) = session.applying(.insert("W"), shiftHeld: true) {
+            #expect(text == "sW")
+            #expect(next.mode == .uppercase)
+        } else { Issue.record("The second fresh Shift letter keeps uppercase continuation") }
+    }
+
 }
