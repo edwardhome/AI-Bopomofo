@@ -4,6 +4,8 @@
 
 本紀錄僅涵蓋規劃文件與隔離工作副本。產品程式、SQLite migration、雲端傳輸及實鍵測試均未執行。
 
+最新範圍調整：使用者改以公司電腦可離線使用的手動匯入／匯出為近期優先；以下 GIS 工作是先前雲端方案的歷史審查，不代表近期仍要開發同步。最新範圍以主規劃為準。
+
 ## GIS 實際派工
 
 使用既有 OpenCode wrapper `python3 -B src/delegate.py run <spec.json>`，節點 `gis/GIS-AI-MODEL`、Thinking off、序列工作、零 wrapper 重試。輸入只有 Codex 審核的 brief、兩個公開 Swift 型別檔及來源雜湊；未提供私人詞庫或聊天紀錄。每次工作只允許變更 proposal.md、cases.json，驗收器不可修改。
