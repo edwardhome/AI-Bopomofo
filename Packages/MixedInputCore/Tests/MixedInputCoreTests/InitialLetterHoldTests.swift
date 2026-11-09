@@ -1,5 +1,6 @@
 // Copyright (c) 2026 AI-Bopomofo contributors. MIT License.
 import Testing
+import Foundation
 @testable import MixedInputCore
 
 @Suite("Initial letter hold timing")
@@ -55,5 +56,79 @@ struct InitialLetterHoldTests {
         #expect(InitialLetterHoldGesture.defaultDelayMilliseconds == 250)
         #expect(InitialLetterHoldGesture.clampedDelayMilliseconds(Int.min) == 100)
         #expect(InitialLetterHoldGesture.clampedDelayMilliseconds(Int.max) == 1000)
+    }
+
+    @Test(arguments: [true, false])
+    func eitherStateTableCanConfirmHold(_ useSession: Bool) throws {
+        var gesture = InitialLetterHoldGesture()
+        gesture.begin(keyCode: 1, at: 0, delayMilliseconds: 250)
+        let early = gesture.probe(to: 0.1, sessionKeyDown: useSession, hardwareKeyDown: !useSession)
+        #expect(!early)
+        let due = gesture.probe(to: 0.25, sessionKeyDown: useSession, hardwareKeyDown: !useSession)
+        #expect(due)
+        let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
+        let lower = try #require(initial.lowercasingInitialLetter())
+        #expect(lower.composition.raw == "s")
+    }
+
+    @Test func failedProbePreservesRealRepeatFallbackAndConfiguredDeadline() throws {
+        var gesture = InitialLetterHoldGesture()
+        gesture.begin(keyCode: 1, at: 0, delayMilliseconds: 1000)
+        let probe = gesture.probe(to: 0.25, sessionKeyDown: false, hardwareKeyDown: false)
+        #expect(!probe)
+        #expect(gesture.keyCode == 1)
+        let earlyRepeat = gesture.advance(to: 0.5, keyIsDown: true)
+        #expect(!earlyRepeat)
+        let dueProbe = gesture.probe(to: 1, sessionKeyDown: false, hardwareKeyDown: false)
+        #expect(!dueProbe)
+        let realRepeat = gesture.advance(to: 1.1, keyIsDown: true)
+        #expect(realRepeat)
+        let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
+        let lower = try #require(initial.lowercasingInitialLetter())
+        if case .updated(let next) = lower.applying(.insert("S"), shiftHeld: true, repeating: true) {
+            #expect(next.composition.raw == "s")
+        } else { Issue.record("Repeat must preserve one lowercase letter") }
+    }
+
+    @Test func failedProbeDoesNotChangeShortReleaseOrCancelledComposition() {
+        var gesture = InitialLetterHoldGesture()
+        gesture.begin(keyCode: 1, at: 0, delayMilliseconds: 250)
+        let probe = gesture.probe(to: 0.3, sessionKeyDown: false, hardwareKeyDown: false)
+        #expect(!probe)
+        // IMK 晚送，但實際放開時間早於門檻；不可因回呼延遲變成小寫。
+        let released = gesture.release(at: 0.1)
+        #expect(!released)
+        let staleRepeat = gesture.advance(to: 0.6, keyIsDown: true)
+        #expect(!staleRepeat)
+        gesture.begin(keyCode: 1, at: 1, delayMilliseconds: 250)
+        gesture.cancel()
+        let staleProbe = gesture.probe(to: 2, sessionKeyDown: true, hardwareKeyDown: true)
+        #expect(!staleProbe)
+    }
+
+    @Test func receiverSurvivesTransientProxyAndIsReleasedOnCancellation() {
+        var context = InitialLetterHoldContext<NSObject>()
+        weak var proxy: NSObject?
+        let token: UUID
+        do {
+            let eventReceiver = NSObject(); proxy = eventReceiver
+            token = context.begin(receiver: eventReceiver)
+        }
+        #expect(proxy != nil)
+        #expect(context.resolve(token) === proxy)
+        context.cancel()
+        #expect(proxy == nil)
+        #expect(context.resolve(token) == nil)
+    }
+
+    @Test func staleTimerCannotResolveNewInputConnection() {
+        var context = InitialLetterHoldContext<NSObject>()
+        let old = context.begin(receiver: NSObject())
+        context.cancel() // 失焦、模式切換、Secure Input 或編輯時取消。
+        let receiver = NSObject(), current = context.begin(receiver: receiver)
+        #expect(context.resolve(old) == nil)
+        #expect(context.resolve(current) === receiver)
+        context.cancel()
+        #expect(context.resolve(current) == nil)
     }
 }

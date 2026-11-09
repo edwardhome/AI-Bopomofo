@@ -23,9 +23,29 @@ public struct InitialLetterHoldGesture: Sendable {
         guard time >= deadline else { return false }
         cancel(); return true
     }
+    /// Quartz 狀態表與 IMK 事件來源可能不同。單次查不到按住只能略過 Timer，
+    /// 不可把它當成可靠 key-up，否則後來的實際 repeat 也無法補判。
+    public mutating func probe(to time: TimeInterval, sessionKeyDown: Bool, hardwareKeyDown: Bool) -> Bool {
+        guard sessionKeyDown || hardwareKeyDown else { return false }
+        return advance(to: time, keyIsDown: true)
+    }
     /// Timer 被主執行緒延後時，仍可依 key-up 的事件時間正確決定本次長按。
     public mutating func release(at time: TimeInterval) -> Bool {
         let reached = advance(to: time, keyIsDown: true)
         cancel(); return reached
     }
+}
+
+/// 只保留當次手勢的輸入接收者；以代次取消舊回呼，不比對 IMK 代理物件位址。
+/// Target 可以是 UI 接收者，因此不宣告跨執行緒 Sendable。
+public struct InitialLetterHoldContext<Target> {
+    public private(set) var token: UUID?
+    private var receiver: Target?
+    public init() {}
+    @discardableResult public mutating func begin(receiver: Target) -> UUID {
+        let token = UUID(); self.token = token; self.receiver = receiver
+        return token
+    }
+    public func resolve(_ token: UUID) -> Target? { self.token == token ? receiver : nil }
+    public mutating func cancel() { token = nil; receiver = nil }
 }

@@ -89,7 +89,7 @@ class McBopomofoInputMethodController: IMKInputController {
     private var symbolKeysDown = SymbolKeyOwnership()
     private var initialLetterHold = InitialLetterHoldGesture()
     private var initialLetterTimer: Timer?
-    private weak var initialLetterClient: AnyObject?
+    private var initialLetterContext = InitialLetterHoldContext<AnyObject>()
 
     // Share the stored issues, so a set of issues is shown as notification only once.
     static var latestUserFileIssues: [String] = []
@@ -471,7 +471,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
     private func cancelInitialLetterHold() {
         initialLetterTimer?.invalidate(); initialLetterTimer = nil
-        initialLetterHold.cancel(); initialLetterClient = nil
+        initialLetterHold.cancel(); initialLetterContext.cancel()
     }
 
     private func lowercaseInitialLetter(client: Any?) {
@@ -482,22 +482,24 @@ class McBopomofoInputMethodController: IMKInputController {
 
     private func scheduleInitialLetterTimer() {
         initialLetterTimer?.invalidate()
+        guard let token = initialLetterContext.token else { return }
         let timer = Timer(timeInterval: initialLetterHold.remaining(at: ProcessInfo.processInfo.systemUptime), repeats: false) { [weak self] timer in
-            guard let self, self.initialLetterTimer === timer else { return }
-            guard !IsSecureEventInputEnabled(), !self.directEnglish, self.currentClient != nil,
-                  self.initialLetterClient === (self.currentClient as AnyObject?),
+            guard let self, let receiver = self.initialLetterContext.resolve(token) else { return }
+            self.initialLetterTimer = nil
+            guard !IsSecureEventInputEnabled(), !self.directEnglish,
                   let keyCode = self.initialLetterHold.keyCode,
                   (self.state as? InputState.ShiftASCII)?.session.canLowercaseInitialLetter == true else {
                 self.cancelInitialLetterHold(); return
             }
             // 只查本次首字母是否仍按住，不建立全域事件監聽，也不記錄按鍵。
-            let down = CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
-            if self.initialLetterHold.advance(to: ProcessInfo.processInfo.systemUptime, keyIsDown: down) {
-                self.lowercaseInitialLetter(client: self.currentClient)
+            let sessionDown = CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
+            let hardwareDown = CGEventSource.keyState(.hidSystemState, key: CGKeyCode(keyCode))
+            if self.initialLetterHold.probe(to: ProcessInfo.processInfo.systemUptime,
+                sessionKeyDown: sessionDown, hardwareKeyDown: hardwareDown) {
+                self.lowercaseInitialLetter(client: receiver)
                 self.cancelInitialLetterHold()
-            } else if self.initialLetterHold.keyCode == nil {
-                self.cancelInitialLetterHold()
-            } else { self.scheduleInitialLetterTimer() }
+            } else if sessionDown || hardwareDown { self.scheduleInitialLetterTimer() }
+            // 無法確認按住時不改字、不忙等，保留手勢交給實際 repeat／key-up 結算。
         }
         initialLetterTimer = timer
         RunLoop.main.add(timer, forMode: .common)
@@ -505,7 +507,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
     private func updateInitialLetterHold(for event: NSEvent, client: Any?) {
         guard let keyCode = initialLetterHold.keyCode else { return }
-        guard !IsSecureEventInputEnabled(), initialLetterClient === (client as AnyObject?),
+        guard !IsSecureEventInputEnabled(), initialLetterContext.token != nil,
               event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty else {
             cancelInitialLetterHold(); return
         }
@@ -520,6 +522,7 @@ class McBopomofoInputMethodController: IMKInputController {
             // 不同新按鍵到達時，先依時間與實體狀態結算，再交給既有英文流程。
             let down = event.keyCode == keyCode && event.isARepeat
                 || CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
+                || CGEventSource.keyState(.hidSystemState, key: CGKeyCode(keyCode))
             if initialLetterHold.advance(to: event.timestamp, keyIsDown: down) { lowercaseInitialLetter(client: client) }
             if !event.isARepeat || event.keyCode != keyCode || initialLetterHold.keyCode == nil { cancelInitialLetterHold() }
         }
@@ -530,8 +533,8 @@ class McBopomofoInputMethodController: IMKInputController {
               event.modifierFlags.contains(.shift),
               event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty,
               let shifted = state as? InputState.ShiftASCII, shifted.session.canLowercaseInitialLetter,
-              event.characters == shifted.composition.raw else { return }
-        initialLetterClient = client as AnyObject?
+              event.characters == shifted.composition.raw, let receiver = client as? IMKTextInput else { return }
+        initialLetterContext.begin(receiver: receiver as AnyObject)
         initialLetterHold.begin(keyCode: event.keyCode, at: event.timestamp,
             delayMilliseconds: Preferences.initialLetterHoldDelayMilliseconds)
         scheduleInitialLetterTimer()
