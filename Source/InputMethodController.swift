@@ -87,6 +87,9 @@ class McBopomofoInputMethodController: IMKInputController {
     private var pendingFEvent: NSEvent?
     private var fHoldStartedAt: TimeInterval?
     private var symbolKeysDown = SymbolKeyOwnership()
+    private var initialLetterHold = InitialLetterHoldGesture()
+    private var initialLetterTimer: Timer?
+    private weak var initialLetterClient: AnyObject?
 
     // Share the stored issues, so a set of issues is shown as notification only once.
     static var latestUserFileIssues: [String] = []
@@ -99,6 +102,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func menu() -> NSMenu! {
+        cancelInitialLetterHold()
         let menu = NSMenu(title: "Input Method Menu")
         menu.autoenablesItems = false
         let directItem = menu.addItem(withTitle: NSLocalizedString("Direct English (Double Shift)", comment: ""),
@@ -112,6 +116,9 @@ class McBopomofoInputMethodController: IMKInputController {
             withTitle: NSLocalizedString("Shift + Letter Starts English", comment: ""),
             action: #selector(toggleMixedEnglish(_:)), keyEquivalent: "")
         mixedItem.state = Preferences.mixedEnglishEnabled.state
+        let delayItem = menu.addItem(withTitle: String(format: NSLocalizedString("Initial Letter Lowercase Delay (%d ms)…", comment: ""),
+            Preferences.initialLetterHoldDelayMilliseconds), action: #selector(setInitialLetterHoldDelay(_:)), keyEquivalent: "")
+        delayItem.target = self
         if Thread.isMainThread { MainActor.assumeIsolated { addLearningMenu(to: menu) } }
         let engineeringItem = menu.addItem(withTitle: NSLocalizedString("Engineering and Science Lexicon", comment: ""),
                                           action: #selector(toggleEngineeringLexicon(_:)), keyEquivalent: "")
@@ -253,6 +260,7 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKStateSetting protocol methods
 
     override func activateServer(_ client: Any!) {
+        cancelInitialLetterHold()
         recordShiftDiagnostic(.activate)
         hideInputModeIndicator()
         shiftGesture.reset()
@@ -281,6 +289,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func deactivateServer(_ client: Any!) {
+        cancelInitialLetterHold()
         recordShiftDiagnostic(.deactivate)
         hideInputModeIndicator()
         shiftGesture.reset()
@@ -295,6 +304,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func setValue(_ value: Any!, forTag tag: Int, client: Any!) {
+        cancelInitialLetterHold()
         recordShiftDiagnostic(.setValue)
         hideInputModeIndicator()
         if let assistance = state as? InputState.Assistance {
@@ -332,6 +342,7 @@ class McBopomofoInputMethodController: IMKInputController {
     // MARK: - IMKServerInput protocol methods
 
     override func commitComposition(_ client: Any!) {
+        cancelInitialLetterHold()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
         if fHoldGesture.phase == .pending {
@@ -432,7 +443,98 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     @objc private func toggleMixedEnglish(_ sender: Any?) {
+        cancelInitialLetterHold()
         Preferences.mixedEnglishEnabled.toggle()
+    }
+
+    @objc private func setInitialLetterHoldDelay(_ sender: Any?) {
+        guard !IsSecureEventInputEnabled() else { return }
+        cancelInitialLetterHold()
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("Initial Letter Lowercase Delay", comment: "")
+        alert.informativeText = NSLocalizedString("Hold the first letter, not Shift. Enter 100–1000 milliseconds; default 250. F layer timing is separate.", comment: "")
+        let field = NSTextField(string: String(Preferences.initialLetterHoldDelayMilliseconds))
+        field.frame = NSRect(x: 0, y: 0, width: 220, height: 24)
+        alert.accessoryView = field
+        alert.addButton(withTitle: NSLocalizedString("Save", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+        NSApp.activate(ignoringOtherApps: true)
+        alert.window.initialFirstResponder = field
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        guard let value = Int(field.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)),
+              (100...1000).contains(value) else {
+            NotifierController.notify(message: NSLocalizedString("Enter a whole number from 100 to 1000 milliseconds.", comment: ""))
+            return
+        }
+        Preferences.initialLetterHoldDelayMilliseconds = value
+    }
+
+    private func cancelInitialLetterHold() {
+        initialLetterTimer?.invalidate(); initialLetterTimer = nil
+        initialLetterHold.cancel(); initialLetterClient = nil
+    }
+
+    private func lowercaseInitialLetter(client: Any?) {
+        guard let shifted = state as? InputState.ShiftASCII,
+              let next = shifted.session.lowercasingInitialLetter(lexicon: shifted.sessionLexicon) else { return }
+        handle(state: InputState.ShiftASCII(session: next, sessionLexicon: shifted.sessionLexicon), client: client)
+    }
+
+    private func scheduleInitialLetterTimer() {
+        initialLetterTimer?.invalidate()
+        let timer = Timer(timeInterval: initialLetterHold.remaining(at: ProcessInfo.processInfo.systemUptime), repeats: false) { [weak self] timer in
+            guard let self, self.initialLetterTimer === timer else { return }
+            guard !IsSecureEventInputEnabled(), !self.directEnglish, self.currentClient != nil,
+                  self.initialLetterClient === (self.currentClient as AnyObject?),
+                  let keyCode = self.initialLetterHold.keyCode,
+                  (self.state as? InputState.ShiftASCII)?.session.canLowercaseInitialLetter == true else {
+                self.cancelInitialLetterHold(); return
+            }
+            // 只查本次首字母是否仍按住，不建立全域事件監聽，也不記錄按鍵。
+            let down = CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
+            if self.initialLetterHold.advance(to: ProcessInfo.processInfo.systemUptime, keyIsDown: down) {
+                self.lowercaseInitialLetter(client: self.currentClient)
+                self.cancelInitialLetterHold()
+            } else if self.initialLetterHold.keyCode == nil {
+                self.cancelInitialLetterHold()
+            } else { self.scheduleInitialLetterTimer() }
+        }
+        initialLetterTimer = timer
+        RunLoop.main.add(timer, forMode: .common)
+    }
+
+    private func updateInitialLetterHold(for event: NSEvent, client: Any?) {
+        guard let keyCode = initialLetterHold.keyCode else { return }
+        guard !IsSecureEventInputEnabled(), initialLetterClient === (client as AnyObject?),
+              event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty else {
+            cancelInitialLetterHold(); return
+        }
+        if event.type == .keyUp, event.keyCode == keyCode {
+            if initialLetterHold.release(at: event.timestamp) { lowercaseInitialLetter(client: client) }
+            cancelInitialLetterHold()
+        } else if event.type == .keyDown {
+            if event.keyCode == keyCode && !event.isARepeat {
+                // 同鍵重新按下代表上一按已結束，即使 IMK 遺漏 key-up 也不可補判長按。
+                cancelInitialLetterHold(); return
+            }
+            // 不同新按鍵到達時，先依時間與實體狀態結算，再交給既有英文流程。
+            let down = event.keyCode == keyCode && event.isARepeat
+                || CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
+            if initialLetterHold.advance(to: event.timestamp, keyIsDown: down) { lowercaseInitialLetter(client: client) }
+            if !event.isARepeat || event.keyCode != keyCode || initialLetterHold.keyCode == nil { cancelInitialLetterHold() }
+        }
+    }
+
+    private func beginInitialLetterHold(after event: NSEvent, client: Any?) {
+        guard !event.isARepeat, !IsSecureEventInputEnabled(), Preferences.mixedEnglishEnabled,
+              event.modifierFlags.contains(.shift),
+              event.modifierFlags.intersection([.command, .control, .option, .function, .capsLock]).isEmpty,
+              let shifted = state as? InputState.ShiftASCII, shifted.session.canLowercaseInitialLetter,
+              event.characters == shifted.composition.raw else { return }
+        initialLetterClient = client as AnyObject?
+        initialLetterHold.begin(keyCode: event.keyCode, at: event.timestamp,
+            delayMilliseconds: Preferences.initialLetterHoldDelayMilliseconds)
+        scheduleInitialLetterTimer()
     }
 
     @objc func toggleEngineeringLexicon(_ sender: Any?) {
@@ -618,6 +720,7 @@ class McBopomofoInputMethodController: IMKInputController {
             commitComposition(client)
             return false
         }
+        updateInitialLetterHold(for: event, client: client)
 
         // 副駕駛提示不得攔住 F 手勢或快捷鍵；先恢復原組字再走既有流程。
         if let automatic = state as? InputState.AutomaticAssistance {
@@ -738,7 +841,9 @@ class McBopomofoInputMethodController: IMKInputController {
             return false
         }
 
-        return handleTextEvent(event, client: client)
+        let handled = handleTextEvent(event, client: client)
+        if handled { beginInitialLetterHold(after: event, client: client) }
+        return handled
     }
 
     private func handleTextEvent(_ event: NSEvent, client: Any?) -> Bool {
@@ -878,6 +983,9 @@ class McBopomofoInputMethodController: IMKInputController {
 extension McBopomofoInputMethodController {
 
     func handle(state newState: InputState, client: Any?) {
+        if (newState as? InputState.ShiftASCII)?.session.canLowercaseInitialLetter != true {
+            cancelInitialLetterHold()
+        }
         hideInputModeIndicator()
         textAssistant.cancel()
         let previous = state

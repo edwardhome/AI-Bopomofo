@@ -243,6 +243,13 @@ class Preferences: NSObject {
     @UserDefault(key: "MixedEnglishEnabled", defaultValue: false)
     @objc static var mixedEnglishEnabled: Bool
 
+    @UserDefault(key: "InitialLetterHoldDelayMilliseconds", defaultValue: InitialLetterHoldGesture.defaultDelayMilliseconds)
+    private static var storedInitialLetterHoldDelayMilliseconds: Int
+    @objc static var initialLetterHoldDelayMilliseconds: Int {
+        get { InitialLetterHoldGesture.clampedDelayMilliseconds(storedInitialLetterHoldDelayMilliseconds) }
+        set { storedInitialLetterHoldDelayMilliseconds = InitialLetterHoldGesture.clampedDelayMilliseconds(newValue) }
+    }
+
     static var allKeys: [String] {
         [
             "FHoldSymbolsEnabled",
@@ -251,6 +258,7 @@ class Preferences: NSObject {
             "EngineeringLexiconEnabled",
             "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",
+            "InitialLetterHoldDelayMilliseconds",
             kLetterBehaviorKey,
             kSwitchInputSourceUponShiftLetterKeyComboInputSourceIDKey,
             kSwitchInputSourceUponShiftLetterKeyComboEnabledKey,

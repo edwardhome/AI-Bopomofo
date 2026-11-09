@@ -468,3 +468,13 @@
 "AnnotationsAreNotReadings" = "原有中文說明只作提示；補入確認過的注音後，才能啟用中文別名。";
 
 "LegacyImportSkipped" = "已略過排除詞 %d 筆；不合法行號：%@。原檔不變。";
+
+"Initial Letter Lowercase Delay (%d ms)…" = "首字母轉小寫等待時間（%d 毫秒）⋯";
+
+"Initial Letter Lowercase Delay" = "首字母轉小寫等待時間";
+
+"Hold the first letter, not Shift. Enter 100–1000 milliseconds; default 250. F layer timing is separate." = "按住首字母鍵即可轉小寫。請輸入 100～1000 毫秒，預設 250 毫秒；與 F 分層的等待時間分開設定。";
+
+"Enter a whole number from 100 to 1000 milliseconds." = "請輸入 100～1000 之間的整數毫秒。";
+
+"Save" = "儲存";

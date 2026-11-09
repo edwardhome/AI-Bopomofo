@@ -2,13 +2,13 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；此功能分支為 1.0.0-dev.1，尚未正式發布。** 已發布版本為 [0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15)。開發版新增首字母長按轉小寫，以及使用者／工程詞的統一 SQLite 管理。[1.0.0 開發版內容與驗證限制](docs/releases/1.0.0-dev.1.md)
+**主線固定為 `main`；此功能分支為 1.0.0-dev.2，尚未正式發布。** 已發布版本為 [0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15)。開發版新增首字母長按轉小寫，以及使用者／工程詞的統一 SQLite 管理。[1.0.0 開發版內容與驗證限制](docs/releases/1.0.0-dev.2.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
 ## 1.0.0 開發版：首字母長按與統一詞庫
 
-Shift＋S 短按保留 `S`；持續按住字母 **S**，收到系統重複事件後將尚未送出的首字母改成 `s`，不連續產生 ssss。放開 Shift 後繼續組英文單字；第二個新 Shift 字母仍沿用連續大寫。長按的是字母鍵，時間沿用系統鍵盤重複延遲。
+Shift＋S 短按保留 `S`；持續按住字母 **S**，到達設定時間後將尚未送出的首字母改成 `s`，不連續產生 ssss。放開 Shift 後繼續組英文單字；第二個新 Shift 字母仍沿用連續大寫。長按的是字母鍵，在第一層選單「首字母轉小寫等待時間」調整 100～1000 毫秒，預設 250 毫秒；與 F 分層分開設定。
 
 新增第一層選單「使用者與工程詞庫」：中文詞、英文碼、工程詞、Unicode 與中文別名關聯，在同一份版本化 SQLite 管理。中文別名需填確認過的注音，例如 `甲烷／ㄐㄧㄚˇ-ㄨㄢˊ` 可用注音選取「甲烷」，工程碼 `ch4` 則可選 `CH₄`。
 

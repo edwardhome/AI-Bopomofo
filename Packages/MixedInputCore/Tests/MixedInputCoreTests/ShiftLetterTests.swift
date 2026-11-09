@@ -53,7 +53,7 @@ struct ShiftLetterTests {
         let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
         let repeated = try updated(initial.applying(.insert("S"), shiftHeld: true, repeating: true))
         #expect(repeated.mode == .initial)
-        #expect(repeated.composition.raw == "s")
+        #expect(repeated.composition.raw == "S")
         if case .passThrough(let text) = initial.applying(.shortcut, shiftHeld: true) { #expect(text == "S") }
         else { Issue.record("Shortcut must pass through") }
     }
@@ -75,6 +75,7 @@ struct ShiftLetterTests {
     @Test func heldInitialLetterLowercasesOnceAfterShiftRelease() throws {
         var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
         session = try updated(session.releasingShift())
+        session = try #require(session.lowercasingInitialLetter())
         for _ in 0..<10 {
             session = try updated(session.applying(.insert("s"), shiftHeld: false, repeating: true))
             #expect(session.composition.raw == "s")
@@ -93,12 +94,22 @@ struct ShiftLetterTests {
     }
 
     @Test func heldInitialLetterDoesNotChangeUppercaseContinuation() throws {
-        let session = try updated(ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
-            .applying(.insert("S"), shiftHeld: true, repeating: true))
+        let session = try #require(ShiftLetterSession(composition: ASCIIComposition(raw: "S")).lowercasingInitialLetter())
         if case .commitAndContinue(let text, let next) = session.applying(.insert("W"), shiftHeld: true) {
             #expect(text == "sW")
             #expect(next.mode == .uppercase)
         } else { Issue.record("The second fresh Shift letter keeps uppercase continuation") }
+    }
+
+    @Test func editsAndCandidateSelectionInvalidateDelayedLowercase() throws {
+        let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"))
+        let deleted = try updated(initial.applying(.backspace, shiftHeld: true))
+        #expect(deleted.lowercasingInitialLetter() == nil)
+        let edited = try updated(initial.applying(.insert("w"), shiftHeld: false))
+        #expect(edited.lowercasingInitialLetter() == nil)
+        #expect(initial.replacing(composition: ASCIIComposition(raw: "Swift")).lowercasingInitialLetter() == nil)
+        let lower = try #require(initial.lowercasingInitialLetter())
+        #expect(lower.lowercasingInitialLetter() == nil)
     }
 
 }

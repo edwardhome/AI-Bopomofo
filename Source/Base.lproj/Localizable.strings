@@ -468,3 +468,13 @@
 "AnnotationsAreNotReadings" = "Annotations remain hints; add confirmed readings to enable Chinese aliases.";
 
 "LegacyImportSkipped" = "Excluded rows: %d. Invalid row numbers: %@. Original files are unchanged.";
+
+"Initial Letter Lowercase Delay (%d ms)…" = "Initial letter lowercase delay (%d ms)…";
+
+"Initial Letter Lowercase Delay" = "Initial letter lowercase delay";
+
+"Hold the first letter, not Shift. Enter 100–1000 milliseconds; default 250. F layer timing is separate." = "Hold the first letter, not Shift. Enter 100–1000 milliseconds; default 250. F layer timing is separate.";
+
+"Enter a whole number from 100 to 1000 milliseconds." = "Enter a whole number from 100 to 1000 milliseconds.";
+
+"Save" = "Save";

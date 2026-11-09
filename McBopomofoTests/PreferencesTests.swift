@@ -82,6 +82,18 @@ final class PreferencesTests {
         #expect(Preferences.fHoldDelayMilliseconds == 1000)
     }
 
+    @Test func initialLetterDelayIsIndependentAndPersists() {
+        #expect(Preferences.initialLetterHoldDelayMilliseconds == 250)
+        Preferences.initialLetterHoldDelayMilliseconds = 150
+        #expect(UserDefaults.standard.integer(forKey: "InitialLetterHoldDelayMilliseconds") == 150)
+        #expect(Preferences.fHoldDelayMilliseconds == 150)
+        Preferences.initialLetterHoldDelayMilliseconds = 0
+        #expect(Preferences.initialLetterHoldDelayMilliseconds == 100)
+        UserDefaults.standard.set(Int.max, forKey: "InitialLetterHoldDelayMilliseconds")
+        #expect(Preferences.initialLetterHoldDelayMilliseconds == 1000)
+        #expect(Preferences.allKeys.contains("InitialLetterHoldDelayMilliseconds"))
+    }
+
     @Test("Test keyboard layout setting")
     func testKeyboardLayout() {
         #expect(Preferences.keyboardLayout == .standard)

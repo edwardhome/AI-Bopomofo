@@ -1,7 +1,7 @@
 // Copyright (c) 2026 AI-Bopomofo contributors. MIT License.
 
 /// Shift 英文的明確狀態：首字母暫存、英文單字、連續大寫。
-/// 首字母的系統重複事件代表長按；第二個新字母仍沿用連續大寫規則。
+/// 首字母的長按計時由控制器提供；第二個新字母仍沿用連續大寫規則。
 public struct ShiftLetterSession: Sendable {
     public enum Mode: Sendable { case initial, word, uppercase }
     public let composition: ASCIIComposition
@@ -33,6 +33,17 @@ public struct ShiftLetterSession: Sendable {
         case forward, cancel, rejected
     }
 
+    public var canLowercaseInitialLetter: Bool {
+        heldInitialLetter != nil && composition.selectedIndex == 0 && composition.raw == heldInitialLetter
+    }
+
+    /// 僅修改仍在組字的原始首字母；保留追蹤以消耗後續 repeat。
+    public func lowercasingInitialLetter(lexicon: TechnicalLexicon = TechnicalLexicon()) -> Self? {
+        guard canLowercaseInitialLetter, let heldInitialLetter else { return nil }
+        return Self(composition: ASCIIComposition(raw: heldInitialLetter.lowercased(), lexicon: lexicon),
+            mode: mode, heldInitialLetter: heldInitialLetter, trackInitialLetter: false)
+    }
+
     public func releasingShift() -> Result {
         switch mode {
         case .initial: return .updated(Self(composition: composition, mode: .word, heldInitialLetter: heldInitialLetter, trackInitialLetter: false))
@@ -47,14 +58,13 @@ public struct ShiftLetterSession: Sendable {
         if case .shortcut = action { return .passThrough(composition.display) }
         if case .enter = action { return .commit(composition.display) }
 
-        // 按住首字母時，只修改尚未提交的原文一次；後續 repeat 一律消耗，
-        // 不接受候選、不改已送出的文字，也不產生一串 ssss。
+        // 門檻前後的首字母 repeat 都只消耗，不提前轉換或產生一串 ssss。
+        // 轉小寫由獨立計時器判斷，避免系統 repeat 比使用者設定更快或更慢。
         if repeating, let heldInitialLetter, case .insert(let text) = action,
            text.lowercased() == heldInitialLetter.lowercased(),
            composition.selectedIndex == 0, composition.raw.count == 1,
            composition.raw.lowercased() == heldInitialLetter.lowercased() {
-            return .updated(Self(composition: ASCIIComposition(raw: heldInitialLetter.lowercased(), lexicon: lexicon),
-                mode: mode, heldInitialLetter: heldInitialLetter, trackInitialLetter: false))
+            return .updated(self)
         }
 
         // 連續大寫只暫存當次要送出的內容；刪除與方向鍵交回原應用程式。
