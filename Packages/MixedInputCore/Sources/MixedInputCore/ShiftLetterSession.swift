@@ -1,18 +1,24 @@
 // Copyright (c) 2026 AI-Bopomofo contributors. MIT License.
 
 /// Shift 英文的明確狀態：首字母暫存、英文單字、連續大寫。
-/// 首字母的長按計時由控制器提供；第二個新字母仍沿用連續大寫規則。
+/// 首字母期限保存在組字內，repeat 不依賴外層 Timer 是否仍存在。
 public struct ShiftLetterSession: Sendable {
     public enum Mode: Sendable { case initial, word, uppercase }
     public let composition: ASCIIComposition
     public let mode: Mode
     /// 只追蹤本次起始字母，任何後續編輯／新按鍵都會解除。
     public let heldInitialLetter: String?
+    public let holdStartedAt: Double?
+    public let holdDelayMilliseconds: Int
 
     public init(composition: ASCIIComposition, mode: Mode = .initial,
-                heldInitialLetter: String? = nil, trackInitialLetter: Bool = true) {
+                heldInitialLetter: String? = nil, trackInitialLetter: Bool = true,
+                holdStartedAt: Double? = nil,
+                holdDelayMilliseconds: Int = InitialLetterHoldGesture.defaultDelayMilliseconds) {
         self.composition = composition
         self.mode = mode
+        self.holdStartedAt = holdStartedAt
+        self.holdDelayMilliseconds = InitialLetterHoldGesture.clampedDelayMilliseconds(holdDelayMilliseconds)
         let bytes = composition.raw.utf8
         self.heldInitialLetter = heldInitialLetter ?? (trackInitialLetter && mode == .initial
             && bytes.count == 1 && bytes.first.map({ (65...90).contains($0) }) == true
@@ -22,7 +28,8 @@ public struct ShiftLetterSession: Sendable {
     public func replacing(composition: ASCIIComposition) -> Self {
         Self(composition: composition, mode: mode,
              heldInitialLetter: composition.raw == self.composition.raw && composition.selectedIndex == 0
-                ? heldInitialLetter : nil, trackInitialLetter: false)
+                ? heldInitialLetter : nil, trackInitialLetter: false,
+             holdStartedAt: holdStartedAt, holdDelayMilliseconds: holdDelayMilliseconds)
     }
 
     public enum Result: Sendable {
@@ -41,29 +48,36 @@ public struct ShiftLetterSession: Sendable {
     public func lowercasingInitialLetter(lexicon: TechnicalLexicon = TechnicalLexicon()) -> Self? {
         guard canLowercaseInitialLetter, let heldInitialLetter else { return nil }
         return Self(composition: ASCIIComposition(raw: heldInitialLetter.lowercased(), lexicon: lexicon),
-            mode: mode, heldInitialLetter: heldInitialLetter, trackInitialLetter: false)
+            mode: mode, heldInitialLetter: heldInitialLetter, trackInitialLetter: false,
+            holdStartedAt: holdStartedAt, holdDelayMilliseconds: holdDelayMilliseconds)
     }
 
     public func releasingShift() -> Result {
         switch mode {
-        case .initial: return .updated(Self(composition: composition, mode: .word, heldInitialLetter: heldInitialLetter, trackInitialLetter: false))
+        case .initial: return .updated(Self(composition: composition, mode: .word, heldInitialLetter: heldInitialLetter,
+            trackInitialLetter: false, holdStartedAt: holdStartedAt, holdDelayMilliseconds: holdDelayMilliseconds))
         case .word: return .updated(self)
         case .uppercase: return .commit(composition.display)
         }
     }
 
     public func applying(_ action: ASCIIComposition.Action, shiftHeld: Bool,
-                         repeating: Bool = false, lexicon: TechnicalLexicon = TechnicalLexicon()) -> Result {
+                         repeating: Bool = false, now: Double? = nil,
+                         lexicon: TechnicalLexicon = TechnicalLexicon()) -> Result {
         if case .escape = action { return .cancel }
         if case .shortcut = action { return .passThrough(composition.display) }
         if case .enter = action { return .commit(composition.display) }
 
-        // 門檻前後的首字母 repeat 都只消耗，不提前轉換或產生一串 ssss。
-        // 轉小寫由獨立計時器判斷，避免系統 repeat 比使用者設定更快或更慢。
+        // 恢復已實測的組字內 repeat 路徑，並套用本次設定門檻。
+        // 外層 Timer 即使未啟動或被取消，仍可完成轉換；只轉一次、不插入重複字母。
         if repeating, let heldInitialLetter, case .insert(let text) = action,
            text.lowercased() == heldInitialLetter.lowercased(),
            composition.selectedIndex == 0, composition.raw.count == 1,
            composition.raw.lowercased() == heldInitialLetter.lowercased() {
+            if let now, let holdStartedAt, now >= holdStartedAt + Double(holdDelayMilliseconds) / 1000,
+               let lower = lowercasingInitialLetter(lexicon: lexicon) {
+                return .updated(lower)
+            }
             return .updated(self)
         }
 

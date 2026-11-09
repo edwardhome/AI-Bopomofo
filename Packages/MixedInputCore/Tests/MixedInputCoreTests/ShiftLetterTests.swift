@@ -4,6 +4,59 @@ import Testing
 
 @Suite("Shift letter modes")
 struct ShiftLetterTests {
+    @Test(arguments: [100, 250, 1000])
+    func repeatConvertsAtConfiguredDeadlineWithoutAnyControllerTimer(_ delay: Int) throws {
+        var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"),
+            holdStartedAt: 10, holdDelayMilliseconds: delay)
+        let deadline = 10 + Double(delay) / 1000
+        session = try updated(session.applying(.insert("S"), shiftHeld: true, repeating: true, now: deadline - 0.001))
+        #expect(session.composition.raw == "S")
+        session = try updated(session.applying(.insert("S"), shiftHeld: true, repeating: true, now: deadline))
+        #expect(session.composition.raw == "s")
+        for _ in 0..<10 {
+            session = try updated(session.applying(.insert("S"), shiftHeld: true, repeating: true, now: deadline + 2))
+            #expect(session.composition.raw == "s")
+        }
+    }
+
+    @Test func shiftReleaseAndStateCopyPreserveOriginalDeadline() throws {
+        var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"),
+            holdStartedAt: 10, holdDelayMilliseconds: 1000)
+        session = try updated(session.releasingShift())
+        session = session.replacing(composition: session.composition)
+        #expect(session.holdStartedAt == 10)
+        #expect(session.holdDelayMilliseconds == 1000)
+        session = try updated(session.applying(.insert("s"), shiftHeld: false, repeating: true, now: 10.5))
+        #expect(session.composition.raw == "S")
+        session = try updated(session.applying(.insert("s"), shiftHeld: false, repeating: true, now: 11))
+        #expect(session.composition.raw == "s")
+        session = try updated(session.applying(.insert("wift"), shiftHeld: false, now: 11.1))
+        #expect(session.composition.raw == "swift")
+    }
+
+    @Test func cancelledOuterGestureCannotDisableRealRepeatFallback() throws {
+        var outer = InitialLetterHoldGesture()
+        outer.begin(keyCode: 1, at: 10, delayMilliseconds: 250)
+        var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"),
+            holdStartedAt: 10, holdDelayMilliseconds: 250)
+        outer.cancel() // 重現外層被取消，但英文組字仍存在的 1.0.3 回歸。
+        #expect(outer.keyCode == nil)
+        session = try updated(session.applying(.insert("S"), shiftHeld: true, repeating: true, now: 10.5))
+        #expect(session.composition.raw == "s")
+    }
+
+    @Test func freshPressAndShortcutDoNotUseOldRepeatDeadline() throws {
+        let initial = ShiftLetterSession(composition: ASCIIComposition(raw: "S"),
+            holdStartedAt: 10, holdDelayMilliseconds: 100)
+        var session = try updated(initial.releasingShift())
+        session = try updated(session.applying(.insert("s"), shiftHeld: false, now: 11))
+        session = try updated(session.applying(.insert("s"), shiftHeld: false, repeating: true, now: 12))
+        #expect(session.composition.raw == "Sss")
+        if case .passThrough(let text) = initial.applying(.shortcut, shiftHeld: true, repeating: true, now: 12) {
+            #expect(text == "S")
+        } else { Issue.record("Shortcut must remain a shortcut") }
+    }
+
     private func updated(_ result: ShiftLetterSession.Result) throws -> ShiftLetterSession {
         guard case .updated(let next) = result else {
             Issue.record("Expected composition to remain editable")

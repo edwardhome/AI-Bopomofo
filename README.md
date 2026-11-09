@@ -2,13 +2,13 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；此功能分支交付版本為 1.0.3，GitHub Release 尚未發布。** 已發布版本為 [0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15)。開發版新增首字母長按轉小寫，以及使用者／工程詞的統一 SQLite 管理。[1.0.3 Bug 修復與驗證限制](docs/releases/1.0.3.md)
+**主線固定為 `main`；此功能分支交付版本為 1.0.4，GitHub Release 尚未發布。** 已發布版本為 [0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15)。開發版新增首字母長按轉小寫，以及使用者／工程詞的統一 SQLite 管理。[1.0.4 Bug 修復與驗證限制](docs/releases/1.0.4.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
-## 1.0.3：修正首字母長按失效
+## 1.0.4：恢復組字內的長按轉小寫
 
-修正 1.0.1 的計時接收者與按住狀態判斷：不再依賴輸入代理物件的位址相同；狀態查詢未確認時保留實際 repeat／key-up 的結算途徑。時間設定與詞庫功能保留，實鍵仍待使用者驗收。[共同版本規則](docs/versioning.md)
+1.0.3 經使用者實測仍未恢復。本版恢復原本已實測的組字內 repeat 轉換，加上每次組字保存的時間門檻；外層計時器即使沒有啟動或被取消，也不會讓長按永久失效。選單內容查詢不再取消計時，設定介面保留。1.0.4 實鍵仍待驗收。[共同版本規則](docs/versioning.md)
 
 ## 1.0.1：首字母長按與統一詞庫
 

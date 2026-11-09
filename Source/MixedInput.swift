@@ -115,7 +115,9 @@ extension InputState {
         }
         init(composition: ASCIIComposition, mode: ShiftLetterSession.Mode,
              prediction: String? = nil, predictionSuppressed: Bool = false, sessionLexicon: TechnicalLexicon = MixedInputHandler.lexicon) {
-            session = ShiftLetterSession(composition: composition, mode: mode)
+            session = ShiftLetterSession(composition: composition, mode: mode,
+                holdStartedAt: ProcessInfo.processInfo.systemUptime,
+                holdDelayMilliseconds: Preferences.initialLetterHoldDelayMilliseconds)
             super.init(composition: composition, prediction: prediction,
                        predictionSuppressed: predictionSuppressed || mode != .word, sessionLexicon: sessionLexicon)
             tooltip = NSLocalizedString("Shift English: Space or Enter commits; Esc cancels", comment: "")
@@ -317,7 +319,7 @@ extension InputState {
 
         if let shifted = state as? InputState.ShiftASCII {
             switch shifted.session.applying(action, shiftHeld: input.isShiftHold,
-                repeating: input.isARepeat, lexicon: state.sessionLexicon) {
+                repeating: input.isARepeat, now: ProcessInfo.processInfo.systemUptime, lexicon: state.sessionLexicon) {
             case .updated(let next):
                 stateCallback(InputState.ShiftASCII(session: next,
                     predictionSuppressed: input.isTab || input.isUp || input.isDown || input.isLeft || input.isRight, sessionLexicon: shifted.sessionLexicon))

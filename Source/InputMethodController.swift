@@ -102,7 +102,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     override func menu() -> NSMenu! {
-        cancelInitialLetterHold()
+        // IMK 可為刷新內容而查詢選單；查詢不可取消正在輸入的手勢。
         let menu = NSMenu(title: "Input Method Menu")
         menu.autoenablesItems = false
         let directItem = menu.addItem(withTitle: NSLocalizedString("Direct English (Double Shift)", comment: ""),
@@ -535,8 +535,8 @@ class McBopomofoInputMethodController: IMKInputController {
               let shifted = state as? InputState.ShiftASCII, shifted.session.canLowercaseInitialLetter,
               event.characters == shifted.composition.raw, let receiver = client as? IMKTextInput else { return }
         initialLetterContext.begin(receiver: receiver as AnyObject)
-        initialLetterHold.begin(keyCode: event.keyCode, at: event.timestamp,
-            delayMilliseconds: Preferences.initialLetterHoldDelayMilliseconds)
+        initialLetterHold.begin(keyCode: event.keyCode, at: shifted.session.holdStartedAt ?? event.timestamp,
+            delayMilliseconds: shifted.session.holdDelayMilliseconds)
         scheduleInitialLetterTimer()
     }
 
