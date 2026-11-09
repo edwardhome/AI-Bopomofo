@@ -2,9 +2,19 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；目前版本為 0.6.15。** 本版發布與 AI 新酷音共用的詞庫交換契約、跨平台回歸測試與操作文件，沿用既有 AI 建議、工程候選及核准式詞庫管理。[下載 0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15) · [更新內容與已知限制](docs/releases/0.6.15.md)
+**主線固定為 `main`；此功能分支為 1.0.0-dev.1，尚未正式發布。** 已發布版本為 [0.6.15](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v0.6.15)。開發版新增首字母長按轉小寫，以及使用者／工程詞的統一 SQLite 管理。[1.0.0 開發版內容與驗證限制](docs/releases/1.0.0-dev.1.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
+
+## 1.0.0 開發版：首字母長按與統一詞庫
+
+Shift＋S 短按保留 `S`；持續按住字母 **S**，收到系統重複事件後將尚未送出的首字母改成 `s`，不連續產生 ssss。放開 Shift 後繼續組英文單字；第二個新 Shift 字母仍沿用連續大寫。長按的是字母鍵，時間沿用系統鍵盤重複延遲。
+
+新增第一層選單「使用者與工程詞庫」：中文詞、英文碼、工程詞、Unicode 與中文別名關聯，在同一份版本化 SQLite 管理。中文別名需填確認過的注音，例如 `甲烷／ㄐㄧㄚˇ-ㄨㄢˊ` 可用注音選取「甲烷」，工程碼 `ch4` 則可選 `CH₄`。
+
+提供新增、編輯、刪除、選取／完整匯出、匯入預覽核准、完整還原與上一版本回復。先採離線檔案交換，不加入雲端同步或語境記憶。原有私人文字詞庫與內建工程資源保留，需主動匯入管理副本；原版編輯及引擎學習仍沿用原儲存。已核准管理詞庫的使用不依賴 FM 或詞彙觀察。
+
+[操作與實鍵驗收](docs/lexicon-learning/unified-sqlite-user-guide.md) · [SQLite 共用格式與資料流](docs/lexicon-learning/unified-sqlite-format.md)
 
 ## 0.6.14：停頓後自動建議
 
@@ -51,7 +61,8 @@
 | F 數字／符號層 | 開啟「長按 F 輸入數字／符號」並授予輸入監控，不依賴 Kanata；放開 F 退出 |
 | 英文單字組字 | 開啟「Shift＋字母開始英文組字」，首字母後放開 Shift 繼續組單字；空白／Enter 送出後回注音，Esc 取消 |
 | 連續大寫 | 持續按住 Shift，第二個新字母確認連續大寫；放開 Shift 回注音 |
-| 小寫單位 | Shift＋M 放開後可退格刪空，再輸入 `mm`；刪空不強制退出英文單字模式 |
+| 小寫單位 | Shift＋M 長按字母 M 改成 `m`，再放開後輸入另一個 m；亦保留退格刪空後輸入 `mm` |
+| 使用者與工程詞庫 | 同一份 SQLite 管理中文、工程詞與別名；離線匯入須預覽核准，可回復版本 |
 | 整句 ASCII 組字 | 從選單進入，保留大小寫、數字與符號，Enter 送出 |
 | 工程與自然科學詞庫 | 三字元前綴、兩字元完整吻合；可選 Unicode 及一般文字，中文只作提示 |
 | 專業詞候選 | 匯入英文技術詞，以前綴比對補全；原文優先，不擅自替換 |

@@ -412,3 +412,61 @@
 "Automatic Suggestions After Pausing" = "Automatic Suggestions After Pausing";
 "AI Suggestion" = "AI Suggestion";
 "AI: Tab selects, Enter confirms; typing keeps your original" = "AI: Tab selects, Enter confirms; typing keeps your original";
+
+"User and Engineering Lexicon…" = "User and Engineering Lexicon…";
+
+"Add Term…" = "Add Term…";
+
+"Edit Selected Term…" = "Edit Selected Term…";
+
+"Import SQLite / JSON…" = "Import SQLite / JSON…";
+
+"Export Selected SQLite…" = "Export Selected SQLite…";
+
+"Export Full SQLite…" = "Export Full SQLite…";
+
+"Restore SQLite…" = "Restore SQLite…";
+
+"Import Legacy User Terms…" = "Import Legacy User Terms…";
+
+"Import Built-in Engineering Terms…" = "Import Built-in Engineering Terms…";
+
+"Export JSON 1.0…" = "Export JSON 1.0…";
+
+"Restore Replaces Entire Managed Lexicon" = "Replace the entire managed lexicon with ALL previewed entries. Entries absent from this file will be removed. Original legacy files are preserved.";
+
+"Linked Terms Are Included Together" = "Selecting a linked term includes its Chinese name and engineering mappings.";
+
+"Confirm Full Replacement…" = "Confirm Full Replacement…";
+
+"JSON Cannot Preserve Relations" = "JSON 1.0 cannot preserve these Chinese alias relations. Export SQLite instead.";
+
+"Select OneSavedTerm" = "Select one saved term, outside an import preview.";
+
+"Chinese Phrase" = "Chinese phrase";
+
+"English Term" = "English term";
+
+"Engineering Term" = "Engineering term";
+
+"Unicode Mapping" = "Unicode mapping";
+
+"Term Annotation" = "Candidate annotation";
+
+"Term Category" = "Category";
+
+"Chinese Alias Optional" = "Chinese alias (optional)";
+
+"Chinese Alias Reading" = "Chinese alias reading (syllables separated by -)";
+
+"Alias Needs Confirmed Reading" = "A Chinese alias requires a confirmed reading. Bopomofo selects the Chinese name; engineering codes select symbols.";
+
+"Preview Changes" = "Preview changes";
+
+"Cancel Preview" = "Cancel preview";
+
+"CompleteOrCancelPreview" = "Approve or cancel the preview before exporting saved terms.";
+
+"AnnotationsAreNotReadings" = "Annotations remain hints; add confirmed readings to enable Chinese aliases.";
+
+"LegacyImportSkipped" = "Excluded rows: %d. Invalid row numbers: %@. Original files are unchanged.";

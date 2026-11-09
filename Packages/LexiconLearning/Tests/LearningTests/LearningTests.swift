@@ -224,7 +224,10 @@ private func temporary() throws -> URL {
         }
         let pointer = try JSONSerialization.jsonObject(with: Data(contentsOf: root.appendingPathComponent("active.json"))) as! [String:Any]
         let active = pointer["active"] as! String
-        try Data("{".utf8).write(to: root.appendingPathComponent(active).appendingPathComponent("lexicon.json"))
+        // 同時損毀權威 SQL 與該版復原快照，才必須回復前一版。
+        for name in ["lexicon.sqlite", "unified.json"] {
+            try Data("{".utf8).write(to: root.appendingPathComponent(active).appendingPathComponent(name))
+        }
         let restored = try DeploymentStore(root: root)
         #expect(try await restored.load().version == "one")
         #expect(await restored.recoveryNotice != nil)

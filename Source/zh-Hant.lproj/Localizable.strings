@@ -410,3 +410,61 @@
 "Automatic Suggestions After Pausing" = "停頓後自動提供 AI 建議";
 "AI Suggestion" = "AI 建議";
 "AI: Tab selects, Enter confirms; typing keeps your original" = "AI：Tab 選取、Enter 確認；繼續打字保留原文";
+
+"User and Engineering Lexicon…" = "使用者與工程詞庫…";
+
+"Add Term…" = "新增詞彙…";
+
+"Edit Selected Term…" = "編輯選取詞彙…";
+
+"Import SQLite / JSON…" = "匯入 SQLite／JSON…";
+
+"Export Selected SQLite…" = "匯出選取 SQLite…";
+
+"Export Full SQLite…" = "匯出完整 SQLite…";
+
+"Restore SQLite…" = "完整還原 SQLite…";
+
+"Import Legacy User Terms…" = "匯入原有使用者詞庫…";
+
+"Import Built-in Engineering Terms…" = "匯入內建工程詞…";
+
+"Export JSON 1.0…" = "匯出 JSON 1.0…";
+
+"Restore Replaces Entire Managed Lexicon" = "將以預覽中的全部詞條替換管理詞庫，檔案未包含的現有詞會移除；原有文字詞庫檔案保留。";
+
+"Linked Terms Are Included Together" = "選取有關聯的詞時，會一併納入中文名稱與工程對應。";
+
+"Confirm Full Replacement…" = "確認完整替換…";
+
+"JSON Cannot Preserve Relations" = "JSON 1.0 無法保留這些中文別名關聯，請改匯出 SQLite。";
+
+"Select OneSavedTerm" = "請先結束匯入預覽，再選取一筆已保存詞彙。";
+
+"Chinese Phrase" = "中文詞";
+
+"English Term" = "英文詞";
+
+"Engineering Term" = "工程詞";
+
+"Unicode Mapping" = "Unicode 符號";
+
+"Term Annotation" = "候選提示";
+
+"Term Category" = "分類";
+
+"Chinese Alias Optional" = "中文別名（選填）";
+
+"Chinese Alias Reading" = "中文別名注音（以 - 分隔音節）";
+
+"Alias Needs Confirmed Reading" = "中文別名須填入確認過的注音；注音選字輸出中文名稱，工程短碼選取符號。";
+
+"Preview Changes" = "預覽變更";
+
+"Cancel Preview" = "取消預覽";
+
+"CompleteOrCancelPreview" = "請先核准或取消預覽，再匯出已保存詞彙。";
+
+"AnnotationsAreNotReadings" = "原有中文說明只作提示；補入確認過的注音後，才能啟用中文別名。";
+
+"LegacyImportSkipped" = "已略過排除詞 %d 筆；不合法行號：%@。原檔不變。";

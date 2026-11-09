@@ -1,0 +1,66 @@
+{
+  "document": {
+    "format": "ai-bopomofo.lexicon",
+    "schema_version": "1.0.0",
+    "document_type": "review",
+    "dictionary_version": "sqlite-v1-synthetic",
+    "entries": [
+      {
+        "entry_id": "b3d93b65c8bc666b0368305f551b9dde594a6f7ce25cee323a080bb2631422a0",
+        "term_type": "zh_phrase",
+        "reading": "ㄐㄧㄚˇ-ㄨㄢˊ",
+        "text": "甲烷",
+        "source": "synthetic-fixture",
+        "review": {
+          "status": "observed",
+          "user_confirmed": false
+        },
+        "usage": {
+          "commit_count": 7,
+          "manual_selection_count": 2
+        }
+      },
+      {
+        "entry_id": "d41b7425d80a2f715d44848a369e9696e340dc64ae1de94037c9e39ed3fa89e3",
+        "term_type": "unicode_mapping",
+        "reading": "ch4",
+        "text": "CH₄",
+        "source": "synthetic-fixture",
+        "review": {
+          "status": "observed",
+          "user_confirmed": false
+        },
+        "annotation": "甲烷",
+        "category": "chemistry",
+        "sources": [
+          "synthetic-fixture"
+        ]
+      },
+      {
+        "entry_id": "f929fd59ce493805cefd6714657dfc2f384a1151f0a0c8e72f5d57f93eab9eb9",
+        "term_type": "technical_alias",
+        "reading": "CH4",
+        "text": "CH4",
+        "source": "synthetic-fixture",
+        "review": {
+          "status": "observed",
+          "user_confirmed": false
+        },
+        "annotation": "甲烷",
+        "policy": "candidate_only"
+      }
+    ]
+  },
+  "relations": [
+    {
+      "source_id": "b3d93b65c8bc666b0368305f551b9dde594a6f7ce25cee323a080bb2631422a0",
+      "target_id": "d41b7425d80a2f715d44848a369e9696e340dc64ae1de94037c9e39ed3fa89e3",
+      "kind": "equivalent"
+    },
+    {
+      "source_id": "b3d93b65c8bc666b0368305f551b9dde594a6f7ce25cee323a080bb2631422a0",
+      "target_id": "f929fd59ce493805cefd6714657dfc2f384a1151f0a0c8e72f5d57f93eab9eb9",
+      "kind": "equivalent"
+    }
+  ]
+}

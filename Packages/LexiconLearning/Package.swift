@@ -8,7 +8,7 @@ let package = Package(
         .target(name: "LearningCore"),
         .target(name: "LearningStorage", dependencies: ["LearningCore", "CSQLite"]),
         .target(name: "LearningOrganizer", dependencies: ["LearningCore"]),
-        .target(name: "LexiconDeployment", dependencies: ["LearningCore"]),
+        .target(name: "LexiconDeployment", dependencies: ["LearningCore", "LearningStorage"]),
         .testTarget(name: "LearningTests", dependencies: ["LearningCore", "LearningStorage", "LearningOrganizer", "LexiconDeployment"]),
         .executableTarget(name: "LearningBenchmark", dependencies: ["LearningCore"]),
     ])
