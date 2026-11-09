@@ -2,6 +2,7 @@
 
 - Work only on isolated `feature/*`, `research/*`, `fix/*` or `release/*` branches.
 - The canonical integration branch is `main`. Develop on the isolated branches above, then merge into `main` only with user authorization. Version history uses tags; do not create a new permanent default branch for every release.
+- User-defined `X.Y.Z` version policy: X changes for architecture changes or major feature generations; Y changes for new features or fundamental behavior changes; Z changes for bug fixes, minor details and UI refinements. Reset lower components when increasing X or Y. Mac and Windows follow this rule with independent version numbers. Explicit user-selected versions take precedence; assigning a version is not authorization to create/move tags, merge or publish. See `docs/versioning.md`.
 - Do not push, publish, sign with private credentials, change Kanata, or install without user authorization.
 - Keep upstream copyright, source history, and traditional input behavior.
 - Product identity: `org.aibopomofo.inputmethod.AIBopomofo`; internal module/target remains `McBopomofo`.

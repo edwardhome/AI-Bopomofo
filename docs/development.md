@@ -85,6 +85,8 @@ git switch -c feature/my-symbols
 
 ## 4. 設定這次的版本號
 
+先依 [版本編號規則](versioning.md) 決定：第一碼為架構／重大改版，第二碼為新增或根本功能變更，第三碼為 Bug／細節／UI 修正。兩平台共用規則，各自維持版本序列。
+
 修改 `Source/McBopomofo-Info.plist` 的兩個值：
 
 - `CFBundleShortVersionString`：例如 `0.6.10`。
