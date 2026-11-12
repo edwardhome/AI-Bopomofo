@@ -88,6 +88,8 @@ extern InputMode InputModePlainBopomofo;
 - (void)acceptPredictionWithState:(InputState *)state stateCallback:(void (^)(InputState *))stateCallback;
 
 - (BOOL)canBeginQuickSymbolsWithState:(InputState *)state;
+/// 唯讀預覽：在獨立讀音緩衝區套用 F，不變更真正的注音引擎。
+- (nullable NSString *)fHoldPreviewForKey:(unichar)key NS_SWIFT_NAME(fHoldPreview(key:));
 - (BOOL)prefersPhoneticFChordWithFirstKey:(unichar)firstKey
                                nextKey:(unichar)nextKey
                                  state:(InputState *)state

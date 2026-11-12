@@ -109,6 +109,14 @@ public struct ASCIIComposition: Sendable {
         case updated(ASCIIComposition), commit(String), cancel, passThrough(String), rejected
     }
 
+    /// 使用者明確儲存的符號映射可包含 Unicode；一般鍵盤輸入驗證保持不變。
+    public func insertingSymbol(_ literal: String, lexicon: TechnicalLexicon = TechnicalLexicon()) -> Result {
+        guard !literal.isEmpty, QuickSymbolLayer.validOutput(literal),
+              display.count + literal.count <= 256 else { return .rejected }
+        let text = (display as NSString).replacingCharacters(in: NSRange(location: displayCursor, length: 0), with: literal)
+        return .updated(Self(acceptedText: text, cursor: displayCursor + literal.utf16.count, lexicon: lexicon))
+    }
+
     public func applying(_ action: Action, lexicon: TechnicalLexicon = TechnicalLexicon()) -> Result {
         func updated(_ text: String, _ cursor: Int, selected: Int = 0) -> Result {
             .updated(ASCIIComposition(acceptedText: text, cursor: cursor, selectedIndex: selected, lexicon: lexicon))

@@ -21,6 +21,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+import MixedInputCore
 import Carbon
 import Cocoa
 import InfoCollector
@@ -35,6 +36,32 @@ struct KeyboardLayoutOption: Identifiable, Hashable {
 final class PreferencesViewModel: NSObject, ObservableObject {
     private var defaultsObserver: NSObjectProtocol?
     @Published private(set) var basisKeyboardLayoutOptions: [KeyboardLayoutOption] = []
+
+    var fHoldSymbolsEnabled: Bool {
+        get { Preferences.fHoldSymbolsEnabled }
+        set { objectWillChange.send(); Preferences.fHoldSymbolsEnabled = newValue }
+    }
+    var mixedEnglishEnabled: Bool {
+        get { Preferences.mixedEnglishEnabled }
+        set { objectWillChange.send(); Preferences.mixedEnglishEnabled = newValue }
+    }
+    var initialLetterHoldDelayMilliseconds: Int {
+        get { Preferences.initialLetterHoldDelayMilliseconds }
+        set { objectWillChange.send(); Preferences.initialLetterHoldDelayMilliseconds = newValue }
+    }
+    func symbolOutput(for code: UInt16) -> String {
+        Preferences.fKeyMapping[String(code)] ?? QuickSymbolLayer.output(for: code) ?? ""
+    }
+    func setSymbolOutput(_ text: String, for code: UInt16) {
+        guard code != 3, QuickSymbolLayer.validOutput(text) else { return }
+        objectWillChange.send()
+        var mapping = Preferences.fKeyMapping
+        mapping[String(code)] = text
+        Preferences.fKeyMapping = mapping
+    }
+    func resetSymbolMapping() {
+        objectWillChange.send(); Preferences.fKeyMapping = [:]
+    }
 
     var fHoldDelayMilliseconds: Int {
         get { Preferences.fHoldDelayMilliseconds }

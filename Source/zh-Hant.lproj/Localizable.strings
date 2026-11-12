@@ -478,3 +478,19 @@
 "Enter a whole number from 100 to 1000 milliseconds." = "請輸入 100～1000 之間的整數毫秒。";
 
 "Save" = "儲存";
+
+"F Layer" = "F 分層";
+
+"Select a QWERTY key to edit its F-layer output." = "選取 QWERTY 按鍵，編輯 F 分層輸出。";
+
+"Output" = "輸出文字";
+
+"Up to 16 characters; empty disables the key. F, Backspace and Enter remain reserved. Changes apply to the next layer." = "最多 16 個字元；留白可停用。F、退格與 Enter 保留控制用途；修改從下次進入分層生效。";
+
+"Restore Default Mapping" = "還原預設映射";
+
+"Restore" = "還原";
+
+"Hold the letter key to lowercase its initial; hold timing is independent of the F layer." = "長按字母鍵將首字母轉小寫；等待時間與 F 分層分開設定。";
+
+"Tools and Dictionaries…" = "工具與詞庫…";

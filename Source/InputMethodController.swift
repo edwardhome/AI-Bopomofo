@@ -101,6 +101,50 @@ class McBopomofoInputMethodController: IMKInputController {
         keyHandler.delegate = self
     }
 
+    private var toolsMenu: NSMenu?
+    private var toolsWindow: NSPanel?
+
+    /// 系統 IMK 子選單曾無法派送 action；工具改用一般 AppKit 視窗。
+    @objc private func showInputTools(_ sender: Any?) {
+        guard let toolsMenu else { return }
+        toolsWindow?.close()
+        let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 560),
+                            styleMask: [.titled, .closable], backing: .buffered, defer: false)
+        panel.title = NSLocalizedString("Tools and Dictionaries…", comment: "")
+        panel.isReleasedWhenClosed = false
+        var commands: [NSMenuItem] = []
+        func append(_ menu: NSMenu) {
+            for item in menu.items where !item.isSeparatorItem {
+                commands.append(item)
+                if let submenu = item.submenu { append(submenu) }
+            }
+        }
+        append(toolsMenu)
+        let document = NSView(frame: NSRect(x: 0, y: 0, width: 450, height: commands.count * 34 + 20))
+        for (index, item) in commands.enumerated() {
+            let y = document.frame.height - CGFloat((index + 1) * 34) - 10
+            if item.action != nil {
+                let button = InputToolButton(command: item, receiver: self)
+                button.frame = NSRect(x: 16, y: y, width: 418, height: 28)
+                document.addSubview(button)
+            } else {
+                let label = NSTextField(labelWithString: item.title)
+                label.font = .boldSystemFont(ofSize: 12)
+                label.frame = NSRect(x: 16, y: y, width: 418, height: 24)
+                document.addSubview(label)
+            }
+        }
+        let scroll = NSScrollView(frame: panel.contentView!.bounds)
+        scroll.autoresizingMask = [.width, .height]
+        scroll.hasVerticalScroller = true
+        scroll.documentView = document
+        panel.contentView?.addSubview(scroll)
+        document.scroll(NSPoint(x: 0, y: document.frame.height))
+        toolsWindow = panel
+        panel.center(); panel.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
     override func menu() -> NSMenu! {
         // IMK 可為刷新內容而查詢選單；查詢不可取消正在輸入的手勢。
         let menu = NSMenu(title: "Input Method Menu")
@@ -254,7 +298,23 @@ class McBopomofoInputMethodController: IMKInputController {
         menu.addItem(
             withTitle: NSLocalizedString("About McBopomofo…", comment: ""),
             action: #selector(showAbout(_:)), keyEquivalent: "")
-        return menu
+        // 第一層保留實際輸入操作；其餘設定與維護指令集中到工具視窗。
+        let primary: Set<Selector> = [#selector(toggleDirectEnglish(_:)), #selector(beginASCII(_:)),
+            #selector(checkTextAssistance(_:)), #selector(beginQuickSymbols(_:)),
+            #selector(toggleChineseConverter(_:)), #selector(toggleHalfWidthPunctuation(_:)),
+            #selector(showPreferences(_:)), #selector(checkForUpdate(_:)), #selector(showAbout(_:))]
+        let compact = NSMenu(title: menu.title)
+        compact.autoenablesItems = false
+        for item in menu.items where item.action.map({ primary.contains($0) }) == true {
+            menu.removeItem(item); compact.addItem(item)
+        }
+        compact.insertItem(NSMenuItem.separator(), at: 4)
+        let tools = NSMenuItem(title: NSLocalizedString("Tools and Dictionaries…", comment: ""),
+                              action: #selector(showInputTools(_:)), keyEquivalent: "")
+        tools.target = self
+        compact.insertItem(tools, at: 5)
+        toolsMenu = menu
+        return compact
     }
 
     // MARK: - IMKStateSetting protocol methods
@@ -295,7 +355,7 @@ class McBopomofoInputMethodController: IMKInputController {
         shiftGesture.reset()
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: client) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
         cancelFHold(client: client)
         symbolKeysDown.reset()
         currentClient = nil
@@ -346,7 +406,7 @@ class McBopomofoInputMethodController: IMKInputController {
         if let assistance = state as? InputState.Assistance { state = assistance.original }
         textAssistant.cancel()
         if fHoldGesture.phase == .pending {
-            _ = applyFHold(.otherKey(isMapped: false), client: client)
+            _ = applyFHold(.otherKey, client: client)
         }
         cancelFHold(client: client)
         if state is InputState.QuickSymbols {
@@ -569,7 +629,7 @@ class McBopomofoInputMethodController: IMKInputController {
     }
 
     @objc private func toggleFHoldSymbols(_ sender: Any?) {
-        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey(isMapped: false), client: currentClient) }
+        if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: currentClient) }
         cancelFHold(client: currentClient)
         Preferences.fHoldSymbolsEnabled.toggle()
         if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess() {
@@ -588,11 +648,18 @@ class McBopomofoInputMethodController: IMKInputController {
         for effect in effects {
             switch effect {
             case .schedule:
-                // 暫存 F 並開始被動放開監聽；短按時才將原事件交回既有輸入流程。
+                // Key-down 立即顯示可撤回的原字；引擎直到短按確定才接收一次事件。
                 fHoldTimer?.invalidate()
                 let started = pendingFEvent?.timestamp ?? ProcessInfo.processInfo.systemUptime
                 fHoldStartedAt = started
-                handle(state: InputState.PendingF(original: state), client: client)
+                let literal = pendingFEvent?.characters ?? "f"
+                let preview: String
+                if directEnglish || state is InputState.ASCII {
+                    preview = literal
+                } else if let key = literal.utf16.first {
+                    preview = keyHandler.fHoldPreview(key: key) ?? literal
+                } else { preview = literal }
+                handle(state: InputState.PendingF(original: state, preview: preview), client: client)
                 guard fReleaseMonitor.start(onRelease: { [weak self] releasedAt in
                     guard let self else { return }
                     self.advanceFHold(to: releasedAt, client: self.currentClient)
@@ -635,16 +702,9 @@ class McBopomofoInputMethodController: IMKInputController {
                     }
                 }
             case .beginLayer:
-                // 同一條路徑處理長按與立即組合鍵；保留監聽，等真正放開 F 才退出。
+                // 撤回的只有本次 marked preview，不刪除使用者已提交的文字。
+                // 保留放開監聽，直到真正放開 F 才退出分層。
                 restorePendingF(client: client)
-                if !directEnglish, pendingFEvent?.modifierFlags.contains(.shift) == true,
-                   !(state is InputState.ASCII) {
-                    keyHandler.beginASCII(with: state, stateCallback: { next in
-                        if let ascii = next as? InputState.ASCII {
-                            self.handle(state: InputState.ShiftASCII(composition: ascii.composition, mode: .initial), client: client)
-                        } else { self.handle(state: next, client: client) }
-                    }, errorCallback: {})
-                }
                 let began = keyHandler.beginQuickSymbols(with: state, held: true) {
                     self.handle(state: $0, client: client)
                 }
@@ -663,7 +723,7 @@ class McBopomofoInputMethodController: IMKInputController {
             }
         }
         // F 的放開可能先由被動監聽器送達；套用最近觀察到的 Shift 狀態，
-        // 避免延後重播的 Shift+F 在 Shift 已放開後留下錯誤模式。
+        // 原組字若來自 Shift 英文，避免包裝狀態留下過期模式。
         releaseShiftCompositionIfNeeded(client: client)
         return effects.contains(.consume)
     }
@@ -687,20 +747,6 @@ class McBopomofoInputMethodController: IMKInputController {
     private func advanceFHold(to timestamp: TimeInterval, client: Any?) {
         guard let started = fHoldStartedAt else { return }
         _ = applyFHold(.elapsed(timestamp - started), client: client)
-    }
-
-    private func prefersPhoneticFChord(with event: NSEvent) -> Bool {
-        // 呼叫前已按事件時間檢查長按門檻；已進層就不再把數字改回注音。
-        let modifiers: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
-        guard fHoldGesture.phase == .pending, !directEnglish, !event.isARepeat,
-              !IsSecureEventInputEnabled(), let first = pendingFEvent,
-              first.modifierFlags.intersection(modifiers).isEmpty,
-              event.modifierFlags.intersection(modifiers).isEmpty,
-              let pending = state as? InputState.PendingF,
-              let firstText = first.characters, firstText.utf16.count == 1,
-              let nextText = event.characters, nextText.utf16.count == 1,
-              let firstKey = firstText.utf16.first, let nextKey = nextText.utf16.first else { return false }
-        return keyHandler.prefersPhoneticFChord(firstKey: firstKey, nextKey: nextKey, state: pending.original)
     }
 
     @objc private func importTechnicalTerms(_ sender: Any?) {
@@ -771,7 +817,7 @@ class McBopomofoInputMethodController: IMKInputController {
         if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyUp {
             if applyFHold(.release, client: client) { return true }
         } else if event.keyCode == UInt16(kVK_ANSI_F), event.type == .keyDown {
-            let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
+            let forbidden: NSEvent.ModifierFlags = [.shift, .command, .control, .option, .capsLock, .function]
             let eligible = Preferences.fHoldSymbolsEnabled
                 && CGPreflightListenEventAccess() && !IsSecureEventInputEnabled()
                 && event.modifierFlags.intersection(forbidden).isEmpty
@@ -782,17 +828,11 @@ class McBopomofoInputMethodController: IMKInputController {
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
         } else if event.type == .keyDown {
-            let forbidden: NSEvent.ModifierFlags = [.command, .control, .option, .capsLock, .function]
-            let isMapped = QuickSymbolLayer.canStartChord(keyCode: event.keyCode,
-                repeating: event.isARepeat,
-                hasDisallowedModifiers: !event.modifierFlags.intersection(forbidden).isEmpty,
-                prefersPhonetic: prefersPhoneticFChord(with: event))
-            // 注音優先時沿用非組合鍵路徑：取消計時、重播 F，再處理當前鍵一次。
-            // 不進入符號層，因此下方的按鍵歸屬也不會把 U／M 當成符號鍵。
-            _ = applyFHold(.otherKey(isMapped: isMapped), client: client)
+            // 先前已按事件時間結算長按；仍在等待時就先送回 F，再處理本鍵。
+            _ = applyFHold(.otherKey, client: client)
         } else if event.type == .flagsChanged &&
                     event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift) {
-            _ = applyFHold(.otherKey(isMapped: false), client: client)
+            _ = applyFHold(.otherKey, client: client)
         }
 
         // The first chord key must acquire ownership after it activates the layer,
@@ -800,7 +840,8 @@ class McBopomofoInputMethodController: IMKInputController {
         if event.type == .keyDown,
            symbolKeysDown.keyDown(event.keyCode, repeating: event.isARepeat,
                layerActive: state is InputState.QuickSymbols,
-               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty) {
+               shortcut: !event.modifierFlags.intersection([.command, .control, .option]).isEmpty,
+               mapped: (state as? InputState.QuickSymbols).map { QuickSymbolLayer.output(for: event.keyCode, entries: $0.entries) != nil }) {
             return true
         }
 
@@ -1001,10 +1042,9 @@ extension McBopomofoInputMethodController {
 
         switch newState {
         case let pending as InputState.PendingF:
-            let original = pending.original as? InputState.Inputting
             (client as? IMKTextInput)?.setMarkedText(
-                InputState.fHoldMarkedText(original: original),
-                selectionRange: NSRange(location: Int(original?.cursorIndex ?? 0), length: 0),
+                pending.markedText,
+                selectionRange: NSRange(location: pending.markedCursor, length: 0),
                 replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
         case let assistance as InputState.Assistance:
             gCurrentCandidateController?.visible = false
@@ -1697,4 +1737,24 @@ private final class FReleaseMonitor {
         source = nil; tap = nil
     }
     deinit { stop() }
+}
+
+/// 明確持有原指令與接收者，避免 IMK 子選單無法傳遞 selector。
+private final class InputToolButton: NSButton {
+    private let command: NSMenuItem
+    private weak var receiver: AnyObject?
+    init(command: NSMenuItem, receiver: AnyObject) {
+        self.command = command; self.receiver = receiver
+        super.init(frame: .zero)
+        title = (command.state == .on ? "✓ " : "") + command.title
+        bezelStyle = .rounded
+        isEnabled = command.isEnabled
+        target = self; action = #selector(invokeCommand)
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @objc private func invokeCommand() {
+        guard let action = command.action else { return }
+        window?.close()
+        NSApp.sendAction(action, to: command.target ?? receiver, from: command)
+    }
 }

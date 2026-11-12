@@ -232,6 +232,13 @@ class Preferences: NSObject {
     @UserDefault(key: "FHoldSymbolsEnabled", defaultValue: false)
     @objc static var fHoldSymbolsEnabled: Bool
 
+    @UserDefault(key: "FKeyMapping", defaultValue: [String: String]())
+    static var fKeyMapping: [String: String]
+
+    static var fSymbolEntries: [QuickSymbolLayer.Entry] {
+        QuickSymbolLayer.configuredEntries(overrides: fKeyMapping)
+    }
+
     @UserDefault(key: "FHoldDelayMilliseconds", defaultValue: FHoldGesture.defaultDelayMilliseconds)
     private static var storedFHoldDelayMilliseconds: Int
 
@@ -253,6 +260,7 @@ class Preferences: NSObject {
     static var allKeys: [String] {
         [
             "FHoldSymbolsEnabled",
+            "FKeyMapping",
             "FHoldDelayMilliseconds",
             "EnglishPredictionEnabled",
             "EngineeringLexiconEnabled",

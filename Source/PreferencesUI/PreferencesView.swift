@@ -91,6 +91,7 @@ private struct PreferencesContentHeightKey: PreferenceKey {
 enum PreferencesTab: CaseIterable, Identifiable {
     case basic
     case userPhrases
+    case fLayer
     case advanced
 
     var id: Self { self }
@@ -104,6 +105,8 @@ enum PreferencesTab: CaseIterable, Identifiable {
             BasicPreferencesView()
         case .userPhrases:
             UserPhrasesPreferencesView()
+        case .fLayer:
+            FLayerPreferencesView()
         case .advanced:
             AdvancedPreferencesView()
         }
@@ -113,6 +116,7 @@ enum PreferencesTab: CaseIterable, Identifiable {
         switch self {
         case .basic: ("Basic", "switch.2")
         case .userPhrases: ("User Phrases", "folder")
+        case .fLayer: ("F Layer", "keyboard")
         case .advanced: ("Advanced", "gearshape")
         }
     }
@@ -156,6 +160,7 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
         private static let basicIdentifier = NSToolbarItem.Identifier("PreferencesToolbar.basic")
         private static let userPhrasesIdentifier =
             NSToolbarItem.Identifier("PreferencesToolbar.userPhrases")
+        private static let fLayerIdentifier = NSToolbarItem.Identifier("PreferencesToolbar.fLayer")
         private static let advancedIdentifier =
             NSToolbarItem.Identifier("PreferencesToolbar.advanced")
 
@@ -212,6 +217,7 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
             [
                 Self.basicIdentifier,
                 Self.userPhrasesIdentifier,
+                Self.fLayerIdentifier,
                 Self.advancedIdentifier,
             ]
         }
@@ -379,6 +385,8 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
                 basicIdentifier
             case .userPhrases:
                 userPhrasesIdentifier
+            case .fLayer:
+                fLayerIdentifier
             case .advanced:
                 advancedIdentifier
             }
@@ -390,6 +398,8 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
                 .basic
             case userPhrasesIdentifier:
                 .userPhrases
+            case fLayerIdentifier:
+                .fLayer
             case advancedIdentifier:
                 .advanced
             default:
@@ -618,27 +628,6 @@ private struct AdvancedPreferencesView: View {
 
     var body: some View {
         FormBody {
-            PreferenceRow(localized("F Hold Delay:")) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Picker(localized("F Hold Delay:"), selection: $preferences.fHoldDelayMilliseconds) {
-                        ForEach(Array(stride(
-                            from: FHoldGesture.delayRangeMilliseconds.lowerBound,
-                            through: FHoldGesture.delayRangeMilliseconds.upperBound,
-                            by: 50)), id: \.self) { milliseconds in
-                            Text(String(format: localized("%d ms"), milliseconds)).tag(milliseconds)
-                        }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                    Text(localized("Increase the delay if F triggers symbols while typing Bopomofo. Default: 150 ms."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-
-            Divider().padding(.vertical, 5)
-
             PreferenceRow(localized("Chinese Conversion Style:")) {
                 Picker("", selection: $preferences.chineseConversionStyle) {
                     Text(localized("Convert output")).tag(ChineseConversionStyle.output)
@@ -844,5 +833,81 @@ extension KeyboardLayout {
 extension ControlEnterOutput {
     fileprivate static var allCasesForPreferences: [ControlEnterOutput] {
         [.off, .bpmfReading, .htmlRuby, .brailleUnicode, .hanyuPinyin, .brailleAscii]
+    }
+}
+
+/// 沿用現有偏好設定宿主。鍵帽只選位置，輸出在下方編輯，避免小鍵帽難以輸入 Unicode。
+private struct FLayerPreferencesView: View {
+    @EnvironmentObject private var preferences: PreferencesViewModel
+    @State private var selectedKey: UInt16 = 15
+    @State private var output = ""
+    @State private var confirmReset = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Toggle(localized("Hold F for Numbers / Symbols"), isOn: $preferences.fHoldSymbolsEnabled)
+            HStack {
+                Text(localized("F Hold Delay:"))
+                Stepper(value: $preferences.fHoldDelayMilliseconds, in: 100...1000, step: 25) {
+                    Text(String(format: localized("%d ms"), preferences.fHoldDelayMilliseconds))
+                }.fixedSize()
+            }
+            Button(localized("Allow Input Monitoring for F Layer")) {
+                if !CGPreflightListenEventAccess() { _ = CGRequestListenEventAccess() }
+                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent") {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+            Divider()
+            Text(localized("Select a QWERTY key to edit its F-layer output."))
+            ForEach(QuickSymbolLayer.keyboardRows.indices, id: \.self) { row in
+                HStack(spacing: 3) {
+                    ForEach(QuickSymbolLayer.keyboardRows[row], id: \.keyCode) { key in
+                        Button {
+                            selectedKey = key.keyCode
+                            output = preferences.symbolOutput(for: selectedKey)
+                        } label: {
+                            VStack(spacing: 2) {
+                                Text(key.label).font(.system(size: 10, weight: .semibold))
+                                Text(key.keyCode == 3 ? "—" : preferences.symbolOutput(for: key.keyCode))
+                                    .font(.system(size: 10)).lineLimit(1).frame(height: 13)
+                            }.frame(width: key.keyCode == 49 ? 130 : 26, height: 36)
+                        }
+                        .buttonStyle(.plain)
+                        .background(selectedKey == key.keyCode ? Color.accentColor.opacity(0.25) : Color.secondary.opacity(0.12))
+                        .cornerRadius(4)
+                        .disabled(key.keyCode == 3)
+                        .accessibilityLabel(key.label)
+                    }
+                }.frame(maxWidth: .infinity)
+            }
+            HStack {
+                Text("F + " + (QuickSymbolLayer.keyboardRows.flatMap { $0 }.first { $0.keyCode == selectedKey }?.label ?? ""))
+                TextField(localized("Output"), text: $output)
+                Button(localized("Save")) { preferences.setSymbolOutput(output, for: selectedKey) }
+                    .disabled(!QuickSymbolLayer.validOutput(output))
+            }
+            Text(localized("Up to 16 characters; empty disables the key. F, Backspace and Enter remain reserved. Changes apply to the next layer."))
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Button(localized("Restore Default Mapping")) { confirmReset = true }
+                .alert(localized("Restore Default Mapping"), isPresented: $confirmReset) {
+                    Button(localized("Restore"), role: .destructive) {
+                        preferences.resetSymbolMapping(); output = preferences.symbolOutput(for: selectedKey)
+                    }
+                    Button(localized("Cancel"), role: .cancel) {}
+                }
+            Divider()
+            Toggle(localized("Shift + Letter Starts English"), isOn: $preferences.mixedEnglishEnabled)
+            HStack {
+                Text(localized("Initial Letter Lowercase Delay"))
+                Stepper(value: $preferences.initialLetterHoldDelayMilliseconds, in: 100...1000, step: 25) {
+                    Text(String(format: localized("%d ms"), preferences.initialLetterHoldDelayMilliseconds))
+                }.fixedSize()
+            }
+            Text(localized("Hold the letter key to lowercase its initial; hold timing is independent of the F layer."))
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(20)
+        .onAppear { output = preferences.symbolOutput(for: selectedKey) }
     }
 }

@@ -478,3 +478,19 @@
 "Enter a whole number from 100 to 1000 milliseconds." = "Enter a whole number from 100 to 1000 milliseconds.";
 
 "Save" = "Save";
+
+"F Layer" = "F Layer";
+
+"Select a QWERTY key to edit its F-layer output." = "Select a QWERTY key to edit its F-layer output.";
+
+"Output" = "Output";
+
+"Up to 16 characters; empty disables the key. F, Backspace and Enter remain reserved. Changes apply to the next layer." = "Up to 16 characters; empty disables the key. F, Backspace and Enter remain reserved. Changes apply to the next layer.";
+
+"Restore Default Mapping" = "Restore Default Mapping";
+
+"Restore" = "Restore";
+
+"Hold the letter key to lowercase its initial; hold timing is independent of the F layer." = "Hold the letter key to lowercase its initial; hold timing is independent of the F layer.";
+
+"Tools and Dictionaries…" = "Tools and Dictionaries…";

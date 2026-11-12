@@ -19,7 +19,18 @@ extension InputState {
     /// mark tells clients such as iTerm2 that the deferred key belongs to the IME.
     class PendingF: InputState {
         let original: InputState
-        init(original: InputState) { self.original = original; super.init() }
+        let preview: String
+        init(original: InputState, preview: String = "f") {
+            self.original = original; self.preview = preview; super.init()
+        }
+        var markedCursor: Int { Int((original as? Inputting)?.cursorIndex ?? 0) + preview.utf16.count }
+        var markedText: NSAttributedString {
+            let input = original as? Inputting
+            let result = NSMutableAttributedString(attributedString: input?.attributedString ?? NSAttributedString(string: ""))
+            let cursor = min(Int(input?.cursorIndex ?? 0), result.length)
+            result.insert(NSAttributedString(string: preview), at: cursor)
+            return result
+        }
     }
 
     static func fHoldMarkedText(original: Inputting?) -> NSAttributedString {
@@ -29,6 +40,7 @@ extension InputState {
 
     @objc(InputStateQuickSymbols)
     class QuickSymbols: InputState, CandidateProvider {
+        let entries: [QuickSymbolLayer.Entry]
         @objc let held: Bool
         @objc let originalASCII: InputState.ASCII?
         let heldBuffer: ASCIIComposition?
@@ -36,21 +48,28 @@ extension InputState {
         var markedComposition: InputState.ASCII? {
             originalASCII ?? heldBuffer.map { InputState.ASCII(composition: $0, predictionSuppressed: true) }
         }
-        @objc init(held: Bool) {
+        @objc convenience init(held: Bool) { self.init(held: held, entries: Preferences.fSymbolEntries) }
+        init(held: Bool, entries: [QuickSymbolLayer.Entry]) {
+            self.entries = entries
             self.held = held; originalASCII = nil
             heldBuffer = held ? ASCIIComposition() : nil
             super.init()
         }
-        init(heldBuffer: ASCIIComposition) {
+        init(heldBuffer: ASCIIComposition, entries: [QuickSymbolLayer.Entry] = Preferences.fSymbolEntries) {
+            self.entries = entries
             held = true; originalASCII = nil; self.heldBuffer = heldBuffer; super.init()
         }
-        @objc init(held: Bool, originalASCII: InputState.ASCII) {
+        @objc convenience init(held: Bool, originalASCII: InputState.ASCII) {
+            self.init(held: held, originalASCII: originalASCII, entries: Preferences.fSymbolEntries)
+        }
+        init(held: Bool, originalASCII: InputState.ASCII, entries: [QuickSymbolLayer.Entry]) {
+            self.entries = entries
             self.held = held; self.originalASCII = originalASCII; heldBuffer = nil; super.init()
         }
-        var candidateCount: Int { QuickSymbolLayer.entries.count }
+        var candidateCount: Int { entries.count }
         func candidate(at index: Int) -> String {
-            guard QuickSymbolLayer.entries.indices.contains(index) else { return "" }
-            let entry = QuickSymbolLayer.entries[index]
+            guard entries.indices.contains(index) else { return "" }
+            let entry = entries[index]
             return entry.label + " → " + entry.output
         }
         func reading(at index: Int) -> String? { nil }
@@ -149,29 +168,30 @@ extension InputState {
     }
     private static func update(_ composition: ASCIIComposition, state: InputState.QuickSymbols,
                                stateCallback: (InputState) -> Void) {
+        let next: InputState.QuickSymbols
         if let original = state.originalASCII {
-            stateCallback(InputState.QuickSymbols(held: state.held,
-                originalASCII: original.replacing(composition: composition, predictionSuppressed: true)))
-        } else {
-            stateCallback(InputState.QuickSymbols(heldBuffer: composition))
-        }
+            next = InputState.QuickSymbols(held: state.held,
+                originalASCII: original.replacing(composition: composition, predictionSuppressed: true), entries: state.entries)
+        } else { next = InputState.QuickSymbols(heldBuffer: composition, entries: state.entries) }
+        stateCallback(next)
     }
     private static func insert(_ text: String, state: InputState.QuickSymbols,
                                stateCallback: (InputState) -> Void) {
         if let original = state.editingComposition {
-            if case .updated(let composition) = original.applying(.insert(text), lexicon: state.originalASCII?.sessionLexicon ?? MixedInputHandler.lexicon) {
+            if case .updated(let composition) = original.insertingSymbol(text, lexicon: state.originalASCII?.sessionLexicon ?? MixedInputHandler.lexicon) {
                 update(composition, state: state, stateCallback: stateCallback)
             }
         } else {
             stateCallback(InputState.Committing(poppedText: text))
-            stateCallback(InputState.QuickSymbols(held: state.held))
+            let next = InputState.QuickSymbols(held: state.held, entries: state.entries)
+            stateCallback(next)
         }
     }
 
     @objc static func select(index: Int, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) {
-        guard QuickSymbolLayer.entries.indices.contains(index) else { return }
-        insert(QuickSymbolLayer.entries[index].output, state: state, stateCallback: stateCallback)
+        guard state.entries.indices.contains(index) else { return }
+        insert(state.entries[index].output, state: state, stateCallback: stateCallback)
     }
     @objc static func handle(input: KeyHandlerInput, state: InputState.QuickSymbols,
                              stateCallback: (InputState) -> Void) -> Bool {
@@ -188,9 +208,9 @@ extension InputState {
         }
         let code: UInt16 = input.charCode == 8 ? 51 : UInt16(input.keyCode)
         if let original = state.editingComposition,
-           case .updated(let composition) = QuickSymbolLayer.edit(keyCode: code, composition: original) {
+           case .updated(let composition) = QuickSymbolLayer.edit(keyCode: code, composition: original, entries: state.entries) {
             update(composition, state: state, stateCallback: stateCallback)
-        } else if let value = QuickSymbolLayer.output(for: code) {
+        } else if let value = QuickSymbolLayer.output(for: code, entries: state.entries) {
             insert(value, state: state, stateCallback: stateCallback)
         } else if code == 51 || code == 117 {
             end(state: state, stateCallback: stateCallback)
@@ -231,14 +251,14 @@ extension InputState {
         }
         if let pending = state as? InputState.PendingF,
            let (text, next) = afterShiftRelease(pending.original) {
-            return (text, InputState.PendingF(original: next))
+            return (text, InputState.PendingF(original: next, preview: pending.preview))
         }
         if let symbols = state as? InputState.QuickSymbols, let original = symbols.originalASCII,
            let (text, next) = afterShiftRelease(original) {
             if let ascii = next as? InputState.ASCII {
-                return (text, InputState.QuickSymbols(held: symbols.held, originalASCII: ascii))
+                return (text, InputState.QuickSymbols(held: symbols.held, originalASCII: ascii, entries: symbols.entries))
             }
-            return (text, InputState.QuickSymbols(held: symbols.held))
+            return (text, InputState.QuickSymbols(held: symbols.held, entries: symbols.entries))
         }
         if let assistance = state as? InputState.Assistance {
             return afterShiftRelease(assistance.original)
@@ -258,11 +278,11 @@ extension InputState {
             return ascii.replacing(composition: ascii.composition.rebuilding(lexicon: lexicon), predictionSuppressed: true, sessionLexicon: lexicon)
         }
         if let pending = state as? InputState.PendingF {
-            return InputState.PendingF(original: reloadingLexicon(state: pending.original))
+            return InputState.PendingF(original: reloadingLexicon(state: pending.original), preview: pending.preview)
         }
         if let symbols = state as? InputState.QuickSymbols, let original = symbols.originalASCII,
            let refreshed = reloadingLexicon(state: original) as? InputState.ASCII {
-            return InputState.QuickSymbols(held: symbols.held, originalASCII: refreshed)
+            return InputState.QuickSymbols(held: symbols.held, originalASCII: refreshed, entries: symbols.entries)
         }
         if let assistance = state as? InputState.Assistance {
             return reloadingLexicon(state: assistance.original)

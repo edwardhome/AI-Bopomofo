@@ -8,10 +8,10 @@
 
 | 想修改的項目 | 修改位置 | 是否需要重新編譯 |
 | --- | --- | --- |
-| F 長按等待時間 | 輸入法選單 → 偏好設定 → 進階 | 不需要；下次新按住 F 生效 |
+| F 長按等待時間 | 輸入法選單 → 偏好設定 → F 分層 | 不需要；下次新按住 F 生效 |
 | 中文／半形標點、Shift 英文組詞 | 輸入法選單對應選項 | 不需要 |
-| 加入英文專業詞彙 | 選單的匯入專業詞彙；格式見 [詞彙文件](dictionary.md) | 不需要 |
-| F＋R 等符號對照 | `Packages/MixedInputCore/Sources/MixedInputCore/QuickSymbolLayer.swift` | 需要 |
+| 加入英文專業詞彙 | 工具與詞庫內的匯入專業詞彙；格式見 [詞彙文件](dictionary.md) | 不需要 |
+| F＋R 等符號對照 | 偏好設定 → F 分層 → 點選 QWERTY 鍵帽 → 儲存 | 不需要；預設對照仍在 `QuickSymbolLayer.swift` |
 | 偏好預設值 | `Source/Preferences.swift`；F 時間常數位於 `QuickSymbolLayer.swift` | 需要；已存偏好不會被新預設值覆蓋 |
 | 偏好視窗選項 | `Source/PreferencesUI/PreferencesView.swift`、`PreferencesModel.swift` | 需要 |
 | 選單、雙 Shift、F 按鍵轉送 | `Source/InputMethodController.swift` | 需要；先了解組字與事件生命週期 |
@@ -198,7 +198,7 @@ defaults export org.aibopomofo.inputmethod.AIBopomofo artifacts/manual-backup/pr
 1. 注音模式短按 F，只出現「ㄑ」，沒有多餘的 `f`。
 2. 雙擊 Shift 進英文，短按 F 只出現一次 `f`；Shift＋F 是 `F`。
 3. F 按超過設定時間，不應先提交 `f`；接著按 R 輸出設定的符號，放開 F 後恢復一般輸入。
-4. F 先放開再按下一鍵應正常打字；注音模式門檻內 F→U／M 重疊應正常組成 ㄑㄧ／ㄑㄩ，其他映射鍵重疊則立即進層。連續長按、放開不應卡住。
+4. F 先放開再按下一鍵應正常打字；注音模式門檻內 F→U／M 重疊應正常組成 ㄑㄧ／ㄑㄩ，其他鍵在門檻內重疊也正常打字，超過門檻才進層。連續長按、放開不應卡住。
 5. 原本的選字、中文標點、Shift 英文組詞與雙 Shift 切換正常。
 
 不要在有重要命令的終端列直接測試。可先打開空白文字編輯器；終端測試使用自己的空白提示列，不按 Enter 執行測試文字。Kanata 與既有編輯器外掛的設定不會因編譯而變更。

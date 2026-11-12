@@ -141,6 +141,33 @@ struct MixedInputTests {
         #expect((s.state as? InputState.Inputting)?.composingBuffer == before)
     }
 
+    @Test func fPreviewDoesNotChangeEngineOrExistingComposition() throws {
+        let session = Session()
+        #expect(session.handler.fHoldPreview(key: 102) == "ㄑ")
+        #expect(session.state is InputState.Empty)
+        #expect(session.handler.canBeginQuickSymbols(with: session.state))
+        let original = InputState.ASCII(text: "ABC", cursor: 2)
+        let preview = InputState.PendingF(original: original, preview: "f")
+        #expect(preview.markedText.string == "ABfC")
+        #expect(preview.markedCursor == 3)
+        #expect(original.composingBuffer == "ABC")
+        #expect(session.committed.isEmpty)
+    }
+
+    @Test func heldSymbolMappingIsStableDuringPreferenceChanges() throws {
+        let previous = Preferences.fKeyMapping
+        defer { Preferences.fKeyMapping = previous }
+        Preferences.fKeyMapping = ["15": "λ"]
+        let session = Session()
+        #expect(session.handler.beginQuickSymbols(with: session.state, held: true, stateCallback: session.transition))
+        Preferences.fKeyMapping = ["15": "X"]
+        session.key("r", code: 15)
+        session.key("r", code: 15)
+        #expect((session.state as? InputState.QuickSymbols)?.editingComposition?.raw == "λλ")
+        session.handler.endQuickSymbols(with: session.state, stateCallback: session.transition)
+        #expect(session.committed == "λλ")
+    }
+
     @Test func protectedOverlapRestoresFBeforeMedialExactlyOnce() {
         for (next, code, reading): (String, UInt16, String) in [("u", 32, "ㄑㄧ"), ("m", 46, "ㄑㄩ")] {
             for elapsed in [0.001, 0.249, 0.250, 0.251] {
@@ -152,9 +179,7 @@ struct MixedInputTests {
                 s.state = InputState.PendingF(original: original)
                 let prefer = gesture.phase == .pending && s.handler.prefersPhoneticFChord(
                     firstKey: 102, nextKey: next.utf16.first!, state: original)
-                let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
-                    hasDisallowedModifiers: false, prefersPhonetic: prefer)
-                let effects = gesture.handle(.otherKey(isMapped: mapped))
+                let effects = gesture.handle(.otherKey)
                 s.state = original
                 if prefer {
                     #expect(effects == [.invalidate, .replayTap])
@@ -350,13 +375,13 @@ struct MixedInputTests {
         #expect(s.errors == 0)
     }
 
-    @Test func earlyFChordHandlesFirstKeyAndEscAsBacktick() {
+    @Test func heldFHandlesFirstKeyAndEscAsBacktick() {
         for english in [false, true] {
             let s = Session()
             if english { s.begin(); s.type("Hello") }
             var gesture = FHoldGesture()
             _ = gesture.handle(.press(eligible: true, repeating: false))
-            #expect(gesture.handle(.otherKey(isMapped: true)) == [.beginLayer])
+            #expect(gesture.handle(.elapsed(0.151)) == [.beginLayer])
             #expect(s.handler.beginQuickSymbols(with: s.state, held: true, stateCallback: s.transition))
             #expect(s.key("r", code: 15))
             #expect(s.key("\u{1B}", code: 53))

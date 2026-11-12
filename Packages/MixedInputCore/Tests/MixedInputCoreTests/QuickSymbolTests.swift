@@ -4,6 +4,30 @@ import Testing
 
 @Suite("Independent F symbol layer")
 struct QuickSymbolTests {
+    @Test func customMappingValidationEditingAndOwnership() throws {
+        let configured = QuickSymbolLayer.configuredEntries(overrides: ["15": "λ²", "17": "±", "32": "", "3": "bad", "51": "bad", "53": "\n"])
+        #expect(QuickSymbolLayer.output(for: 15, entries: configured) == "λ²")
+        #expect(QuickSymbolLayer.output(for: 32, entries: configured) == nil)
+        #expect(QuickSymbolLayer.output(for: 3, entries: configured) == nil)
+        #expect(QuickSymbolLayer.output(for: 51, entries: configured) == nil)
+        #expect(QuickSymbolLayer.output(for: 53, entries: configured) == "`")
+        #expect(!QuickSymbolLayer.validOutput(String(repeating: "x", count: 17)))
+        #expect(!QuickSymbolLayer.validOutput("a\u{202E}"))
+        #expect(QuickSymbolLayer.validOutput(""))
+        var keys = SymbolKeyOwnership()
+        #expect(keys.keyDown(17, repeating: false, layerActive: true, shortcut: false, mapped: true) == false)
+        #expect(keys.keyDown(17, repeating: true, layerActive: false, shortcut: false, mapped: true) == true)
+        #expect(keys.keyUp(17) == true)
+        guard case .updated(let composition) = QuickSymbolLayer.edit(keyCode: 15, composition: ASCIIComposition(), entries: configured) else {
+            Issue.record("Custom output was not inserted"); return
+        }
+        #expect(composition.raw == "λ²")
+        guard case .updated(let deleted) = QuickSymbolLayer.edit(keyCode: 51, composition: composition, entries: configured) else {
+            Issue.record("Backspace was not applied"); return
+        }
+        #expect(deleted.raw == "λ")
+    }
+
     @Test func phoneticOverlapReplaysOnceAndNeverReenters() {
         for code: UInt16 in [32, 46] {
             for milliseconds in [100, 150, 250, 1000] {
@@ -14,17 +38,14 @@ struct QuickSymbolTests {
                         var ownership = SymbolKeyOwnership()
                         _ = gesture.handle(.press(eligible: true, repeating: false))
                         #expect(gesture.handle(.elapsed(elapsed)).isEmpty)
-                        let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
-                            hasDisallowedModifiers: false, prefersPhonetic: true)
-                        #expect(!mapped)
-                        #expect(gesture.handle(.otherKey(isMapped: mapped)) == [.invalidate, .replayTap])
+                        #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
                         #expect(gesture.phase == .idle)
                         #expect(ownership.keyDown(code, repeating: false, layerActive: false, shortcut: false) == false)
                         // 已選注音就不能被晚到的計時器或仍按住的 F 重複事件變回符號。
                         #expect(gesture.handle(.elapsed(deadline + 1)).isEmpty)
                         #expect(gesture.handle(.timeout).isEmpty)
                         #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume])
-                        #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+                        #expect(gesture.handle(.otherKey).isEmpty)
                         if !fReleasedFirst { #expect(ownership.keyUp(code) == false) }
                         #expect(gesture.handle(.observedRelease) == [.consume])
                         #expect(gesture.handle(.release) == [.consume])
@@ -43,7 +64,7 @@ struct QuickSymbolTests {
             var ownership = SymbolKeyOwnership()
             _ = gesture.handle(.press(eligible: true, repeating: false))
             #expect(gesture.handle(.elapsed(0.251)) == [.beginLayer])
-            #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+            #expect(gesture.handle(.otherKey).isEmpty)
             #expect(ownership.keyDown(code, repeating: false, layerActive: true, shortcut: false) == false)
             #expect(QuickSymbolLayer.output(for: code) == output)
             #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
@@ -52,15 +73,17 @@ struct QuickSymbolTests {
         }
     }
 
-    @Test func englishAndOtherChordsKeepImmediateEntry() {
-        for code: UInt16 in [32, 46, 15, 53] {
-            var gesture = FHoldGesture(delayMilliseconds: 250)
-            _ = gesture.handle(.press(eligible: true, repeating: false))
-            let mapped = QuickSymbolLayer.canStartChord(keyCode: code, repeating: false,
-                hasDisallowedModifiers: false, prefersPhonetic: false)
-            #expect(mapped)
-            #expect(gesture.handle(.otherKey(isMapped: mapped)) == [.beginLayer])
-            #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+    @Test func everyMappedKeyBeforeOrAtDeadlineRemainsTyping() {
+        for _ in QuickSymbolLayer.keyboardRows.flatMap({ $0 }) {
+            for time in [0.001, 0.249, 0.250] {
+                var gesture = FHoldGesture(delayMilliseconds: 250)
+                _ = gesture.handle(.press(eligible: true, repeating: false))
+                #expect(gesture.handle(.elapsed(time)).isEmpty)
+                #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
+                #expect(gesture.handle(.elapsed(1)).isEmpty)
+                #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume])
+                #expect(gesture.handle(.release) == [.consume])
+            }
         }
     }
 
@@ -68,27 +91,27 @@ struct QuickSymbolTests {
         for end in [FHoldGesture.Event.release, .cancel] {
             var gesture = FHoldGesture(delayMilliseconds: 250)
             _ = gesture.handle(.press(eligible: true, repeating: false))
-            #expect(gesture.handle(.otherKey(isMapped: false)) == [.invalidate, .replayTap])
+            #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
             #expect(!gesture.handle(end).contains(.replayTap))
             #expect(!gesture.handle(.observedRelease).contains(.replayTap))
             #expect(gesture.handle(.timeout).isEmpty)
         }
     }
 
-    @Test func immediateChordRetainsMonitorUntilRelease() {
+    @Test func longHoldRetainsMonitorUntilRelease() {
         for milliseconds in [100, 150, 500, 1000] {
             var gesture = FHoldGesture(delayMilliseconds: milliseconds)
             var monitoring = false
             let pressed = gesture.handle(.press(eligible: true, repeating: false))
             if pressed.contains(.schedule) { monitoring = true }
             #expect(gesture.handle(.elapsed(0.010)).isEmpty)
-            let started = gesture.handle(.otherKey(isMapped: true))
+            let started = gesture.handle(.elapsed(Double(milliseconds) / 1000 + 0.001))
             if started.contains(.invalidate) { monitoring = false }
             #expect(started == [.beginLayer])
             #expect(monitoring)
             #expect(gesture.phase == .held)
             #expect(gesture.handle(.elapsed(2)).isEmpty)
-            #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+            #expect(gesture.handle(.otherKey).isEmpty)
             let released = gesture.handle(.observedRelease)
             if released.contains(.invalidate) { monitoring = false }
             #expect(!monitoring)
@@ -104,9 +127,7 @@ struct QuickSymbolTests {
             var keys = SymbolKeyOwnership()
             var buffer = ASCIIComposition()
             _ = gesture.handle(.press(eligible: true, repeating: false))
-            let mapped = QuickSymbolLayer.canStartChord(keyCode: entry.keyCode,
-                repeating: false, hasDisallowedModifiers: false)
-            #expect(gesture.handle(.otherKey(isMapped: mapped)) == [.beginLayer])
+            #expect(gesture.handle(.elapsed(0.151)) == [.beginLayer])
             // Match the adapter ordering: activate, register ownership, route text.
             #expect(keys.keyDown(entry.keyCode, repeating: false,
                 layerActive: gesture.phase == .held, shortcut: false) == false)
@@ -123,43 +144,34 @@ struct QuickSymbolTests {
         }
     }
 
-    @Test func shortcutRepeatAndUnmappedKeysNeverStartEarly() {
-        for code: UInt16 in [15, 53, 8, 51] {
-            for repeated in [false, true] {
-                for forbidden in [false, true] {
-                    var gesture = FHoldGesture()
-                    _ = gesture.handle(.press(eligible: true, repeating: false))
-                    let mapped = QuickSymbolLayer.canStartChord(keyCode: code,
-                        repeating: repeated, hasDisallowedModifiers: forbidden)
-                    let expected = (code == 15 || code == 53) && !repeated && !forbidden
-                    #expect(mapped == expected)
-                    let effects = gesture.handle(.otherKey(isMapped: mapped))
-                    #expect(effects == (expected ? [.beginLayer] : [.invalidate, .replayTap]))
-                }
-            }
-        }
+    @Test func otherKeyAndRepeatCannotStartEarly() {
+        var gesture = FHoldGesture()
+        _ = gesture.handle(.press(eligible: true, repeating: false))
+        #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume])
+        #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
+        #expect(gesture.handle(.elapsed(1)).isEmpty)
     }
 
     @Test func releasedFBeforeMappedKeyIsNormalFastTyping() {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.observedRelease) == [.invalidate, .replayTap, .consume])
-        #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+        #expect(gesture.handle(.otherKey).isEmpty)
         #expect(gesture.phase == .idle)
         #expect(gesture.handle(.release) == [.consume])
     }
 
-    @Test func earlyLayerCancelOrMonitorFailureCannotReenter() {
+    @Test func heldLayerCancelOrMonitorFailureCannotReenter() {
         for end in [FHoldGesture.Event.cancel, .release] {
             var gesture = FHoldGesture()
             _ = gesture.handle(.press(eligible: true, repeating: false))
-            _ = gesture.handle(.otherKey(isMapped: true))
+            _ = gesture.handle(.elapsed(0.151))
             let effects = gesture.handle(end)
             #expect(effects.contains(.invalidate))
             #expect(effects.contains(.endLayer))
             #expect(!effects.contains(.replayTap))
             #expect(gesture.handle(.elapsed(1)).isEmpty)
-            #expect(gesture.handle(.otherKey(isMapped: true)).isEmpty)
+            #expect(gesture.handle(.otherKey).isEmpty)
         }
     }
 
@@ -188,7 +200,7 @@ struct QuickSymbolTests {
     @Test func rolledFRepeatsCannotLeakAfterReplayingTap() {
         var gesture = FHoldGesture(delayMilliseconds: 500)
         _ = gesture.handle(.press(eligible: true, repeating: false))
-        #expect(gesture.handle(.otherKey(isMapped: false)).contains(.replayTap))
+        #expect(gesture.handle(.otherKey).contains(.replayTap))
         for _ in 0..<3 {
             #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
         }
@@ -201,7 +213,7 @@ struct QuickSymbolTests {
         _ = gesture.handle(.press(eligible: true, repeating: false))
         // The adapter advances using R's timestamp even if the timer has not fired.
         #expect(gesture.handle(.elapsed(0.450)) == [.beginLayer])
-        #expect(gesture.handle(.otherKey(isMapped: false)).isEmpty)
+        #expect(gesture.handle(.otherKey).isEmpty)
         #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
         #expect(gesture.handle(.release) == [.consume])
     }
@@ -231,7 +243,7 @@ struct QuickSymbolTests {
         var gesture = FHoldGesture(delayMilliseconds: 500)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.elapsed(0.200)).isEmpty)
-        #expect(gesture.handle(.otherKey(isMapped: false)) == [.invalidate, .replayTap])
+        #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
         #expect(gesture.handle(.release) == [.consume])
     }
 
@@ -296,7 +308,7 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.timeout) == [.beginLayer])
         #expect(gesture.phase == .held)
         #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
-        #expect(gesture.handle(.otherKey(isMapped: false)).isEmpty)
+        #expect(gesture.handle(.otherKey).isEmpty)
         #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
         #expect(gesture.phase == .idle)
     }
@@ -304,7 +316,7 @@ struct QuickSymbolTests {
     @Test func unmappedOverlappingKeyReplaysBeforeFollowingKey() {
         var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
-        #expect(gesture.handle(.otherKey(isMapped: false)) == [.invalidate, .replayTap])
+        #expect(gesture.handle(.otherKey) == [.invalidate, .replayTap])
         #expect(gesture.handle(.timeout).isEmpty)
         #expect(gesture.handle(.release) == [.consume])
     }

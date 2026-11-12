@@ -356,6 +356,15 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
          [state isKindOfClass:[InputStateInputting class]]);
 }
 
+- (NSString *)fHoldPreviewForKey:(unichar)key
+{
+    if (key > 127) { return nil; }
+    auto preview = *_bpmfReadingBuffer;
+    if (!preview.combineKey(static_cast<char>(key))) { return nil; }
+    const auto text = preview.composedString();
+    return text.empty() ? nil : [NSString stringWithUTF8String:text.c_str()];
+}
+
 - (BOOL)prefersPhoneticFChordWithFirstKey:(unichar)firstKey
                                nextKey:(unichar)nextKey
                                  state:(InputState *)state

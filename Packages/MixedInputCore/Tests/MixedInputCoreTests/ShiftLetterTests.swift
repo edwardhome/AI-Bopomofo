@@ -19,6 +19,18 @@ struct ShiftLetterTests {
         }
     }
 
+    @Test func heldFUsesTheSameLowercaseSessionAsS() throws {
+        for letter in ["F", "S"] {
+            var session = ShiftLetterSession(composition: ASCIIComposition(raw: letter),
+                holdStartedAt: 10, holdDelayMilliseconds: 200)
+            session = try updated(session.applying(.insert(letter), shiftHeld: true, repeating: true, now: 10.2))
+            #expect(session.composition.raw == letter.lowercased())
+            session = try updated(session.releasingShift())
+            session = try updated(session.applying(.insert("oo"), shiftHeld: false, now: 10.3))
+            #expect(session.composition.raw == letter.lowercased() + "oo")
+        }
+    }
+
     @Test func shiftReleaseAndStateCopyPreserveOriginalDeadline() throws {
         var session = ShiftLetterSession(composition: ASCIIComposition(raw: "S"),
             holdStartedAt: 10, holdDelayMilliseconds: 1000)
