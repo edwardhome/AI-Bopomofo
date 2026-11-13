@@ -76,7 +76,8 @@ class ReadingGrid {
   // Delete the reading after the cursor, like Del. Cursor is unmoved.
   bool deleteReadingAfterCursor();
 
-  static constexpr size_t kMaximumSpanLength = 8;
+  // Ctrl+9 新詞必須可被引擎重新選取；維持原分詞演算法，只擴充跨度上限。
+  static constexpr size_t kMaximumSpanLength = 9;
   static constexpr char kDefaultSeparator[] = "-";
 
   // A Node consists of a set of unigrams, a reading, and a spanning length.

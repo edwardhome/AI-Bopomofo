@@ -494,3 +494,13 @@
 "Hold the letter key to lowercase its initial; hold timing is independent of the F layer." = "長按字母鍵將首字母轉小寫；等待時間與 F 分層分開設定。";
 
 "Tools and Dictionaries…" = "工具與詞庫…";
+
+"Ctrl + Number Adds Phrase Before Cursor" = "Ctrl＋數字儲存游標前方的詞";
+
+"Ctrl + 2–9 immediately adds that many characters. Turn off to use characters after the cursor. Shift + Arrow and Enter remain available." = "Ctrl＋2～9 立即加入對應字數的詞組；取消勾選改取游標後方。仍可用 Shift＋方向鍵選取，再按 Enter 加入。";
+
+"Not enough characters or reliable readings to add this phrase." = "指定方向的字數不足，或無法確認詞組讀音。";
+
+"Could not save the user phrase." = "無法儲存使用者詞組。";
+
+"Added phrase: %@" = "已加入詞組：%@";

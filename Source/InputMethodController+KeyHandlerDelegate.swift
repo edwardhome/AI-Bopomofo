@@ -23,6 +23,7 @@
 
 import CandidateUI
 import Cocoa
+import Carbon
 import InputMethodKit
 
 extension McBopomofoInputMethodController: KeyHandlerDelegate {
@@ -89,10 +90,10 @@ extension McBopomofoInputMethodController: KeyHandlerDelegate {
         guard let state = state as? InputState.Marking else {
             return false
         }
-        if !state.validToWrite {
+        if IsSecureEventInputEnabled() || !state.validToWrite {
             return false
         }
-        LanguageModelManager.writeUserPhrase(state.userPhrase)
+        guard LanguageModelManager.writeUserPhrase(state.userPhrase) else { return false }
         runUserPhraseHookIfEnabled(text: state.selectedText)
         return true
     }

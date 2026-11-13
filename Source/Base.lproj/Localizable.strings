@@ -494,3 +494,13 @@
 "Hold the letter key to lowercase its initial; hold timing is independent of the F layer." = "Hold the letter key to lowercase its initial; hold timing is independent of the F layer.";
 
 "Tools and Dictionaries…" = "Tools and Dictionaries…";
+
+"Ctrl + Number Adds Phrase Before Cursor" = "Ctrl + Number Adds Phrase Before Cursor";
+
+"Ctrl + 2–9 immediately adds that many characters. Turn off to use characters after the cursor. Shift + Arrow and Enter remain available." = "Ctrl + 2–9 immediately adds that many characters. Turn off to use characters after the cursor. Shift + Arrow and Enter remain available.";
+
+"Not enough characters or reliable readings to add this phrase." = "Not enough characters or reliable readings to add this phrase.";
+
+"Could not save the user phrase." = "Could not save the user phrase.";
+
+"Added phrase: %@" = "Added phrase: %@";

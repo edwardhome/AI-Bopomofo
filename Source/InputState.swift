@@ -22,6 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Cocoa
+import MixedInputCore
 import NSStringUtils
 import SystemCharacterInfo
 
@@ -355,6 +356,7 @@ class InputState: NSObject {
     /// Represents that the user is marking a range in the composing buffer.
     @objc(InputStateMarking)
     class Marking: NotEmpty {
+        private let isNumberShortcut: Bool
         private func validate(tooltip: inout String) -> Bool {
             /// McBopomofo allows users to input a string whose length differs
             /// from the amount of Bopomofo readings. In this case, the range
@@ -388,17 +390,19 @@ class InputState: NSObject {
             }
 
             let text = (composingBuffer as NSString).substring(with: markedRange)
-            if markedRange.length < kMinMarkRangeLength {
+            let phraseLength = isNumberShortcut ? text.count : markedRange.length
+            let maximumLength = isNumberShortcut ? 9 : kMaxMarkRangeLength
+            if phraseLength < kMinMarkRangeLength {
                 tooltip = String(
                     format: NSLocalizedString(
                         "Marking \"%@\": add a custom phrase by selecting two or more characters.",
                         comment: ""), text)
                 return false
-            } else if markedRange.length > kMaxMarkRangeLength {
+            } else if phraseLength > maximumLength {
                 tooltip = String(
                     format: NSLocalizedString(
                         "The phrase being marked \"%@\" is longer than the allowed %d characters.",
-                        comment: ""), text, kMaxMarkRangeLength)
+                        comment: ""), text, maximumLength)
                 return false
             }
 
@@ -434,15 +438,33 @@ class InputState: NSObject {
         @objc var tooltipForInputting: String = ""
         @objc private(set) var readings: [String]
 
-        @objc init(
+        @objc convenience init(
             composingBuffer: String, cursorIndex: UInt, markerIndex: UInt, readings: [String]
         ) {
+            self.init(composingBuffer: composingBuffer, cursorIndex: cursorIndex,
+                      markerIndex: markerIndex, readings: readings, isNumberShortcut: false)
+        }
+
+        private init(composingBuffer: String, cursorIndex: UInt, markerIndex: UInt,
+                     readings: [String], isNumberShortcut: Bool) {
+            self.isNumberShortcut = isNumberShortcut
             self.markerIndex = markerIndex
             let begin = min(cursorIndex, markerIndex)
             let end = max(cursorIndex, markerIndex)
             markedRange = NSMakeRange(Int(begin), Int(end - begin))
             self.readings = readings
             super.init(composingBuffer: composingBuffer, cursorIndex: cursorIndex)
+        }
+
+        @objc(phraseShortcutWithState:readings:length:beforeCursor:)
+        static func phraseShortcut(state: Inputting, readings: [String], length: Int,
+                                   beforeCursor: Bool) -> Marking? {
+            guard let selection = PhraseShortcut.selection(text: state.composingBuffer, readings: readings,
+                cursorUTF16: Int(state.cursorIndex), length: length, beforeCursor: beforeCursor) else { return nil }
+            let next = Marking(composingBuffer: state.composingBuffer, cursorIndex: state.cursorIndex,
+                markerIndex: UInt(selection.markerUTF16), readings: readings, isNumberShortcut: true)
+            next.tooltipForInputting = state.tooltip
+            return next
         }
 
         @objc var attributedString: NSAttributedString {

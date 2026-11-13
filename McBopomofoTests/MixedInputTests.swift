@@ -40,6 +40,70 @@ struct MixedInputTests {
         }
     }
 
+    final class PhraseWriter: NSObject, KeyHandlerDelegate {
+        var requests: [InputState.Marking] = []
+        var succeeds = true
+        func candidateController(for keyHandler: KeyHandler) -> Any { NSObject() }
+        func keyHandler(_ keyHandler: KeyHandler, didSelectCandidateAt index: Int, candidateController: Any) {}
+        func keyHandler(_ keyHandler: KeyHandler, didRequestWriteUserPhraseWith state: InputState) -> Bool {
+            if let marked = state as? InputState.Marking { requests.append(marked) }
+            return succeeds
+        }
+        func keyHandler(_ keyHandler: KeyHandler, didRequestBoostScoreForPhrase phrase: String, reading: String) -> Bool { false }
+        func keyHandler(_ keyHandler: KeyHandler, didRequestExcludePhrase phrase: String, reading: String) -> Bool { false }
+        func keyHandlerDidRequestReloadLanguageModel(_ keyHandler: KeyHandler) -> Bool { false }
+    }
+
+    @Test func controlNumberPreservesIncompleteReadingAndEmptyShortcut() {
+        let session = Session()
+        #expect(session.key("\u{0}", code: 19, flags: .control) == false)
+        session.type("s")
+        let before = (session.state as? InputState.Inputting)?.composingBuffer
+        #expect(session.key("\u{0}", code: 19, flags: .control) == true)
+        #expect((session.state as? InputState.Inputting)?.composingBuffer == before)
+        #expect(session.committed.isEmpty)
+        #expect(session.errors == 1)
+    }
+
+    @Test func controlNineUsesWriterWithoutCommittingAndPreservesCursor() throws {
+        let saved = (Preferences.addPhraseBeforeCursor, Preferences.phraseReplacementEnabled,
+                     Preferences.chineseConversionEnabled, Preferences.bopomofoFontAnnotationSupportEnabled)
+        defer {
+            Preferences.addPhraseBeforeCursor = saved.0; Preferences.phraseReplacementEnabled = saved.1
+            Preferences.chineseConversionEnabled = saved.2; Preferences.bopomofoFontAnnotationSupportEnabled = saved.3
+        }
+        Preferences.addPhraseBeforeCursor = true; Preferences.phraseReplacementEnabled = false
+        Preferences.chineseConversionEnabled = false; Preferences.bopomofoFontAnnotationSupportEnabled = false
+        for success in [true, false] {
+            let session = Session(), writer = PhraseWriter()
+            writer.succeeds = success; session.handler.delegate = writer
+            session.type(String(repeating: "a8 ", count: 9))
+            let original = try #require(session.state as? InputState.Inputting)
+            #expect(session.key("9", code: 25, flags: .control) == true)
+            #expect(writer.requests.count == 1)
+            #expect(writer.requests.first?.selectedText.count == 9)
+            #expect((session.state as? InputState.Inputting)?.cursorIndex == original.cursorIndex)
+            #expect((session.state as? InputState.Inputting)?.composingBuffer == original.composingBuffer)
+            #expect(session.committed.isEmpty)
+            #expect(session.errors == (success ? 0 : 1))
+        }
+    }
+
+    @Test func shortcutFactoryAndLegacyMarkingKeepIndependentLengthLimits() throws {
+        let text = "甲乙丙丁戊己庚辛壬"
+        let readings = Array(repeating: "ㄐㄧㄚˇ", count: 9)
+        let original = InputState.Inputting(composingBuffer: text, cursorIndex: 9)
+        let marked = try #require(InputState.Marking.phraseShortcut(state: original, readings: readings, length: 9, beforeCursor: true))
+        #expect(marked.selectedText == text)
+        #expect(marked.validToWrite)
+        let legacy = InputState.Marking(composingBuffer: text, cursorIndex: 9, markerIndex: 0, readings: readings)
+        #expect(!legacy.validToWrite)
+        let controlTwo = KeyHandlerInput(inputText: "\u{0}", keyCode: 19, charCode: 0, flags: .control, isVerticalMode: false)
+        #expect(controlTwo.controlPhraseLength == 2)
+        let shifted = KeyHandlerInput(inputText: "@", keyCode: 19, charCode: 64, flags: [.control, .shift], isVerticalMode: false)
+        #expect(shifted.controlPhraseLength == 0)
+    }
+
     @Test func automaticSuggestionDoesNotConsumeTypingOrDeletion() {
         for (key, code, expected): (String, UInt16, String) in [("1", 18, "helo1"), ("f", 3, "helof"), ("\u{7f}", 51, "hel")] {
             let session = Session()

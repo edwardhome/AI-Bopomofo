@@ -537,6 +537,40 @@ InputMode InputModePlainBopomofo = @"org.aibopomofo.inputmethod.AIBopomofo.Plain
         return YES;
     }
 
+    // Ctrl＋數字加入詞組與 Shift＋方向鍵共用 Marking 驗證及寫入委派。
+    // 必須在 charCode/Emacs 分流前處理，因為 Ctrl+2／6 等可能是控制字元。
+    if (input.controlPhraseLength > 0 && _inputMode == InputModeBopomofo &&
+        ([state isKindOfClass:[InputStateInputting class]] || [state isKindOfClass:[InputStateMarking class]])) {
+        if (input.isARepeat) { return YES; } // 長按不重複寫檔或執行使用者 hook。
+        if (!_bpmfReadingBuffer->isEmpty() || Preferences.bopomofoFontAnnotationSupportEnabled) {
+            errorCallback();
+            stateCallback(state);
+            return YES;
+        }
+        InputStateInputting *original = [state isKindOfClass:[InputStateMarking class]]
+            ? [(InputStateMarking *)state convertToInputting] : (InputStateInputting *)state;
+        InputStateMarking *marking = [InputStateMarking phraseShortcutWithState:original
+            readings:[self _currentReadings] length:input.controlPhraseLength beforeCursor:Preferences.addPhraseBeforeCursor];
+        if (!marking) {
+            errorCallback();
+            InputStateInputting *next = [[InputStateInputting alloc] initWithComposingBuffer:original.composingBuffer cursorIndex:original.cursorIndex];
+            next.tooltip = NSLocalizedString(@"Not enough characters or reliable readings to add this phrase.", @"");
+            stateCallback(next);
+            return YES;
+        }
+        if (!marking.validToWrite || ![self.delegate keyHandler:self didRequestWriteUserPhraseWithState:marking]) {
+            errorCallback();
+            InputStateInputting *next = [marking convertToInputting];
+            next.tooltip = marking.validToWrite ? NSLocalizedString(@"Could not save the user phrase.", @"") : marking.tooltip;
+            stateCallback(next);
+            return YES;
+        }
+        InputStateInputting *next = (InputStateInputting *)[self buildInputtingState];
+        next.tooltip = [NSString stringWithFormat:NSLocalizedString(@"Added phrase: %@", @""), marking.selectedText];
+        stateCallback(next);
+        return YES;
+    }
+
     // if the inputText is empty, it's a function key combination, we ignore it
     if (!input.inputText.length) {
         return NO;

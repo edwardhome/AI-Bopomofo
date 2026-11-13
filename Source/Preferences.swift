@@ -247,6 +247,9 @@ class Preferences: NSObject {
         set { storedFHoldDelayMilliseconds = FHoldGesture.clampedDelayMilliseconds(newValue) }
     }
 
+    @UserDefault(key: "AddPhraseBeforeCursor", defaultValue: true)
+    @objc static var addPhraseBeforeCursor: Bool
+
     @UserDefault(key: "MixedEnglishEnabled", defaultValue: false)
     @objc static var mixedEnglishEnabled: Bool
 
@@ -266,6 +269,7 @@ class Preferences: NSObject {
             "EngineeringLexiconEnabled",
             "BacktickOpensPunctuationList",
             "MixedEnglishEnabled",
+            "AddPhraseBeforeCursor",
             "InitialLetterHoldDelayMilliseconds",
             kLetterBehaviorKey,
             kSwitchInputSourceUponShiftLetterKeyComboInputSourceIDKey,

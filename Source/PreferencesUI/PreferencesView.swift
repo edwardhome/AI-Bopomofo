@@ -543,6 +543,11 @@ private struct UserPhrasesPreferencesView: View {
 
     var body: some View {
         FormBody {
+            Toggle(localized("Ctrl + Number Adds Phrase Before Cursor"), isOn: $preferences.addPhraseBeforeCursor)
+            Text(localized("Ctrl + 2–9 immediately adds that many characters. Turn off to use characters after the cursor. Shift + Arrow and Enter remain available."))
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Divider()
+
             VStack(alignment: .leading, spacing: 8) {
                 Text(localized("User Phrase Location:"))
 

@@ -6,6 +6,10 @@
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
+## 1.2.0-dev.1：Ctrl＋數字加入詞組
+
+開發分支新增 Ctrl＋2～9，從尚未送出的注音組字取對應字數，立即加入使用者詞庫，不必再按 Enter。預設取游標前方，可在「偏好設定 → 使用者詞彙」調整方向；原本 Shift＋方向鍵選取、Enter 加詞保留。本版未合併或發布，正式版仍是 1.1.0。[操作說明](docs/dictionary.md#ctrl數字加入中文詞組12-開發版) · [驗證與實鍵清單](docs/releases/1.2.0-dev.1.md)
+
 ## 1.1.0：可自訂 F 分層與精簡選單
 
 F 按下即預覽 ㄑ／f，門檻內接任何下一鍵均正常打字；只有超過門檻才撤回預覽進入符號層。Shift＋F 優先英文大小寫，不再進層。偏好設定新增「F 分層」頁，可調整兩種長按時間、編輯 QWERTY 鍵位與還原預設。

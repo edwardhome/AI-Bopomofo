@@ -280,6 +280,21 @@ TEST(ReadingGridTest, ScoreRankedLanguageModel) {
   ASSERT_EQ(unigrams[2].score(), -10);
 }
 
+TEST(ReadingGridTest, NineCharacterUserPhraseCanBeSelectedAndEdited) {
+  auto lm = std::make_shared<SimpleLM>(
+      "a 甲 -10\na-a-a-a-a-a-a-a-a 甲乙丙丁戊己庚辛壬 -1\n");
+  ReadingGrid grid(lm);
+  for (size_t i = 0; i < 9; ++i) { ASSERT_TRUE(grid.insertReading("a")); }
+  EXPECT_TRUE(Contains(grid.candidatesAt(0), "甲乙丙丁戊己庚辛壬"));
+  EXPECT_EQ(grid.walk().valuesAsStrings(), (std::vector<std::string>{"甲乙丙丁戊己庚辛壬"}));
+  ASSERT_TRUE(grid.deleteReadingBeforeCursor());
+  EXPECT_FALSE(Contains(grid.candidatesAt(0), "甲乙丙丁戊己庚辛壬"));
+  EXPECT_EQ(grid.length(), 8);
+  ASSERT_TRUE(grid.insertReading("a"));
+  EXPECT_TRUE(grid.overrideCandidate(0, "甲乙丙丁戊己庚辛壬"));
+  EXPECT_EQ(grid.walk().valuesAsStrings(), (std::vector<std::string>{"甲乙丙丁戊己庚辛壬"}));
+}
+
 TEST(ReadingGridTest, BasicOperations) {
   ReadingGrid grid(std::make_shared<MockLM>());
   ASSERT_EQ(grid.readingSeparator(), ReadingGrid::kDefaultSeparator);

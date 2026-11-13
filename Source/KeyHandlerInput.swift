@@ -22,6 +22,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Cocoa
+import MixedInputCore
 
 enum KeyCode: UInt16 {
     case none = 0
@@ -95,6 +96,12 @@ class KeyHandlerInput: NSObject {
 
     override var description: String {
         return "<\(super.description) inputText:\(String(describing: inputText)), inputTextIgnoringModifiers:\(String(describing: inputTextIgnoringModifiers)) charCode:\(charCode), keyCode:\(keyCode), flags:\(flags), cursorForwardKey:\(cursorForwardKey), cursorBackwardKey:\(cursorBackwardKey), extraChooseCandidateKey:\(extraChooseCandidateKey), absorbedArrowKey:\(absorbedArrowKey),  verticalModeOnlyChooseCandidateKey:\(verticalModeOnlyChooseCandidateKey), emacsKey:\(emacsKey), useVerticalMode:\(useVerticalMode)>"
+    }
+
+    /// Ctrl+2 在 macOS 可能產生 NUL，因此使用實體數字鍵碼，不依賴 charCode。
+    @objc var controlPhraseLength: Int {
+        PhraseShortcut.length(keyCode: keyCode, control: flags.contains(.control),
+            otherModifiers: !flags.intersection([.shift, .command, .option, .function, .capsLock]).isEmpty) ?? 0
     }
 
     @objc var isShiftHold: Bool {

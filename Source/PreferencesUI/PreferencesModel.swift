@@ -37,6 +37,11 @@ final class PreferencesViewModel: NSObject, ObservableObject {
     private var defaultsObserver: NSObjectProtocol?
     @Published private(set) var basisKeyboardLayoutOptions: [KeyboardLayoutOption] = []
 
+    var addPhraseBeforeCursor: Bool {
+        get { Preferences.addPhraseBeforeCursor }
+        set { objectWillChange.send(); Preferences.addPhraseBeforeCursor = newValue }
+    }
+
     var fHoldSymbolsEnabled: Bool {
         get { Preferences.fHoldSymbolsEnabled }
         set { objectWillChange.send(); Preferences.fHoldSymbolsEnabled = newValue }
