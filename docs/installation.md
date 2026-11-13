@@ -1,13 +1,13 @@
-# 1.1.0 安裝
+# 1.2.0 安裝
 
 適用於 Apple Silicon 與 Intel Mac；基本功能部署目標為 macOS 13 以上，舊系統相容性尚待實測。Apple 模型功能另外需要 macOS 26 以上及可用的 Apple Intelligence。建議朋友先保留原有輸入法作為備用。
 
 ## 下載與核對
 
-從 [1.1.0 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v1.1.0) 下載：
+從 [1.2.0 Release](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v1.2.0) 下載：
 
-- `AI-Bopomofo-1.1.0.pkg`：一般安裝，固定安裝到 `/Library/Input Methods/AI-Bopomofo.app`。
-- `AI-Bopomofo-1.1.0.zip`：app 備用封裝，僅在選擇使用者層安裝時使用。
+- `AI-Bopomofo-1.2.0.pkg`：一般安裝，固定安裝到 `/Library/Input Methods/AI-Bopomofo.app`。
+- `AI-Bopomofo-1.2.0.zip`：app 備用封裝，僅在選擇使用者層安裝時使用。
 - `checksums.txt`：下載檔案 SHA-256 校驗。
 - `SOURCE-COMMIT.txt`：本次套件對應的原始碼提交。
 

@@ -2,13 +2,13 @@
 
 以 [小麥注音 McBopomofo](https://github.com/openvanilla/McBopomofo) 為基礎的 macOS 繁體中文輸入法，由 [edwardhome](https://github.com/edwardhome) 維護。保留傳統注音、選字與詞庫，加入英文組字、F 數字／符號層及本機文字協助。這是獨立衍生專案，並非小麥注音官方版本。
 
-**主線固定為 `main`；目前正式版為 [1.1.0](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v1.1.0)。** 新增可編輯 QWERTY F 分層、F 按下預覽與長按判定，修正 Shift＋F 長按轉小寫並精簡選單；使用者與工程詞彙可在統一 SQLite 中管理。[更新內容與驗證](docs/releases/1.1.0.md)
+**主線固定為 `main`；目前正式版為 [1.2.0](https://github.com/edwardhome/AI-Bopomofo/releases/tag/v1.2.0)。** 新增 Ctrl＋2～9 加入詞組與前後方向設定，保留 Shift＋方向鍵操作、F 長按分層與統一 SQLite 詞庫管理。[更新內容與驗證](docs/releases/1.2.0.md)
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
-## 1.2.0-dev.1：Ctrl＋數字加入詞組
+## 1.2.0：Ctrl＋數字加入詞組
 
-開發分支新增 Ctrl＋2～9，從尚未送出的注音組字取對應字數，立即加入使用者詞庫，不必再按 Enter。預設取游標前方，可在「偏好設定 → 使用者詞彙」調整方向；原本 Shift＋方向鍵選取、Enter 加詞保留。本版未合併或發布，正式版仍是 1.1.0。[操作說明](docs/dictionary.md#ctrl數字加入中文詞組12-開發版) · [驗證與實鍵清單](docs/releases/1.2.0-dev.1.md)
+新增 Ctrl＋2～9，從尚未送出的注音組字取對應字數，立即加入使用者詞庫，不必再按 Enter。預設取游標前方，可在「偏好設定 → 使用者詞彙」調整方向；原本 Shift＋方向鍵選取、Enter 加詞保留。[操作說明](docs/dictionary.md#ctrl數字加入中文詞組12) · [驗證範圍](docs/releases/1.2.0.md)
 
 ## 1.1.0：可自訂 F 分層與精簡選單
 
