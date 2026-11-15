@@ -215,6 +215,15 @@ struct CandidateListTextSize {
 // MARK: -
 
 class Preferences: NSObject {
+    @UserDefault(key: "AppInputRulesEnabled", defaultValue: false)
+    static var appInputRulesEnabled: Bool
+    @UserDefault(key: "AppInputRulesJSON", defaultValue: "")
+    private static var appInputRulesJSON: String
+    static var appInputRuleSettings: AppInputRuleSettings {
+        get { AppInputRuleSettings.decode(appInputRulesJSON) }
+        set { appInputRulesJSON = newValue.encoded() }
+    }
+
     @UserDefault(key: "LexiconObservationEnabled", defaultValue: true)
     @objc static var lexiconObservationEnabled: Bool
     @UserDefault(key: "LexiconOrganizerEnabled", defaultValue: true)
@@ -264,6 +273,8 @@ class Preferences: NSObject {
         [
             "FHoldSymbolsEnabled",
             "FKeyMapping",
+            "AppInputRulesEnabled",
+            "AppInputRulesJSON",
             "FHoldDelayMilliseconds",
             "EnglishPredictionEnabled",
             "EngineeringLexiconEnabled",

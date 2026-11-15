@@ -26,6 +26,7 @@ import Carbon
 import Cocoa
 import InfoCollector
 import InputSourceHelper
+import UniformTypeIdentifiers
 
 struct KeyboardLayoutOption: Identifiable, Hashable {
     let id: String
@@ -36,6 +37,73 @@ struct KeyboardLayoutOption: Identifiable, Hashable {
 final class PreferencesViewModel: NSObject, ObservableObject {
     private var defaultsObserver: NSObjectProtocol?
     @Published private(set) var basisKeyboardLayoutOptions: [KeyboardLayoutOption] = []
+
+    @Published var appRuleMessage: String?
+    var appInputRulesEnabled: Bool {
+        get { Preferences.appInputRulesEnabled }
+        set { objectWillChange.send(); Preferences.appInputRulesEnabled = newValue }
+    }
+    var appInputRules: [AppInputRule] { Preferences.appInputRuleSettings.rules }
+
+    func setAppInputMode(_ mode: AppInputMode, rule: AppInputRule) {
+        var settings = Preferences.appInputRuleSettings
+        var updated = rule; updated.mode = mode
+        settings.upsert(updated)
+        objectWillChange.send(); Preferences.appInputRuleSettings = settings
+    }
+    func removeAppRule(_ rule: AppInputRule) {
+        var settings = Preferences.appInputRuleSettings
+        settings.remove(bundleIdentifier: rule.id)
+        objectWillChange.send(); Preferences.appInputRuleSettings = settings
+    }
+    func appRuleIcon(_ rule: AppInputRule) -> NSImage? {
+        guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: rule.id) else { return nil }
+        return NSWorkspace.shared.icon(forFile: url.path)
+    }
+    func chooseAppForRule() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.applicationBundle]
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = URL(fileURLWithPath: "/Applications", isDirectory: true)
+        panel.begin { [weak self] response in
+            guard response == .OK, let url = panel.url else { return }
+            self?.addAppRule(url: url)
+        }
+    }
+    func addAppRule(url: URL) {
+        guard url.pathExtension.lowercased() == "app", let bundle = Bundle(url: url),
+              let identifier = bundle.bundleIdentifier, !identifier.isEmpty else {
+            appRuleMessage = NSLocalizedString("Choose an application with a valid bundle identifier.", comment: "")
+            return
+        }
+        let name = (bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)
+            ?? (bundle.object(forInfoDictionaryKey: "CFBundleName") as? String)
+            ?? url.deletingPathExtension().lastPathComponent
+        var settings = Preferences.appInputRuleSettings
+        let existed = settings.rules.contains { $0.id == identifier }
+        settings.upsert(.init(bundleIdentifier: identifier, displayName: name, mode: .english), replacingExisting: false)
+        objectWillChange.send(); Preferences.appInputRuleSettings = settings
+        appRuleMessage = NSLocalizedString(existed ? "This application already has a rule; its setting was kept."
+            : settings.rules.contains(where: { $0.id == identifier }) ? "Rule added. Changes apply on the next application visit."
+            : "Could not add this application rule.", comment: "")
+    }
+    func addTerminalAppRules() {
+        var settings = Preferences.appInputRuleSettings
+        var found = false
+        for identifier in ["com.googlecode.iterm2", "com.apple.Terminal"] {
+            guard let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: identifier),
+                  let bundle = Bundle(url: url), bundle.bundleIdentifier == identifier else { continue }
+            found = true
+            let name = (bundle.object(forInfoDictionaryKey: "CFBundleName") as? String)
+                ?? url.deletingPathExtension().lastPathComponent
+            settings.upsert(.init(bundleIdentifier: identifier, displayName: name, mode: .english), replacingExisting: false)
+        }
+        objectWillChange.send(); Preferences.appInputRuleSettings = settings
+        appRuleMessage = NSLocalizedString(found ? "Installed terminal examples added. Existing rules and the enable switch were kept."
+            : "No supported terminal application was found.", comment: "")
+    }
 
     var addPhraseBeforeCursor: Bool {
         get { Preferences.addPhraseBeforeCursor }

@@ -504,3 +504,35 @@
 "Could not save the user phrase." = "無法儲存使用者詞組。";
 
 "Added phrase: %@" = "已加入詞組：%@";
+
+"Applications" = "應用程式";
+
+"Enable Application Input Mode Rules" = "啟用應用程式輸入模式規則";
+
+"Only switches modes inside AI-Bopomofo. Manual changes last until you leave the app. Changes to rules apply on the next visit." = "只切換 AI注音內部模式。手動切換保留到離開 App；規則修改於下次切入 App 生效。";
+
+"No application rules. Add an app or terminal examples to get started." = "尚無應用程式規則，可加入 App 或終端機範例。";
+
+"Default Mode" = "預設模式";
+
+"Default English" = "預設英文";
+
+"Default Bopomofo" = "預設注音";
+
+"Remove Application Rule" = "移除應用程式規則";
+
+"Add Application…" = "加入應用程式…";
+
+"Add Terminal Examples" = "加入終端機範例";
+
+"Choose an application with a valid bundle identifier." = "請選擇具有有效識別碼的應用程式。";
+
+"This application already has a rule; its setting was kept." = "此應用程式已有規則，保留原有設定。";
+
+"Rule added. Changes apply on the next application visit." = "已加入規則，下次切入應用程式時生效。";
+
+"Could not add this application rule." = "無法加入此應用程式規則。";
+
+"Installed terminal examples added. Existing rules and the enable switch were kept." = "已加入可用的終端機範例；原有規則與啟用開關保持不變。";
+
+"No supported terminal application was found." = "找不到支援的終端機應用程式。";

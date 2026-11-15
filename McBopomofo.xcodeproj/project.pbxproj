@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A13000000000000000000002 /* AppInputRuleRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13000000000000000000001 /* AppInputRuleRuntime.swift */; };
 		AC0000000000000000000011 /* CandidateRanking in Frameworks */ = {isa = PBXBuildFile; productRef = AC0000000000000000000013; };
 		AC0000000000000000000001 /* TextAssistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002; };
 		AB0000000000000000000011 /* MixedInputCore in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000013; };
@@ -144,6 +145,7 @@ AE0000000000000000000023 = {isa = PBXCopyFilesBuildPhase; buildActionMask = 2147
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A13000000000000000000001 /* AppInputRuleRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInputRuleRuntime.swift; sourceTree = "<group>"; };
 		AC0000000000000000000012 /* CandidateRanking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CandidateRanking; path = Packages/CandidateRanking; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* TextAssistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAssistance.swift; sourceTree = "<group>"; };
 		AB0000000000000000000012 /* MixedInputCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MixedInputCore; path = Packages/MixedInputCore; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@ AE0000000000000000000002,
 				6ACA41E715FC1D9000935EF6 /* Installer */,
 				6A0D4F4715FC0EB900ABF4B3 /* Resources */,
 				D4A13D5927A59D5C003BE359 /* InputMethodController.swift */,
+				A13000000000000000000001 /* AppInputRuleRuntime.swift */,
 				D43737C82DF9C35100D9707C /* InputMethodController+KeyHandlerDelegate.swift */,
 				D43737CA2DF9C48200D9707C /* InputMethodController+CandidateControllerDelegate.swift */,
 				D41355D6278D7409005E5CBD /* LanguageModelManager.h */,
@@ -790,6 +793,7 @@ AE0000000000000000000040,
 				D47B92C027972AD100458394 /* main.swift in Sources */,
 				D44FB74D2792189A003C80A6 /* PhraseReplacementMap.cpp in Sources */,
 				D4A13D5A27A59F0B003BE359 /* InputMethodController.swift in Sources */,
+				A13000000000000000000002 /* AppInputRuleRuntime.swift in Sources */,
 				D44FB74527915565003C80A6 /* Preferences.swift in Sources */,
 				AB0000000000000000000001 /* MixedInput.swift in Sources */,
 				AC0000000000000000000001 /* TextAssistance.swift in Sources */,

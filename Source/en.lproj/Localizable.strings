@@ -506,3 +506,35 @@
 "Could not save the user phrase." = "Could not save the user phrase.";
 
 "Added phrase: %@" = "Added phrase: %@";
+
+"Applications" = "Applications";
+
+"Enable Application Input Mode Rules" = "Enable Application Input Mode Rules";
+
+"Only switches modes inside AI-Bopomofo. Manual changes last until you leave the app. Changes to rules apply on the next visit." = "Only switches modes inside AI-Bopomofo. Manual changes last until you leave the app. Changes to rules apply on the next visit.";
+
+"No application rules. Add an app or terminal examples to get started." = "No application rules. Add an app or terminal examples to get started.";
+
+"Default Mode" = "Default Mode";
+
+"Default English" = "Default English";
+
+"Default Bopomofo" = "Default Bopomofo";
+
+"Remove Application Rule" = "Remove Application Rule";
+
+"Add Application…" = "Add Application…";
+
+"Add Terminal Examples" = "Add Terminal Examples";
+
+"Choose an application with a valid bundle identifier." = "Choose an application with a valid bundle identifier.";
+
+"This application already has a rule; its setting was kept." = "This application already has a rule; its setting was kept.";
+
+"Rule added. Changes apply on the next application visit." = "Rule added. Changes apply on the next application visit.";
+
+"Could not add this application rule." = "Could not add this application rule.";
+
+"Installed terminal examples added. Existing rules and the enable switch were kept." = "Installed terminal examples added. Existing rules and the enable switch were kept.";
+
+"No supported terminal application was found." = "No supported terminal application was found.";

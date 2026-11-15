@@ -92,6 +92,7 @@ enum PreferencesTab: CaseIterable, Identifiable {
     case basic
     case userPhrases
     case fLayer
+    case applications
     case advanced
 
     var id: Self { self }
@@ -107,6 +108,8 @@ enum PreferencesTab: CaseIterable, Identifiable {
             UserPhrasesPreferencesView()
         case .fLayer:
             FLayerPreferencesView()
+        case .applications:
+            ApplicationRulesPreferencesView()
         case .advanced:
             AdvancedPreferencesView()
         }
@@ -117,6 +120,7 @@ enum PreferencesTab: CaseIterable, Identifiable {
         case .basic: ("Basic", "switch.2")
         case .userPhrases: ("User Phrases", "folder")
         case .fLayer: ("F Layer", "keyboard")
+        case .applications: ("Applications", "app.badge")
         case .advanced: ("Advanced", "gearshape")
         }
     }
@@ -161,6 +165,7 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
         private static let userPhrasesIdentifier =
             NSToolbarItem.Identifier("PreferencesToolbar.userPhrases")
         private static let fLayerIdentifier = NSToolbarItem.Identifier("PreferencesToolbar.fLayer")
+        private static let applicationsIdentifier = NSToolbarItem.Identifier("PreferencesToolbar.applications")
         private static let advancedIdentifier =
             NSToolbarItem.Identifier("PreferencesToolbar.advanced")
 
@@ -218,6 +223,7 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
                 Self.basicIdentifier,
                 Self.userPhrasesIdentifier,
                 Self.fLayerIdentifier,
+                Self.applicationsIdentifier,
                 Self.advancedIdentifier,
             ]
         }
@@ -387,6 +393,8 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
                 userPhrasesIdentifier
             case .fLayer:
                 fLayerIdentifier
+            case .applications:
+                applicationsIdentifier
             case .advanced:
                 advancedIdentifier
             }
@@ -400,10 +408,58 @@ private struct WindowToolbarConfigurator: NSViewRepresentable {
                 .userPhrases
             case fLayerIdentifier:
                 .fLayer
+            case applicationsIdentifier:
+                .applications
             case advancedIdentifier:
                 .advanced
             default:
                 nil
+            }
+        }
+    }
+}
+
+private struct ApplicationRulesPreferencesView: View {
+    @EnvironmentObject private var preferences: PreferencesViewModel
+    var body: some View {
+        FormBody {
+            Toggle(localized("Enable Application Input Mode Rules"), isOn: $preferences.appInputRulesEnabled)
+            Text(localized("Only switches modes inside AI-Bopomofo. Manual changes last until you leave the app. Changes to rules apply on the next visit."))
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            if preferences.appInputRules.isEmpty {
+                Text(localized("No application rules. Add an app or terminal examples to get started."))
+                    .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            } else {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(preferences.appInputRules) { rule in
+                            HStack {
+                                if let icon = preferences.appRuleIcon(rule) {
+                                    Image(nsImage: icon).resizable().frame(width: 28, height: 28)
+                                } else { Image(systemName: "app").frame(width: 28, height: 28) }
+                                VStack(alignment: .leading) {
+                                    Text(rule.displayName).lineLimit(1)
+                                    Text(rule.id).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                                }.frame(maxWidth: .infinity, alignment: .leading)
+                                Picker(localized("Default Mode"), selection: Binding(
+                                    get: { rule.mode }, set: { preferences.setAppInputMode($0, rule: rule) })) {
+                                    Text(localized("Default English")).tag(AppInputMode.english)
+                                    Text(localized("Default Bopomofo")).tag(AppInputMode.bopomofo)
+                                }.labelsHidden().frame(width: 112)
+                                Button { preferences.removeAppRule(rule) } label: {
+                                    Image(systemName: "minus.circle")
+                                }.help(localized("Remove Application Rule"))
+                            }
+                        }
+                    }
+                }.frame(height: 240)
+            }
+            HStack {
+                Button(localized("Add Application…")) { preferences.chooseAppForRule() }
+                Button(localized("Add Terminal Examples")) { preferences.addTerminalAppRules() }
+            }
+            if let message = preferences.appRuleMessage {
+                Text(message).font(.caption).fixedSize(horizontal: false, vertical: true)
             }
         }
     }

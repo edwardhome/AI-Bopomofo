@@ -78,6 +78,54 @@ class McBopomofoInputMethodController: IMKInputController {
         case recognizedEvents, missingEvent, flags, keyDownReset, matched, toggle
     }
     private var directEnglish = false
+    private var ruleClientBundleIdentifier: String?
+    private var ruleGeneration: UInt64 = 0
+    private var isHandlingInputEvent = false
+    private var ruleClientApplication: AppInputModeSession.Application?
+
+    /// 只有目前啟用的 AI注音連線可套用；舊 controller 與舊前景要求自然失效。
+    func applicationRuleContextChanged() {
+        guard Thread.isMainThread else { return }
+        MainActor.assumeIsolated {
+            guard ruleClientApplication == AppInputRuleRuntime.shared.session.application else { return }
+            ruleGeneration = AppInputRuleRuntime.shared.session.generation
+            applyAppInputRuleIfSafe()
+        }
+    }
+
+    private func applyAppInputRuleIfSafe() {
+        guard Thread.isMainThread else { return }
+        MainActor.assumeIsolated {
+            guard ruleClientBundleIdentifier != nil else { return }
+            let runtime = AppInputRuleRuntime.shared
+            // 關閉／未設規則，以及模式已相同時，按鍵路徑直接返回。
+            guard let proposed = runtime.session.mode, directEnglish != (proposed == .english) else { return }
+            let idle = state is InputState.Empty || state is InputState.EmptyIgnoringPreviousState
+                || state is InputState.Deactivated || state is InputState.Committing
+            let safe = !isHandlingInputEvent && idle && fHoldGesture.phase == .idle && !symbolKeysDown.hasOwnedKeys && initialLetterHold.keyCode == nil
+                && !shiftGesture.isPending(at: ProcessInfo.processInfo.systemUptime)
+                && (lastInputModifiers ?? []).intersection([.shift, .control, .option, .command, .function]).isEmpty
+            guard keyHandler.inputMode == .bopomofo, ruleClientApplication == runtime.session.application,
+                  let mode = runtime.session.target(clientBundleIdentifier: ruleClientBundleIdentifier,
+                    generation: ruleGeneration, inputActive: runtime.activeController === self && currentClient != nil,
+                    secureInput: IsSecureEventInputEnabled(), safeToSwitch: safe) else { return }
+            let english = mode == .english
+            guard directEnglish != english else { return }
+            // 不使用 toggleDirectEnglish：自動規則不得提交組字或接受預測。
+            textAssistant.cancel()
+            directEnglish = english
+            showInputModeIndicator(client: currentClient)
+        }
+    }
+
+    private func rememberManualAppMode(_ mode: AppInputMode) {
+        guard Thread.isMainThread else { return }
+        MainActor.assumeIsolated {
+            AppInputRuleRuntime.shared.selectManually(mode, clientBundleIdentifier: ruleClientBundleIdentifier,
+                                                      generation: ruleGeneration)
+        }
+    }
+
     private var modeIndicator: TooltipController?
     private var modeIndicatorTimer: Timer?
     private var fHoldGesture = FHoldGesture()
@@ -336,6 +384,14 @@ class McBopomofoInputMethodController: IMKInputController {
             withKeyboardNamed: Preferences.basisKeyboardLayout)
         // reset the state
         currentClient = client
+        ruleClientBundleIdentifier = (client as? IMKTextInput)?.bundleIdentifier()
+        if Thread.isMainThread { MainActor.assumeIsolated {
+            let runtime = AppInputRuleRuntime.shared
+            runtime.refreshForeground()
+            runtime.activeController = self
+            ruleClientApplication = runtime.session.application
+            ruleGeneration = runtime.session.generation
+        } }
         if Preferences.fHoldSymbolsEnabled, !CGPreflightListenEventAccess(),
            !Self.didRequestFMonitoring {
             Self.didRequestFMonitoring = true
@@ -344,6 +400,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
         keyHandler.clear()
         keyHandler.syncWithPreferences()
+        applyAppInputRuleIfSafe()
 
         (NSApp.delegate as? AppDelegate)?.checkForUpdate()
     }
@@ -358,6 +415,13 @@ class McBopomofoInputMethodController: IMKInputController {
         if fHoldGesture.phase == .pending { _ = applyFHold(.otherKey, client: client) }
         cancelFHold(client: client)
         symbolKeysDown.reset()
+        if Thread.isMainThread { MainActor.assumeIsolated {
+            if AppInputRuleRuntime.shared.activeController === self {
+                AppInputRuleRuntime.shared.activeController = nil
+            }
+        } }
+        ruleClientBundleIdentifier = nil
+        ruleClientApplication = nil
         currentClient = nil
         keyHandler.clear()
         self.handle(state: .Deactivated(), client: client)
@@ -397,6 +461,7 @@ class McBopomofoInputMethodController: IMKInputController {
 
         // Since setValue is called after activateServer, show user file issues here, if any.
         checkUserFileIssues()
+        applyAppInputRuleIfSafe()
     }
 
     // MARK: - IMKServerInput protocol methods
@@ -484,16 +549,19 @@ class McBopomofoInputMethodController: IMKInputController {
 
     @objc private func toggleDirectEnglish(_ sender: Any?) {
         guard !IsSecureEventInputEnabled() else { return }
+        let nextEnglish = !directEnglish
+        rememberManualAppMode(nextEnglish ? .english : .bopomofo)
         commitComposition(currentClient)
         keyHandler.clear()
         handle(state: .EmptyIgnoringPreviousState(), client: currentClient)
-        directEnglish.toggle()
+        directEnglish = nextEnglish
         recordShiftDiagnostic(.toggle)
         shiftGesture.reset()
         showInputModeIndicator(client: currentClient)
     }
 
     @objc private func beginASCII(_ sender: Any?) {
+        rememberManualAppMode(.bopomofo)
         directEnglish = false
         keyHandler.beginASCII(with: state, stateCallback: { newState in
             self.handle(state: newState, client: self.currentClient)
@@ -768,6 +836,15 @@ class McBopomofoInputMethodController: IMKInputController {
             hideInputModeIndicator()
             commitComposition(client)
             return false
+        }
+        // 只在整個事件之前／之後處理，不能插進引擎同一事件的多段 stateCallback。
+        // 查詢快取，不在按鍵路徑讀偏好、掃描 App 或發出系統來源切換。
+        applyAppInputRuleIfSafe()
+        let wasHandlingInputEvent = isHandlingInputEvent
+        isHandlingInputEvent = true
+        defer {
+            isHandlingInputEvent = wasHandlingInputEvent
+            applyAppInputRuleIfSafe()
         }
         updateInitialLetterHold(for: event, client: client)
 

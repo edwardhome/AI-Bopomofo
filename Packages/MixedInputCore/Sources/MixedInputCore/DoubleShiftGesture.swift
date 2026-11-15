@@ -7,6 +7,10 @@ public struct DoubleShiftGesture {
     private var firstRelease: Double?
     private var shiftWasDown = false
     public init() {}
+    /// 避免 App 預設模式切換插入兩次 Shift 短按之間。
+    public func isPending(at time: Double) -> Bool {
+        shiftWasDown || firstRelease.map { time >= $0 && time - $0 <= Self.interval } == true
+    }
     public mutating func reset() {
         downAt = nil
         firstRelease = nil

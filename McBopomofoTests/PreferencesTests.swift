@@ -22,11 +22,31 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Testing
+import MixedInputCore
 
 @testable import McBopomofo
 
 @Suite("Preference Tests", .serialized)
 final class PreferencesTests {
+
+    @Test func applicationRulesDefaultOffAndPersistWithoutChangingEnableSwitch() {
+        let snapshot = makeSnapshot()
+        defer { restore(from: snapshot) }
+        UserDefaults.standard.removeObject(forKey: "AppInputRulesEnabled")
+        UserDefaults.standard.removeObject(forKey: "AppInputRulesJSON")
+        #expect(!Preferences.appInputRulesEnabled)
+        #expect(Preferences.appInputRuleSettings.rules.isEmpty)
+        let rule = AppInputRule(bundleIdentifier: "org.example.Editor", displayName: "Editor", mode: .english)
+        Preferences.appInputRuleSettings = .init(rules: [rule])
+        #expect(Preferences.appInputRuleSettings.rules == [rule])
+        #expect(!Preferences.appInputRulesEnabled)
+        Preferences.appInputRulesEnabled = true
+        #expect(Preferences.appInputRulesEnabled)
+        UserDefaults.standard.set("invalid", forKey: "AppInputRulesJSON")
+        #expect(Preferences.appInputRuleSettings.rules.isEmpty)
+        #expect(Preferences.allKeys.contains("AppInputRulesEnabled"))
+        #expect(Preferences.allKeys.contains("AppInputRulesJSON"))
+    }
 
     @Test func engineeringLexiconDefaultsOnAndPersistsOff() {
         let snapshot = makeSnapshot()

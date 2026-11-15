@@ -173,6 +173,8 @@ public struct FHoldGesture {
 /// must keep their native repeat behavior, even when IMK omits their key-up.
 public struct SymbolKeyOwnership {
     private var keys: Set<UInt16> = []
+    /// F 已放開但符號鍵尚未放開時，不讓自動模式切換插入手勢中間。
+    public var hasOwnedKeys: Bool { !keys.isEmpty }
     public init() {}
     public mutating func reset() { keys.removeAll() }
     public mutating func keyUp(_ code: UInt16) -> Bool { keys.remove(code) != nil }

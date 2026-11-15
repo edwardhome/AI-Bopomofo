@@ -1,5 +1,7 @@
 # 1.2.0 安裝
 
+開發分支另提供 `1.3.0-dev.1` 測試包，使用 `AI-Bopomofo-1.3.0-dev.1.pkg` 或同版本 app ZIP 手動安裝；尚無正式 Release。安裝流程與簽章限制同下，新增功能見 [應用程式規則](app-input-rules.md)。
+
 適用於 Apple Silicon 與 Intel Mac；基本功能部署目標為 macOS 13 以上，舊系統相容性尚待實測。Apple 模型功能另外需要 macOS 26 以上及可用的 Apple Intelligence。建議朋友先保留原有輸入法作為備用。
 
 ## 下載與核對

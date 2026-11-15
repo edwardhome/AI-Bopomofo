@@ -6,6 +6,10 @@
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
+## 1.3.0-dev.1：應用程式輸入模式規則
+
+新增「偏好設定 → 應用程式」，可為 App 指定預設英文或注音。預設關閉、規則空白，支援加入已安裝的終端機範例；同一 App 的手動切換保留到離開，再次進入才重套預設。只在 AI注音內生效，不切換系統來源，不修改 Vim 配置。這是功能分支開發版，尚未合併或發布。[操作與實鍵驗收](docs/app-input-rules.md) · [開發驗證報告](docs/releases/1.3.0-dev.1.md)
+
 ## 1.2.0：Ctrl＋數字加入詞組
 
 新增 Ctrl＋2～9，從尚未送出的注音組字取對應字數，立即加入使用者詞庫，不必再按 Enter。預設取游標前方，可在「偏好設定 → 使用者詞彙」調整方向；原本 Shift＋方向鍵選取、Enter 加詞保留。[操作說明](docs/dictionary.md#ctrl數字加入中文詞組12) · [驗證範圍](docs/releases/1.2.0.md)
