@@ -15,13 +15,14 @@ public enum UnifiedSQLite {
     ]
     public static func isSQLite(_ data: Data) -> Bool { data.starts(with: Data("SQLite format 3\0".utf8)) }
 
-    private static func temporary<T>(_ body: (URL) throws -> T) throws -> T {
+    static func temporary<T>(_ body: (URL) throws -> T) throws -> T {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent("ai-lexicon-" + UUID().uuidString)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
         defer { try? FileManager.default.removeItem(at: folder) }
         return try body(folder.appendingPathComponent("lexicon.sqlite"))
     }
     public static func encode(_ value: UnifiedLexicon) throws -> Data {
+        if value.cards != nil { return try CardSQLite.encode(value) }
         try value.validated()
         return try temporary { url in
             do {
@@ -52,6 +53,8 @@ public enum UnifiedSQLite {
         return try temporary { url in
             try data.write(to: url, options: .atomic)
             let db = try Database(url, writable: false)
+            if try db.rows("PRAGMA application_id") == [[String(applicationID)]],
+               try db.rows("PRAGMA user_version") == [["2"]] { return try CardSQLite.decode(db) }
             guard try db.rows("PRAGMA application_id") == [[String(applicationID)]],
                   try db.rows("PRAGMA user_version") == [["1"]] else { throw LexiconError.invalid("不支援的 SQLite 詞庫版本") }
             let schema = try db.rows("SELECT type, name, sql FROM sqlite_schema WHERE sql IS NOT NULL ORDER BY name", limit: 4)
@@ -91,7 +94,7 @@ public enum UnifiedSQLite {
     }
 }
 
-private final class Database {
+final class Database {
     private let db: OpaquePointer
     init(_ url: URL, writable: Bool) throws {
         var pointer: OpaquePointer?

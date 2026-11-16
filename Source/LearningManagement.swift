@@ -9,7 +9,7 @@ import MixedInputCore
 
 @MainActor extension McBopomofoInputMethodController {
     func addLearningMenu(to menu: NSMenu) {
-        let unified = menu.addItem(withTitle: NSLocalizedString("User and Engineering Lexicon…", comment: ""),
+        let unified = menu.addItem(withTitle: NSLocalizedString("Vocabulary Cards", comment: ""),
             action: #selector(showLearningApproved), keyEquivalent: "")
         unified.target = self
         let item = menu.addItem(withTitle: NSLocalizedString("AI Lexicon Management", comment: ""), action: nil, keyEquivalent: "")
@@ -27,7 +27,6 @@ import MixedInputCore
         add("Remember Current Term…", #selector(rememberLearningTerm))
         add("Export Review Data…", #selector(showLearningReview))
         add("Import Lexicon JSON…", #selector(importLearningJSON))
-        add("Manage Approved Lexicon…", #selector(showLearningApproved))
         add("Learning Status…", #selector(showLearningStatus))
         add("Cancel Background Organization", #selector(cancelLearningOrganizer))
         add("Disable AI Lexicon Features", #selector(disableLearning))
@@ -50,7 +49,10 @@ import MixedInputCore
         let queue = LearningRuntime.shared.queue; Task.detached { queue.clear() }
     }
     @objc func showLearningReview() { presentLearningPanel(approved: false) }
-    @objc func showLearningApproved() { presentLearningPanel(approved: true) }
+    @objc func showLearningApproved() {
+        guard !IsSecureEventInputEnabled() else { return }
+        LearningRuntime.shared.retain(LexiconCardManagementController())
+    }
     @objc func showLearningStatus() { presentLearningPanel(approved: false) }
     private func presentLearningPanel(approved: Bool) {
         guard !IsSecureEventInputEnabled() else { return }
@@ -59,8 +61,8 @@ import MixedInputCore
     }
     @objc func importLearningJSON() {
         guard !IsSecureEventInputEnabled() else { return }
-        let panel = LearningManagementController(approved: true)
-        LearningRuntime.shared.retain(panel); panel.importJSON()
+        let panel = LexiconCardManagementController()
+        LearningRuntime.shared.retain(panel); panel.beginImport()
     }
     @objc func rememberLearningTerm() {
         guard !IsSecureEventInputEnabled() else { return }

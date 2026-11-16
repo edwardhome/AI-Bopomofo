@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC2000000000000000000001 = {isa = PBXBuildFile; fileRef = AC2000000000000000000002; };
 		A13000000000000000000002 /* AppInputRuleRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13000000000000000000001 /* AppInputRuleRuntime.swift */; };
 		AC0000000000000000000011 /* CandidateRanking in Frameworks */ = {isa = PBXBuildFile; productRef = AC0000000000000000000013; };
 		AC0000000000000000000001 /* TextAssistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002; };
@@ -145,6 +146,7 @@ AE0000000000000000000023 = {isa = PBXCopyFilesBuildPhase; buildActionMask = 2147
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AC2000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LexiconCardManagement.swift; sourceTree = "<group>"; };
 		A13000000000000000000001 /* AppInputRuleRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInputRuleRuntime.swift; sourceTree = "<group>"; };
 		AC0000000000000000000012 /* CandidateRanking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CandidateRanking; path = Packages/CandidateRanking; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* TextAssistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAssistance.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@ AE0000000000000000000002,
 				AB0000000000000000000002 /* MixedInput.swift */,
 				AC0000000000000000000002 /* TextAssistance.swift */,
 				AD0000000000000000000003,
+				AC2000000000000000000002,
 				AD0000000000000000000002,
 				AD0000000000000000000001,
 				D47F7DCF278C0897002F9DD7 /* NonModalAlertWindowController.swift */,
@@ -798,6 +801,7 @@ AE0000000000000000000040,
 				AB0000000000000000000001 /* MixedInput.swift in Sources */,
 				AC0000000000000000000001 /* TextAssistance.swift in Sources */,
 				AD0000000000000000000013,
+				AC2000000000000000000001,
 				AD0000000000000000000012,
 				AD0000000000000000000011,
 				6A660A702EAF371000D53D7B /* ByteBlockBackedDictionary.cpp in Sources */,

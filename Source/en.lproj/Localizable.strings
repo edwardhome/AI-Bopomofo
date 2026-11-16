@@ -538,3 +538,171 @@
 "Installed terminal examples added. Existing rules and the enable switch were kept." = "Installed terminal examples added. Existing rules and the enable switch were kept.";
 
 "No supported terminal application was found." = "No supported terminal application was found.";
+
+"Vocabulary Cards" = "Vocabulary Cards";
+
+"Search Chinese, English, Bopomofo or symbols" = "Search Chinese, English, Bopomofo or symbols";
+
+"All" = "All";
+
+"Chinese" = "Chinese";
+
+"English" = "English";
+
+"Terms and Symbols" = "Terms and Symbols";
+
+"Meaning and Names" = "Meaning and Names";
+
+"New Card…" = "New Card…";
+
+"Edit Meaning…" = "Edit Meaning…";
+
+"Add Name…" = "Add Name…";
+
+"Edit Name…" = "Edit Name…";
+
+"Remove Name…" = "Remove Name…";
+
+"Delete Card…" = "Delete Card…";
+
+"Organize with FM" = "Organize with FM";
+
+"Review Suggestions…" = "Review Suggestions…";
+
+"Save and Apply…" = "Save and Apply…";
+
+"Discard Changes" = "Discard Changes";
+
+"Import…" = "Import…";
+
+"Export All…" = "Export All…";
+
+"Unavailable during Secure Input" = "Unavailable during Secure Input";
+
+"Lexicon storage is not ready" = "Lexicon storage is not ready";
+
+"Draft changes are not active" = "Draft changes are not active";
+
+"Approved vocabulary; legacy files remain unchanged" = "Approved vocabulary; legacy files remain unchanged";
+
+"cards" = "cards";
+
+"Select a card to view its names and input rules" = "Select a card to view its names and input rules";
+
+"Input" = "Input";
+
+"Legacy links retained; shared meaning has not been confirmed" = "Legacy links retained; shared meaning has not been confirmed";
+
+"Continue" = "Continue";
+
+"Meaning" = "Meaning";
+
+"Domain" = "Domain";
+
+"Choose a name" = "Choose a name";
+
+"Name" = "Name";
+
+"Bopomofo: hyphens between syllables; semicolons between readings" = "Bopomofo: hyphens between syllables; semicolons between readings";
+
+"English input codes: separate with semicolons; empty means display only" = "English input codes: separate with semicolons; empty means display only";
+
+"Delete selected cards?" = "Delete selected cards?";
+
+"Other sources may still provide the same words. Changes remain a draft until saved." = "Other sources may still provide the same words. Changes remain a draft until saved.";
+
+"Unsaved card edits will be discarded." = "Unsaved card edits will be discarded.";
+
+"Save these changes as a new approved version?" = "Save these changes as a new approved version?";
+
+"Added" = "Added";
+
+"Removed" = "Removed";
+
+"Names" = "Names";
+
+"Input rules" = "Input rules";
+
+"Save or discard your draft first" = "Save or discard your draft first";
+
+"Import Preview" = "Import Preview";
+
+"Imported approval flags do not activate entries. Review the draft, then Save and Apply." = "Imported approval flags do not activate entries. Review the draft, then Save and Apply.";
+
+"Only selected cards and their internal links are exported; links to other cards are omitted." = "Only selected cards and their internal links are exported; links to other cards are omitted.";
+
+"Export completed" = "Export completed";
+
+"The previous approved snapshot will become active at the next safe composition boundary." = "The previous approved snapshot will become active at the next safe composition boundary.";
+
+"Enable FM background organization first; one request at a time" = "Enable FM background organization first; one request at a time";
+
+"FM is preparing suggestions; approved vocabulary remains unchanged" = "FM is preparing suggestions; approved vocabulary remains unchanged";
+
+"Suggestions are ready for individual review" = "Suggestions are ready for individual review";
+
+"FM is unavailable or cancelled; manual editing remains available" = "FM is unavailable or cancelled; manual editing remains available";
+
+"Suggestions are stale; organize again" = "Suggestions are stale; organize again";
+
+"Select only the changes you want. They become a draft; Save and Apply confirms deployment." = "Select only the changes you want. They become a draft; Save and Apply confirms deployment.";
+
+"Apply Selected to Draft" = "Apply Selected to Draft";
+
+"zh" = "zh";
+
+"en" = "en";
+
+"abbreviation" = "abbreviation";
+
+"symbol" = "symbol";
+
+"broader" = "broader";
+
+"related" = "related";
+
+"set_definition" = "set_definition";
+
+"add_name" = "add_name";
+
+"link" = "link";
+
+"merge" = "merge";
+
+"split_name" = "split_name";
+
+"Import Legacy Terms…" = "Import Legacy Terms…";
+
+"Import Built-in Terms…" = "Import Built-in Terms…";
+
+"Review Observed Terms…" = "Review Observed Terms…";
+
+"Observed words become draft cards only. Review and remove unwanted cards before saving; FM can organize selected drafts." = "Observed words become draft cards only. Review and remove unwanted cards before saving; FM can organize selected drafts.";
+
+"A personal copy is created. Built-in vocabulary remains unchanged; annotations are not verified readings." = "A personal copy is created. Built-in vocabulary remains unchanged; annotations are not verified readings.";
+
+"Please wait for draft validation" = "Please wait for draft validation";
+
+"More changes are shown in the draft cards; review before saving." = "More changes are shown in the draft cards; review before saving.";
+
+"Data and Maintenance" = "Data and Maintenance";
+
+"Link Cards…" = "Link Cards…";
+
+"Merge Cards…" = "Merge Cards…";
+
+"Split Name…" = "Split Name…";
+
+"Remove Relationship…" = "Remove Relationship…";
+
+"Choose a target meaning" = "Choose a target meaning";
+
+"Names and input rules move to the target meaning. Review the resulting draft before saving." = "Names and input rules move to the target meaning. Review the resulting draft before saving.";
+
+"Target is the broader meaning" = "Target is the broader meaning";
+
+"Related meanings" = "Related meanings";
+
+"Restore Original Legacy Version…" = "Restore Original Legacy Version…";
+
+"Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified." = "Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified.";

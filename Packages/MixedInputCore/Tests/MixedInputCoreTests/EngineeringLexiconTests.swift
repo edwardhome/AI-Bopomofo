@@ -178,3 +178,15 @@ struct EngineeringLexiconTests {
         #expect(ASCIIComposition(raw: "x₂").raw == "x")
     }
 }
+
+@Suite struct ApprovedCardCandidateTests {
+    @Test func englishCardsRetainTypeAndDoNotSuppressPrediction() throws {
+        let data = Data(#"{"version":1,"terms":[{"id":"one","category":"english","aliases":["program"],"outputs":["program"],"annotation":"程式","sources":["local"],"term_type":"english_term"},{"id":"two","category":"symbol","aliases":["sio2"],"outputs":["SiO₂"],"annotation":"二氧化矽","sources":["local"],"term_type":"unicode_mapping"}]}"#.utf8)
+        let lexicon = TechnicalLexicon(engineeringEnabled: false).withApproved(EngineeringLexicon(data: data))
+        let english = ASCIIComposition(raw: "prog", lexicon: lexicon)
+        #expect(!english.hasEngineeringCandidates)
+        let candidate = try #require(english.candidateItems.first { $0.text == "program" })
+        #expect(candidate.annotation == "程式"); #expect(candidate.termType == "english_term"); #expect(candidate.inputCode == "program")
+        #expect(ASCIIComposition(raw: "sio2", lexicon: lexicon).hasEngineeringCandidates)
+    }
+}

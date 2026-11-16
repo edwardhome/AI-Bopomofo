@@ -36,6 +36,7 @@ public struct AppleTextAssistance: CorrectionProvider {
         return try await request("correction", payload: payload, background: false)
     }
     public func organize(_ payload: Data) async throws -> Data { try await request("organize", payload: payload, background: true) }
+    public func organizeCards(_ payload: Data) async throws -> Data { try await request("organize_cards", payload: payload, background: true) }
     public func cancelBackground() { if pending?.background == true { cancelRequest() } }
     private func cancelRequest() {
         guard let request = pending else { return }

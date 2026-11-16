@@ -1,0 +1,316 @@
+{
+  "dictionary_version": "synthetic-cards-v2-001",
+  "document_type": "review",
+  "cards": {
+    "concepts": [
+      {
+        "id": "8a47ff2c8930a390511de1edfe4fe17d6b07a712f870291e0999370503ce2d15",
+        "definition": "𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀𠀀",
+        "domain": "synthetic"
+      },
+      {
+        "id": "20e5c2eda925b6289441bacc7027709c9a33d0675f8c26717692630b699e2090",
+        "definition": "river side",
+        "domain": "synthetic"
+      },
+      {
+        "id": "7a6c4fac6c5cd7209ee2eecd9d6ad3673c55315117de1d8daa5aeb3f71bbd7c7",
+        "definition": "行走",
+        "domain": "synthetic"
+      },
+      {
+        "id": "50e0d250228d28f81a60397ef9fb9e10d1cb9a52c3cf552429139839d395bb5e",
+        "definition": "行業",
+        "domain": "synthetic"
+      },
+      {
+        "id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "definition": "水分子",
+        "domain": "synthetic"
+      },
+      {
+        "id": "5d79e8c3c51b4379e300d99fe841aed235f2243005e34b1dcd6cc8d29b9eb08a",
+        "definition": "用水",
+        "domain": "synthetic"
+      },
+      {
+        "id": "2d5f5a8dc4bbee0af82aee1c86024b91773b21af1c30f383f24e4f89171d347b",
+        "definition": "甲烷",
+        "domain": "synthetic"
+      }
+    ],
+    "forms": [
+      {
+        "id": "3654837d29b8c4c24c35acc3e7f7e326de701246f3495ddddae2bfe305381e72",
+        "text": "bank",
+        "kind": "en"
+      },
+      {
+        "id": "adcf9811d28abfafe7bf77cc4ce38bd6cabf421ded05c93ba93f7246bb1d1a84",
+        "text": "行",
+        "kind": "zh"
+      },
+      {
+        "id": "0c465ab88c04abcd4c843e825642f7fedbdb29da84b576cd13ffb7e5071dcf03",
+        "text": "水",
+        "kind": "zh"
+      },
+      {
+        "id": "7ba9c25bed7a29ff0e6858af67982698a40d72880aac5b7d24606252c80ebe35",
+        "text": "H₂O",
+        "kind": "symbol"
+      },
+      {
+        "id": "99565df3b3a33832139d54ca1ec0db5cce9affcb8448e43a3ec1d3ff807d8c59",
+        "text": "H2O",
+        "kind": "abbreviation"
+      },
+      {
+        "id": "e1c7254f97349df47ee2c02581cb1da9efed4fed69b304a73515918d3e29e28b",
+        "text": "CH₄",
+        "kind": "symbol"
+      }
+    ],
+    "names": [
+      {
+        "id": "d74e3c64d07ba4c058230a19fe6f5500101a0e3c9a186789f2ac2ffb2072baf5",
+        "concept_id": "8a47ff2c8930a390511de1edfe4fe17d6b07a712f870291e0999370503ce2d15",
+        "form_id": "3654837d29b8c4c24c35acc3e7f7e326de701246f3495ddddae2bfe305381e72",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "aa371da22b2bd60dca945eb63429acc14756c8055900ba7bb4f43c2566ffc408",
+        "concept_id": "20e5c2eda925b6289441bacc7027709c9a33d0675f8c26717692630b699e2090",
+        "form_id": "3654837d29b8c4c24c35acc3e7f7e326de701246f3495ddddae2bfe305381e72",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "7d1fa42d561782cb44da305233e9dd8769c2bc8febc7eae202f5894998352972",
+        "concept_id": "7a6c4fac6c5cd7209ee2eecd9d6ad3673c55315117de1d8daa5aeb3f71bbd7c7",
+        "form_id": "adcf9811d28abfafe7bf77cc4ce38bd6cabf421ded05c93ba93f7246bb1d1a84",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "1c21e2d7d621acaef0f276bcef649ceab07916945925bfa8b084c2f965e0f791",
+        "concept_id": "50e0d250228d28f81a60397ef9fb9e10d1cb9a52c3cf552429139839d395bb5e",
+        "form_id": "adcf9811d28abfafe7bf77cc4ce38bd6cabf421ded05c93ba93f7246bb1d1a84",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "60c8a9751b1b1cb5293b9409712a75db1a1d00a0206b5a10eeb8c032a19bf7a6",
+        "concept_id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "form_id": "0c465ab88c04abcd4c843e825642f7fedbdb29da84b576cd13ffb7e5071dcf03",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "3ebcbbbc5f684b71db5288353e6135a8f31c99549bfbc21eab267c9a2df049be",
+        "concept_id": "5d79e8c3c51b4379e300d99fe841aed235f2243005e34b1dcd6cc8d29b9eb08a",
+        "form_id": "0c465ab88c04abcd4c843e825642f7fedbdb29da84b576cd13ffb7e5071dcf03",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "456c78cc8efd6f94f47a8dea7849c6bcd5ec45b13b94393b4684f32bd4f94fab",
+        "concept_id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "form_id": "7ba9c25bed7a29ff0e6858af67982698a40d72880aac5b7d24606252c80ebe35",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "4894f48a9d9b377593a1d9999b6d84f0940215fd9eee0e03e20879d6fd038712",
+        "concept_id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "form_id": "99565df3b3a33832139d54ca1ec0db5cce9affcb8448e43a3ec1d3ff807d8c59",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "6b623e710f0b3d00c39e72d533c75edb0d6992018b38f1dc4877df92c6401c93",
+        "concept_id": "2d5f5a8dc4bbee0af82aee1c86024b91773b21af1c30f383f24e4f89171d347b",
+        "form_id": "e1c7254f97349df47ee2c02581cb1da9efed4fed69b304a73515918d3e29e28b",
+        "source": "synthetic:user"
+      }
+    ],
+    "readings": [
+      {
+        "id": "fc617e5f766cf277c555fa16de7ec744efbe4881fde9282e0015051497a64f31",
+        "value": "ㄒㄧㄥˊ"
+      },
+      {
+        "id": "b21ff09496a36427bc96560ce85b538207e9ea01bfbe6a33d138576e0ac9c375",
+        "value": "ㄏㄤˊ"
+      },
+      {
+        "id": "c38212ad35c756e8bfa5af640037717ea10778f2f4a0183a52403637a229ea59",
+        "value": "ㄕㄨㄟˇ"
+      }
+    ],
+    "pronunciations": [
+      {
+        "id": "5e0c79eadb36dd20e43f42d603ad48193683552414f002430776df7e1dc02b5b",
+        "name_id": "7d1fa42d561782cb44da305233e9dd8769c2bc8febc7eae202f5894998352972",
+        "reading_id": "fc617e5f766cf277c555fa16de7ec744efbe4881fde9282e0015051497a64f31",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "dd61640704e5946052637bef4396d41cf2a5e1e0ae8f1f2eb26329033c886a01",
+        "name_id": "1c21e2d7d621acaef0f276bcef649ceab07916945925bfa8b084c2f965e0f791",
+        "reading_id": "b21ff09496a36427bc96560ce85b538207e9ea01bfbe6a33d138576e0ac9c375",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "0445193cca0e4a630eb64fc39524cccf3494c4dc03d4c21470f6394e2e990951",
+        "name_id": "60c8a9751b1b1cb5293b9409712a75db1a1d00a0206b5a10eeb8c032a19bf7a6",
+        "reading_id": "c38212ad35c756e8bfa5af640037717ea10778f2f4a0183a52403637a229ea59",
+        "source": "synthetic:user"
+      },
+      {
+        "id": "93afebec7baa9d7f7c895e4bdabe69a90928c77e0ac43354b4e39d37c5305c59",
+        "name_id": "3ebcbbbc5f684b71db5288353e6135a8f31c99549bfbc21eab267c9a2df049be",
+        "reading_id": "c38212ad35c756e8bfa5af640037717ea10778f2f4a0183a52403637a229ea59",
+        "source": "synthetic:user"
+      }
+    ],
+    "bindings": [
+      {
+        "id": "d6b264fedf7b36f5c6148b437ea4bfe08547d062ea29665457e1e2d22b9c892c",
+        "name_id": "d74e3c64d07ba4c058230a19fe6f5500101a0e3c9a186789f2ac2ffb2072baf5",
+        "reading_id": "",
+        "code": "bank",
+        "term_type": "english_term",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "6a31a7f80d38f8ad56c6508b7b2dec70c751dbb4bb3b42f603f6ff611c5e04af",
+        "name_id": "aa371da22b2bd60dca945eb63429acc14756c8055900ba7bb4f43c2566ffc408",
+        "reading_id": "",
+        "code": "bank",
+        "term_type": "english_term",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "34fc436ff12e5a85acb7bca2bd2260708435cac48122104d890bd6c13cfb4133",
+        "name_id": "7d1fa42d561782cb44da305233e9dd8769c2bc8febc7eae202f5894998352972",
+        "reading_id": "fc617e5f766cf277c555fa16de7ec744efbe4881fde9282e0015051497a64f31",
+        "code": "ㄒㄧㄥˊ",
+        "term_type": "zh_phrase",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "1fe5f2bb26201c23ce60080e41d991fdcf917f03fde2d06fafae9811cb0eddf3",
+        "name_id": "1c21e2d7d621acaef0f276bcef649ceab07916945925bfa8b084c2f965e0f791",
+        "reading_id": "b21ff09496a36427bc96560ce85b538207e9ea01bfbe6a33d138576e0ac9c375",
+        "code": "ㄏㄤˊ",
+        "term_type": "zh_phrase",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "9d6a53033a87487cd512feae6d513f27f0fcf7ad82fecb7992e54d0b36ed74c3",
+        "name_id": "60c8a9751b1b1cb5293b9409712a75db1a1d00a0206b5a10eeb8c032a19bf7a6",
+        "reading_id": "c38212ad35c756e8bfa5af640037717ea10778f2f4a0183a52403637a229ea59",
+        "code": "ㄕㄨㄟˇ",
+        "term_type": "zh_phrase",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "1229a346e8ab0ca61dc17d28e41bf79febb681591b3251bba02b8cd5f461b9cb",
+        "name_id": "3ebcbbbc5f684b71db5288353e6135a8f31c99549bfbc21eab267c9a2df049be",
+        "reading_id": "c38212ad35c756e8bfa5af640037717ea10778f2f4a0183a52403637a229ea59",
+        "code": "ㄕㄨㄟˇ",
+        "term_type": "zh_phrase",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "61c07b29c498234b250cd91880c766d325ab683827d72d08f601af268070e78e",
+        "name_id": "456c78cc8efd6f94f47a8dea7849c6bcd5ec45b13b94393b4684f32bd4f94fab",
+        "reading_id": "",
+        "code": "H2O",
+        "term_type": "unicode_mapping",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "933a3824eb9311a4303ff18c2dec6eac015d94af356ed96d79a6ce730b57483a",
+        "name_id": "4894f48a9d9b377593a1d9999b6d84f0940215fd9eee0e03e20879d6fd038712",
+        "reading_id": "",
+        "code": "water",
+        "term_type": "technical_alias",
+        "source": "apple_fm:synthetic-proposal"
+      },
+      {
+        "id": "1d9e87bdfbafd2a4cadd7a2e7221d5aaa70dab0dae387e95c8bb3c0515264e9c",
+        "name_id": "6b623e710f0b3d00c39e72d533c75edb0d6992018b38f1dc4877df92c6401c93",
+        "reading_id": "",
+        "code": "CH4",
+        "term_type": "unicode_mapping",
+        "source": "apple_fm:synthetic-proposal"
+      }
+    ],
+    "relations": [
+      {
+        "id": "c0af110e9770cff66c9f5699cbdadfe7ea69c065d5958b6c4a1d41412b8bead9",
+        "source_id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "target_id": "5d79e8c3c51b4379e300d99fe841aed235f2243005e34b1dcd6cc8d29b9eb08a",
+        "kind": "related",
+        "source": "synthetic:user"
+      }
+    ],
+    "legacy_links": [
+      {
+        "source_id": "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
+        "target_id": "2d5f5a8dc4bbee0af82aee1c86024b91773b21af1c30f383f24e4f89171d347b"
+      }
+    ],
+    "origins": [
+      {
+        "id": "a1c6882dd005fd8e67e702ea59508fb38a9fd34f362c419dfa98d064606c0ef2",
+        "subject_id": "d74e3c64d07ba4c058230a19fe6f5500101a0e3c9a186789f2ac2ffb2072baf5",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/0"
+      },
+      {
+        "id": "57d34a42164619866b66d7281cb19c3614b9ea7aec11790db842c218a632f727",
+        "subject_id": "aa371da22b2bd60dca945eb63429acc14756c8055900ba7bb4f43c2566ffc408",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/1"
+      },
+      {
+        "id": "6d85cf66b4bde26eb840a852dc8ae8cdf287d0cc1e2e1bae6b5960fc5c219800",
+        "subject_id": "7d1fa42d561782cb44da305233e9dd8769c2bc8febc7eae202f5894998352972",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/2"
+      },
+      {
+        "id": "135bb89f413051bd97c8d1bb6e55c6c2602c8f11c1397046fd07b12d7c340961",
+        "subject_id": "1c21e2d7d621acaef0f276bcef649ceab07916945925bfa8b084c2f965e0f791",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/3"
+      },
+      {
+        "id": "ba1c7c1bbf1cd5ae751108c03eb3c36c31c46a4618f6496944a2933d580ac0ed",
+        "subject_id": "60c8a9751b1b1cb5293b9409712a75db1a1d00a0206b5a10eeb8c032a19bf7a6",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/4"
+      },
+      {
+        "id": "5e730f41b7392515c5f23f3be6c29f299fc5749ebc2d9acfe92d69c196ff3f25",
+        "subject_id": "3ebcbbbc5f684b71db5288353e6135a8f31c99549bfbc21eab267c9a2df049be",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/5"
+      },
+      {
+        "id": "24c89d487d5c9b521ac710f55bbebe585108f4d9600c634c79184d0341557f8d",
+        "subject_id": "456c78cc8efd6f94f47a8dea7849c6bcd5ec45b13b94393b4684f32bd4f94fab",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/6"
+      },
+      {
+        "id": "82e155f8f630fab97467080b2d75f2102a458331e001b22e956cb2a8c731bb9a",
+        "subject_id": "4894f48a9d9b377593a1d9999b6d84f0940215fd9eee0e03e20879d6fd038712",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/7"
+      },
+      {
+        "id": "ef4af5e22e767392baa9d45f36f83a07a79b83c1f6a45fc7f9323fad83f98ab1",
+        "subject_id": "6b623e710f0b3d00c39e72d533c75edb0d6992018b38f1dc4877df92c6401c93",
+        "source": "synthetic:user",
+        "reference": "https://example.org/reference/8"
+      }
+    ]
+  }
+}

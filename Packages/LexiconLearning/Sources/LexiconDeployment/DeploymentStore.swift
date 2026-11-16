@@ -8,10 +8,11 @@ public struct LexiconSnapshot: Sendable {
     public let revision: String
     public let entries: [LexiconEntry]
     public let relations: [LexiconRelation]
+    public let cards: CardGraph?
     private let exact: [String: [LexiconEntry]]
     private let prefixes: [String: [LexiconEntry]]
-    public init(version: String = "", entries: [LexiconEntry] = [], relations: [LexiconRelation] = [], revision: String = "") {
-        self.version = version; self.revision = revision; self.entries = entries; self.relations = relations
+    public init(version: String = "", entries: [LexiconEntry] = [], relations: [LexiconRelation] = [], revision: String = "", cards: CardGraph? = nil) {
+        self.version = version; self.revision = revision; self.entries = entries; self.relations = relations; self.cards = cards
         var exact: [String: [LexiconEntry]] = [:], prefixes: [String: [LexiconEntry]] = [:]
         for e in entries {
             let key = e.term_type == .zhPhrase ? "zh:" + e.reading : "en:" + e.reading.lowercased()
@@ -40,6 +41,7 @@ public struct ImportPreview: Sendable {
     public let token: UUID
     public let document: LexiconDocument
     public let relations: [LexiconRelation]
+    public let cards: CardGraph?
     public let added: Int, changed: Int, existing: Int, duplicates: Int, conflicts: Int, proposals: Int
     public let digest: String
 }
@@ -117,7 +119,7 @@ public actor DeploymentStore {
         }
         var readingValues: [String: Set<String>] = [:]
         for e in current.entries + entries { readingValues[e.term_type.rawValue + ":" + e.reading, default: []].insert(e.text) }
-        let normalizedValue = UnifiedLexicon(document: normalized, relations: value.relations)
+        let normalizedValue = UnifiedLexicon(document: normalized, relations: value.relations, cards: value.cards)
         let digest = LexiconEntry.digest(try normalizedValue.encoded())
         // 版本名稱不能重用來表示另一份資料，亦不可用來源檔內的 approved 繞過預覽。
         for id in ([manifest.active].compactMap { $0 } + manifest.history) {
@@ -129,7 +131,7 @@ public actor DeploymentStore {
                       receipt.sourceChecksum == legacyDigest else { throw LexiconError.invalid("同一詞庫版本已存在不同內容") }
             }
         }
-        let preview = ImportPreview(token: UUID(), document: normalized, relations: value.relations, added: added, changed: changed,
+        let preview = ImportPreview(token: UUID(), document: normalized, relations: value.relations, cards: value.cards, added: added, changed: changed,
             existing: existing, duplicates: duplicates, conflicts: readingValues.values.filter { $0.count > 1 }.count,
             proposals: entries.filter { $0.review.status == .proposed || $0.model_suggestion != nil }.count, digest: digest)
         previews.removeAll(); previews[preview.token] = (preview, manifest.active ?? "", replacing)
@@ -148,13 +150,20 @@ public actor DeploymentStore {
             else { positions[entry.entry_id] = values.count; values.append(entry) }
         }
         guard values.count <= 20_000 else { throw LexiconError.invalid("合併後超過 20,000 詞") }
+        var cards: CardGraph?
+        if current.cards != nil || preview.cards != nil {
+            let incoming = try CardGraph.migrating(UnifiedLexicon(document: preview.document, relations: preview.relations, cards: preview.cards))
+            cards = replacing ? incoming : try CardGraph.migrating(unifiedCurrent()).merging(incoming)
+            values = try cards!.projectedEntries()
+            for i in values.indices { values[i].review.status = .approved }
+        }
         let doc = LexiconDocument(type: "approved", version: preview.document.dictionary_version, entries: values)
         var relations = replacing ? [] : current.relations
         var seenRelations = Set(relations)
         for relation in preview.relations where seenRelations.insert(relation).inserted { relations.append(relation) }
         let ids = Set(values.map(\.entry_id))
         relations.removeAll { !ids.contains($0.source_id) || !ids.contains($0.target_id) }
-        let value = UnifiedLexicon(document: doc, relations: relations)
+        let value = UnifiedLexicon(document: doc, relations: cards == nil ? relations : [], cards: cards)
         let bytes = try value.encoded()
         let sqlite = try UnifiedSQLite.encode(value)
         let checksum = LexiconEntry.digest(bytes)
@@ -171,11 +180,20 @@ public actor DeploymentStore {
         if !FileManager.default.fileExists(atPath: folder.path) { try FileManager.default.moveItem(at: stage, to: folder) }
         let snapshot = try readVersion(checksum)
         try checkpoint(.verified)
+        // 首次 v2 遷移釘選原 v1 版本，不受一般五版輪替清除。
+        if cards != nil, current.cards == nil, let previous = manifest.active,
+           !FileManager.default.fileExists(atPath: root.appendingPathComponent("preserved-v1.json").path) {
+            try write(try JSONEncoder().encode(previous), to: root.appendingPathComponent("preserved-v1.json"))
+        }
         let old = manifest
         manifest.history = Array(([manifest.active].compactMap { $0 } + manifest.history).filter { $0 != checksum }.prefix(5))
         manifest.active = checksum
         do { try checkpoint(.activating); try persistManifest() } catch { manifest = old; throw error }
         current = snapshot; pruneVersions(); return snapshot
+    }
+    public func cardGraph() throws -> CardGraph { try CardGraph.migrating(unifiedCurrent()) }
+    public func previewCards(_ cards: CardGraph, expectedRevision: String) throws -> ImportPreview {
+        try preview(cards.exchange(), replacing: true, expectedRevision: expectedRevision)
     }
     public func cancel(_ token: UUID) { previews.removeValue(forKey: token) }
     public func rollback() throws -> LexiconSnapshot {
@@ -186,34 +204,54 @@ public actor DeploymentStore {
         do { try persistManifest() } catch { manifest = old; throw error }
         previews.removeAll(); current = snapshot; return snapshot
     }
+    public func restoreOriginalV1() throws -> LexiconSnapshot {
+        let id = try JSONDecoder().decode(String.self, from: boundedRead(root.appendingPathComponent("preserved-v1.json"), max: 128))
+        let restored = try readVersion(id)
+        guard restored.cards == nil else { throw LexiconError.invalid("原始版本不是 v1") }
+        let old = manifest
+        manifest.history = Array(([manifest.active].compactMap { $0 } + manifest.history).filter { $0 != id }.prefix(5)); manifest.active = id
+        do { try persistManifest() } catch { manifest = old; throw error }
+        current = restored; previews.removeAll(); return restored
+    }
     public func unifiedCurrent() -> UnifiedLexicon {
-        UnifiedLexicon(document: LexiconDocument(type: "approved", version: current.version, entries: current.entries), relations: current.relations)
+        UnifiedLexicon(document: LexiconDocument(type: "approved", version: current.version, entries: current.entries), relations: current.relations, cards: current.cards)
     }
     public func exportSQLite(keys: Set<String>? = nil) throws -> Data {
         let value = unifiedCurrent()
-        var selected = keys.map { value.selecting($0) } ?? value
+        var selected: UnifiedLexicon
+        if let cards = value.cards { selected = try (keys.map { cards.selecting($0) } ?? cards).exchange(version: value.document.dictionary_version) }
+        else { selected = keys.map { value.selecting($0) } ?? value }
         // 核准／合併／選取後的快照不是原始匯入檔，使用內容衍生的交換版本。
         selected.document.dictionary_version = "snapshot-" + LexiconEntry.digest(try selected.encoded())
         return try UnifiedSQLite.encode(selected)
     }
     public func exportCurrent() throws -> Data {
-        guard current.relations.isEmpty else { throw LexiconError.invalid("JSON 1.0 無法保留中文別名關聯，請匯出 SQLite") }
+        guard current.relations.isEmpty, current.cards == nil else { throw LexiconError.invalid("JSON 1.0 無法保留中文別名關聯，請匯出 SQLite") }
         var value = unifiedCurrent()
         value.document.dictionary_version = "snapshot-" + LexiconEntry.digest(try value.encoded())
         return try value.document.encoded()
     }
     public func selectPreview(_ token: UUID, keys: Set<String>) throws -> ImportPreview {
         guard let (p, base, replacing) = previews[token], base == (manifest.active ?? "") else { throw LexiconError.invalid("預覽已失效") }
-        let selection = UnifiedLexicon(document: p.document, relations: p.relations).selecting(keys)
+        let source = UnifiedLexicon(document: p.document, relations: p.relations, cards: p.cards)
+        let selection: UnifiedLexicon
+        if let cards = p.cards {
+            let matching = Set(cards.bindings.filter { b in
+                guard let n = cards.names.first(where: { $0.id == b.name_id }), let f = cards.forms.first(where: { $0.id == n.form_id }) else { return false }
+                return keys.contains(LexiconEntry.key(type: b.term_type, reading: b.code, text: f.text))
+            }.compactMap { b in cards.names.first(where: { $0.id == b.name_id })?.concept_id })
+            selection = try cards.selecting(matching).exchange(version: p.document.dictionary_version)
+        } else { selection = source.selecting(keys) }
         try selection.validated()
         // 核准選取範圍不改變來源檔的身分，之後仍可匯入同檔其他詞條。
-        let selected = ImportPreview(token: UUID(), document: selection.document, relations: selection.relations,
+        let selected = ImportPreview(token: UUID(), document: selection.document, relations: selection.relations, cards: selection.cards,
             added: p.added, changed: p.changed, existing: p.existing, duplicates: p.duplicates,
             conflicts: p.conflicts, proposals: p.proposals, digest: p.digest)
         previews.removeAll(); previews[selected.token] = (selected, base, replacing)
         return selected
     }
     public func deletionPreview(keys: Set<String>) throws -> ImportPreview {
+        guard current.cards == nil else { throw LexiconError.invalid("請在詞彙卡中刪除名稱或輸入規則") }
         let entries = current.entries.filter { !keys.contains($0.entry_id) }
         let ids = Set(entries.map(\.entry_id))
         return try preview(UnifiedLexicon(document: LexiconDocument(entries: entries),
@@ -242,7 +280,7 @@ public actor DeploymentStore {
             guard receipt.checksum == id, value.document.document_type == "approved",
                   value.document.dictionary_version == receipt.version,
                   value.document.entries.allSatisfy({ $0.review.status == .approved }) else { throw LexiconError.invalid("缺少有效核准版本") }
-            return LexiconSnapshot(version: receipt.version, entries: value.document.entries, relations: value.relations, revision: id)
+            return LexiconSnapshot(version: receipt.version, entries: value.document.entries, relations: value.relations, revision: id, cards: value.cards)
         }
         let bytes = try boundedRead(root.appendingPathComponent(id).appendingPathComponent("lexicon.json"), max: 8*1024*1024)
         guard receipt.checksum == id && LexiconEntry.digest(bytes) == id else { throw LexiconError.invalid("詞庫校驗失敗") }
@@ -273,7 +311,9 @@ public actor DeploymentStore {
         try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
     }
     private func pruneVersions() {
-        let keep = Set([manifest.active].compactMap { $0 } + manifest.history)
+        var keep = Set([manifest.active].compactMap { $0 } + manifest.history)
+        if let data = try? boundedRead(root.appendingPathComponent("preserved-v1.json"), max: 128),
+           let id = try? JSONDecoder().decode(String.self, from: data), (try? readReceipt(id)) != nil { keep.insert(id) }
         for folder in (try? FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)) ?? [] {
             let id = folder.lastPathComponent
             if id.count == 64 && !keep.contains(id) && (try? readReceipt(id)) != nil { try? FileManager.default.removeItem(at: folder) }

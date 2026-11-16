@@ -78,7 +78,9 @@ final class ApprovedLearningCandidate: InputState.Candidate {
             let known = ascii.composition.candidateItems.indices.contains(selected)
                 && ascii.composition.candidateItems[selected].source != .original
             guard known else { return }
-            let entry = LexiconEntry(type: .technical, reading: raw, text: output)
+            let item = ascii.composition.candidateItems[selected]
+            let type = item.termType.flatMap(TermType.init(rawValue:)) ?? .technical
+            let entry = LexiconEntry(type: type, reading: item.inputCode ?? raw, text: output)
             LearningRuntime.shared.offer(entry, kind: manuallySelectedASCII || selected > 0 ? .manualSelected : .autoCommitted)
             return
         }

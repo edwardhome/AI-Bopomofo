@@ -13,13 +13,21 @@ public struct LexiconRelation: Codable, Hashable, Sendable {
 
 /// SQLite 與本機復原快照共用的值資料；原 JSON 1.0 契約維持不變。
 public struct UnifiedLexicon: Codable, Sendable, Equatable {
+    public var cards: CardGraph?
     public var document: LexiconDocument
     public var relations: [LexiconRelation]
-    public init(document: LexiconDocument, relations: [LexiconRelation] = []) {
-        self.document = document; self.relations = relations
+    public init(document: LexiconDocument, relations: [LexiconRelation] = [], cards: CardGraph? = nil) {
+        self.document = document; self.relations = relations; self.cards = cards
     }
     public func validated() throws {
         _ = try document.exchangeData()
+        if let cards {
+            let projected = try cards.projectedEntries()
+            let same = zip(projected, document.entries).allSatisfy { a, b in
+                a.entry_id == b.entry_id && a.annotation == b.annotation && a.category == b.category && a.source == b.source && b.usage == nil && b.model_suggestion == nil
+            }
+            guard relations.isEmpty, projected.count == document.entries.count, same else { throw LexiconError.invalid("詞彙卡與候選投影不一致") }
+        }
         let entries = Dictionary(document.entries.map { ($0.entry_id, $0) }, uniquingKeysWith: { first, _ in first })
         guard entries.count == document.entries.count, relations.count <= 40_000,
               Set(relations).count == relations.count else { throw LexiconError.invalid("詞條或關聯重複／超過上限") }

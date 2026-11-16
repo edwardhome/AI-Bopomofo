@@ -6,6 +6,12 @@
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
+## 開發驗收：2.0.0-dev.1 詞彙卡
+
+此功能只在 `feature/lexicon-cards-v2`，尚未合併或發布。以詞義連結中文、注音、英文及符號；FM 提出逐項建議，人工確認後才部署。保留舊詞庫與原始 v1 回復，SQLite v2 可與新酷音的格式模組互讀；Windows 介面／部署仍待整合。沒有擴大記錄任意英文或文件內容。
+
+[詞彙卡操作與人工驗收](docs/lexicon-learning/lexicon-cards-v2-user-guide.md) · [共用格式與架構](docs/lexicon-learning/lexicon-cards-v2.md) · [驗證報告](docs/lexicon-learning/lexicon-cards-v2-test-report.md)
+
 ## 1.3.0：應用程式輸入模式規則
 
 新增「偏好設定 → 應用程式」，可為 App 指定預設英文或注音。預設關閉、規則空白，支援加入已安裝的終端機範例；同一 App 的手動切換保留到離開，再次進入才重套預設。只在 AI注音內生效，不切換系統來源，不修改 Vim 配置。[操作與實鍵驗收](docs/app-input-rules.md) · [驗證範圍](docs/releases/1.3.0.md)

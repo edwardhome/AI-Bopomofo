@@ -536,3 +536,171 @@
 "Installed terminal examples added. Existing rules and the enable switch were kept." = "已加入可用的終端機範例；原有規則與啟用開關保持不變。";
 
 "No supported terminal application was found." = "找不到支援的終端機應用程式。";
+
+"Vocabulary Cards" = "詞彙卡管理";
+
+"Search Chinese, English, Bopomofo or symbols" = "搜尋中文、英文、注音或符號";
+
+"All" = "全部";
+
+"Chinese" = "中文";
+
+"English" = "英文";
+
+"Terms and Symbols" = "術語與符號";
+
+"Meaning and Names" = "詞義與名稱";
+
+"New Card…" = "新增詞彙卡…";
+
+"Edit Meaning…" = "編輯詞義…";
+
+"Add Name…" = "新增名稱…";
+
+"Edit Name…" = "編輯名稱…";
+
+"Remove Name…" = "移除名稱…";
+
+"Delete Card…" = "刪除詞彙卡…";
+
+"Organize with FM" = "請 FM 整理";
+
+"Review Suggestions…" = "檢視建議…";
+
+"Save and Apply…" = "儲存並套用…";
+
+"Discard Changes" = "放棄草稿變更";
+
+"Import…" = "匯入…";
+
+"Export All…" = "匯出全部…";
+
+"Unavailable during Secure Input" = "安全輸入期間無法操作";
+
+"Lexicon storage is not ready" = "詞庫尚未就緒";
+
+"Draft changes are not active" = "草稿變更尚未生效";
+
+"Approved vocabulary; legacy files remain unchanged" = "核准詞彙；舊詞庫檔案保持不變";
+
+"cards" = "張卡片";
+
+"Select a card to view its names and input rules" = "選取詞彙卡，查看名稱、注音與輸入規則";
+
+"Input" = "輸入碼";
+
+"Legacy links retained; shared meaning has not been confirmed" = "已保留舊關聯，尚未確認是否為同一詞義";
+
+"Continue" = "繼續";
+
+"Meaning" = "詞義";
+
+"Domain" = "領域";
+
+"Choose a name" = "選取名稱";
+
+"Name" = "名稱";
+
+"Bopomofo: hyphens between syllables; semicolons between readings" = "注音：音節用 - 分隔，多種讀音用 ; 分隔";
+
+"English input codes: separate with semicolons; empty means display only" = "英文輸入碼：多個用 ; 分隔；留白只作名稱對照";
+
+"Delete selected cards?" = "刪除選取的詞彙卡？";
+
+"Other sources may still provide the same words. Changes remain a draft until saved." = "其他詞庫來源仍可能提供相同詞彙。儲存前只變更草稿。";
+
+"Unsaved card edits will be discarded." = "尚未儲存的詞彙卡編輯將被放棄。";
+
+"Save these changes as a new approved version?" = "確認將這些變更儲存為新的核准版本？";
+
+"Added" = "新增";
+
+"Removed" = "刪除";
+
+"Names" = "名稱";
+
+"Input rules" = "輸入規則";
+
+"Save or discard your draft first" = "請先儲存或放棄目前草稿";
+
+"Import Preview" = "匯入預覽";
+
+"Imported approval flags do not activate entries. Review the draft, then Save and Apply." = "匯入檔的核准標記不會讓詞彙自動生效。請檢查草稿，再儲存並套用。";
+
+"Only selected cards and their internal links are exported; links to other cards are omitted." = "只匯出選取卡片與內部關聯；通往其他卡片的關聯會省略。";
+
+"Export completed" = "匯出完成";
+
+"The previous approved snapshot will become active at the next safe composition boundary." = "上一個核准版本將在安全組字邊界生效。";
+
+"Enable FM background organization first; one request at a time" = "請先啟用 FM 背景整理；每次只執行一項整理";
+
+"FM is preparing suggestions; approved vocabulary remains unchanged" = "FM 正在整理建議；正式詞庫保持不變";
+
+"Suggestions are ready for individual review" = "建議已備妥，請逐項檢視";
+
+"FM is unavailable or cancelled; manual editing remains available" = "FM 無法使用或已取消；仍可手動編輯";
+
+"Suggestions are stale; organize again" = "草稿或詞庫已變更，請重新整理建議";
+
+"Select only the changes you want. They become a draft; Save and Apply confirms deployment." = "僅勾選要接受的變更。結果先成為草稿，儲存並套用才會生效。";
+
+"Apply Selected to Draft" = "將選取建議加入草稿";
+
+"zh" = "中文";
+
+"en" = "英文";
+
+"abbreviation" = "縮寫／別名";
+
+"symbol" = "符號";
+
+"broader" = "上位概念";
+
+"related" = "相關概念";
+
+"set_definition" = "修改詞義";
+
+"add_name" = "新增名稱";
+
+"link" = "建立關聯";
+
+"merge" = "合併詞義";
+
+"split_name" = "拆分詞義";
+
+"Import Legacy Terms…" = "匯入舊使用者詞庫…";
+
+"Import Built-in Terms…" = "匯入內建工程詞…";
+
+"Review Observed Terms…" = "檢視觀察詞彙…";
+
+"Observed words become draft cards only. Review and remove unwanted cards before saving; FM can organize selected drafts." = "觀察詞彙只加入草稿。請檢視並移除不需要的卡片，再儲存；也可先選取草稿請 FM 整理。";
+
+"A personal copy is created. Built-in vocabulary remains unchanged; annotations are not verified readings." = "建立個人副本，不改動內建詞庫；中文提示不代表已確認的讀音。";
+
+"Please wait for draft validation" = "正在驗證草稿，請稍候";
+
+"More changes are shown in the draft cards; review before saving." = "其他變更請在草稿卡片中檢視，確認後再儲存。";
+
+"Data and Maintenance" = "資料與維護";
+
+"Link Cards…" = "連結詞義…";
+
+"Merge Cards…" = "合併詞義…";
+
+"Split Name…" = "將名稱拆成另一詞義…";
+
+"Remove Relationship…" = "移除詞義關聯…";
+
+"Choose a target meaning" = "選取目標詞義";
+
+"Names and input rules move to the target meaning. Review the resulting draft before saving." = "名稱與輸入規則將移到目標詞義。請檢查草稿再儲存。";
+
+"Target is the broader meaning" = "目標是目前詞義的上位概念";
+
+"Related meanings" = "相關詞義";
+
+"Restore Original Legacy Version…" = "回復遷移前的原始版本…";
+
+"Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified." = "回復首次遷移 v2 前的核准詞庫。不修改原生使用者詞庫檔案。";

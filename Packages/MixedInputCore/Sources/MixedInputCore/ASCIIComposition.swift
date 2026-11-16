@@ -49,10 +49,10 @@ public struct TechnicalLexicon: Sendable {
         let matches = engineering?.matches(prefix) ?? (exact: [], prefix: [])
         let additional = approved?.matches(prefix) ?? (exact: [], prefix: [])
         func approvedItems(_ items: [TechnicalCandidate]) -> [TechnicalCandidate] {
-            items.map { TechnicalCandidate(text: $0.text, annotation: $0.annotation, source: .approved) }
+            items.map { TechnicalCandidate(text: $0.text, annotation: $0.annotation, source: .approved, termType: $0.termType, inputCode: $0.inputCode) }
         }
         let legacy = words.lazy.filter { $0.lowercased().hasPrefix(lower) && $0 != prefix }
-            .prefix(8).map { TechnicalCandidate(text: $0, source: .technical) }
+            .prefix(8).map { TechnicalCandidate(text: $0, source: .technical, termType: "english_term", inputCode: $0) }
         var seen: Set<String> = [prefix]
         return Array((matches.exact + approvedItems(additional.exact) + legacy + matches.prefix + approvedItems(additional.prefix)).filter { seen.insert($0.text).inserted }.prefix(8))
     }
@@ -65,7 +65,7 @@ public struct ASCIIComposition: Sendable {
     public let selectedIndex: Int
     public let candidates: [String]
     public let candidateItems: [TechnicalCandidate]
-    public var hasEngineeringCandidates: Bool { candidateItems.contains { $0.source == .engineering || $0.source == .approved } }
+    public var hasEngineeringCandidates: Bool { candidateItems.contains { $0.source == .engineering || ($0.source == .approved && $0.termType != "english_term") } }
 
     public init(raw: String = "", cursor: Int? = nil, selectedIndex: Int = 0,
                 lexicon: TechnicalLexicon = TechnicalLexicon()) {

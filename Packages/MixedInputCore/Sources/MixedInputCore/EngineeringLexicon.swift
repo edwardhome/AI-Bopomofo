@@ -7,9 +7,11 @@ public struct TechnicalCandidate: Sendable, Equatable {
     public let text: String
     public let annotation: String?
     public let source: Source
+    public let termType: String?
+    public let inputCode: String?
 
-    public init(text: String, annotation: String? = nil, source: Source) {
-        self.text = text; self.annotation = annotation; self.source = source
+    public init(text: String, annotation: String? = nil, source: Source, termType: String? = nil, inputCode: String? = nil) {
+        self.text = text; self.annotation = annotation; self.source = source; self.termType = termType; self.inputCode = inputCode
     }
 }
 
@@ -21,6 +23,7 @@ public struct EngineeringTerm: Codable, Sendable {
     public let outputs: [String]
     public let annotation: String
     public let sources: [String]
+    public var term_type: String? = nil
 }
 
 public struct EngineeringLexicon: Sendable {
@@ -93,7 +96,7 @@ public struct EngineeringLexicon: Sendable {
                 return l == r ? left < right : l
             }.flatMap { index in
                 terms[index].outputs.map {
-                    TechnicalCandidate(text: $0, annotation: terms[index].annotation, source: .engineering)
+                    TechnicalCandidate(text: $0, annotation: terms[index].annotation, source: .engineering, termType: terms[index].term_type ?? ($0.unicodeScalars.contains(where: { $0.value > 127 }) ? "unicode_mapping" : "technical_alias"), inputCode: terms[index].aliases.first(where: { $0.lowercased() == lower }) ?? terms[index].aliases.first(where: { $0.lowercased().hasPrefix(lower) }))
                 }
             }
         }

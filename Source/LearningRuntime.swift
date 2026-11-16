@@ -130,7 +130,7 @@ final class LearningRuntime: NSObject {
             for e in value.entries {
                 if e.term_type == .zhPhrase { chinese[e.reading, default: []].append(e.text); continue }
                 terms.append(["id": e.entry_id, "category": e.category ?? "approved", "aliases": [e.reading],
-                    "outputs": [e.text], "annotation": String((e.annotation ?? e.text).prefix(80)), "sources": ["local-approval:" + e.entry_id]])
+                    "outputs": [e.text], "term_type": e.term_type.rawValue, "annotation": String((e.annotation ?? e.text).prefix(80)), "sources": ["local-approval:" + e.entry_id]])
             }
             let bytes = (try? JSONSerialization.data(withJSONObject: ["version": 1, "terms": terms])) ?? Data()
             return (ApprovedLearningIndex(chinese), EngineeringLexicon(data: bytes, maximumTerms: 20_000))
