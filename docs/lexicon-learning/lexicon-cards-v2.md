@@ -75,8 +75,17 @@ stateDiagram-v2
     Active --> Loaded: 回復上一版或原始 v1
 ```
 
-card-proposals.json 為本機待審 session，包含草稿及提議，最大讀取 16 MiB、權限 0600；不隨正式詞庫匯出。卡片編輯的完整驗證與大型匯入在背景執行。舊學習資料庫 learning.sqlite 保持獨立，沒有把觀察紀錄當成正式詞庫。Mac 應用程式開發版本為 2.0.0-dev.1，詞庫 Schema 為 2.0.0；均不代表標籤、合併或發布授權。
+card-proposals.json 為本機待審 session，包含草稿及提議，最大讀取 16 MiB、權限 0600；不隨正式詞庫匯出。卡片編輯的完整驗證與大型匯入在背景執行。舊學習資料庫 learning.sqlite 保持獨立，沒有把觀察紀錄當成正式詞庫。Mac 應用程式開發版本為 2.0.0-dev.2，詞庫 Schema 為 2.0.0；均不代表標籤、合併或發布授權。
 
 首次由 v1 核准到 v2 時以 preserved-v1.json 釘選原版本，五版一般輪替不得刪除；可明確回復原版。失敗的部署不得替換 active。來源 origins 保存原始查證網址與已接受 FM 理由，但不將模型理由當成外部查證。
 
 目前中文投影沿用既有 1–8 字限制；原生九字詞原檔與輸入不改寫，匯入會報告跳過。模型不會在打字時遍歷圖或查 SQL。完整詞庫圖不是每次按鍵的查詢依賴。
+
+## dev.2 FM 整理修正
+
+- `CardModelInput` 將所選卡片轉成短索引與名稱／詞義／讀音／輸入碼，不傳來源或資料庫識別碼。模型提示最多 12,000 UTF-8 bytes；超限要求減少卡片。
+- `CardModelAction` 使用有關聯值的型別列舉。中文名稱沒有英文輸入碼欄位，英文名稱沒有注音欄位；模型不能自行填入資料庫身分。依 Apple 的 [guided generation 文件](https://developer.apple.com/documentation/foundationmodels/generating-swift-data-structures-with-guided-generation) 建立結構限制，語意仍需另行驗證與人工審核。
+- 最多四項獨立提議、1,024 回應 token。逐項套用到不可變原始快照驗證；非法項只回傳項次及固定原因分類，不修補非法資料、不自動部署。UI 再次驗證全部有效項。內部 XPC 回應為 `CardOrganizationResponse(changes, rejected)`；共用 SQLite／JSON Schema 2.0.0 完全不變。
+- 手動卡片整理採使用者發起的工作優先度，僅該請求期間持有避免 App Nap 的 activity。等待 60 秒，獨立服務 watchdog 75 秒；自動整理仍為 20／30 秒，文字協助仍為 5／30 秒。
+- `ModelServiceFailure` 只傳固定原因碼，沒有模型文字或私人資料。取消不等於推論已停止；收到原請求完成或連線中斷後才釋放單一請求名額，防止逾時重疊推論。
+- 一般輸入活動只取消自動整理；Secure Input、停用整理及明確取消可停止手動整理。失效草稿／版本回覆不呈現為新建議。清單重繪保留選取，未選卡片與空回應均有明確提示。

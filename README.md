@@ -6,7 +6,9 @@
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
-## 開發驗收：2.0.0-dev.1 詞彙卡
+## 開發驗收：2.0.0-dev.2 詞彙卡
+
+本次修正 FM 整理逾時與回傳格式：手動整理最多等待 60 秒，支援取消；逐項驗證建議，顯示被排除項目的原因。有效建議仍須人工勾選、儲存確認。模型內容不保證正確。
 
 此功能只在 `feature/lexicon-cards-v2`，尚未合併或發布。以詞義連結中文、注音、英文及符號；FM 提出逐項建議，人工確認後才部署。保留舊詞庫與原始 v1 回復，SQLite v2 可與新酷音的格式模組互讀；Windows 介面／部署仍待整合。沒有擴大記錄任意英文或文件內容。
 

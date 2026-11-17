@@ -44,7 +44,7 @@ import MixedInputCore
         stack.addArrangedSubview(row)
         let more = NSPopUpButton(frame: .zero, pullsDown: true); more.addItem(withTitle: tr("Data and Maintenance"))
         for (title,action) in actions where !primary.contains(title) { let item = NSMenuItem(title: tr(title), action: action, keyEquivalent: ""); item.target = self; more.menu?.addItem(item) }
-        stack.addArrangedSubview(more)
+        stack.addArrangedSubview(NSStackView(views: [more, NSButton(title: tr("Cancel FM Organization"), target: self, action: #selector(cancelCardOrganization))]))
         stack.translatesAutoresizingMaskIntoConstraints = false; window.contentView!.addSubview(stack)
         NSLayoutConstraint.activate([stack.leadingAnchor.constraint(equalTo: window.contentView!.leadingAnchor, constant: 16),stack.trailingAnchor.constraint(equalTo: window.contentView!.trailingAnchor, constant: -16),stack.topAnchor.constraint(equalTo: window.contentView!.topAnchor, constant: 16),stack.bottomAnchor.constraint(equalTo: window.contentView!.bottomAnchor, constant: -16),list.widthAnchor.constraint(equalTo: stack.widthAnchor),list.heightAnchor.constraint(greaterThanOrEqualToConstant: 220),detailScroll.widthAnchor.constraint(equalTo: stack.widthAnchor),detailScroll.heightAnchor.constraint(equalToConstant: 210),search.widthAnchor.constraint(greaterThanOrEqualToConstant: 420)])
         reload()
@@ -74,6 +74,7 @@ import MixedInputCore
         }
     }
     @objc private func refresh() {
+        let selection = selectedIDs
         let query = search.stringValue.lowercased(), kind = filter.indexOfSelectedItem
         let forms = Dictionary(uniqueKeysWithValues: graph.forms.map { ($0.id, $0) })
         let names = Dictionary(grouping: graph.names, by: \.concept_id)
@@ -84,8 +85,10 @@ import MixedInputCore
             let text = ([c.definition,c.domain] + fs.map(\.text) + ns.flatMap { codes[$0.id] ?? [] }.map(\.code)).joined(separator: " ")
             return (kinds.isEmpty || fs.contains { kinds.contains($0.kind) }) && (query.isEmpty || text.lowercased().contains(query))
         }
-        table.reloadData(); tableSelectionDidChange(Notification(name: NSTableView.selectionDidChangeNotification))
-        message(tr(dirty ? "Draft changes are not active" : "Approved vocabulary; legacy files remain unchanged") + " · \(graph.concepts.count) " + tr("cards"))
+        table.reloadData()
+        table.selectRowIndexes(IndexSet(visible.indices.filter { selection.contains(visible[$0].id) }), byExtendingSelection: false)
+        tableSelectionDidChange(Notification(name: NSTableView.selectionDidChangeNotification))
+        if modelTask == nil { message(tr(dirty ? "Draft changes are not active" : "Approved vocabulary; legacy files remain unchanged") + " · \(graph.concepts.count) " + tr("cards")) }
     }
     func numberOfRows(in tableView: NSTableView) -> Int { visible.count }
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -150,10 +153,10 @@ import MixedInputCore
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         if validating { return false }
         if dirty {
-            confirm("Discard Changes", text: tr("Unsaved card edits will be discarded.")) { [self] in dirty = false; sender.close(); modelTask?.cancel(); if modelTask != nil { ModelServiceClient.shared.cancelBackground() } }
+            confirm("Discard Changes", text: tr("Unsaved card edits will be discarded.")) { [self] in dirty = false; sender.close(); modelTask?.cancel() }
             return false
         }
-        modelTask?.cancel(); if modelTask != nil { ModelServiceClient.shared.cancelBackground() }; return true
+        modelTask?.cancel(); return true
     }
     @objc private func addName() { nameDialog(nil) }
     @objc private func editName() { chooseName { [self] in nameDialog($0) } }
@@ -354,31 +357,70 @@ import MixedInputCore
         } catch { message(error.localizedDescription) } } }
     }
     @objc private func organize() {
-        guard allowed(), modelTask == nil, Preferences.lexiconOrganizerEnabled else { message(tr("Enable FM background organization first; one request at a time")); return }
-        let ids = selectedIDs; guard !ids.isEmpty else { return }
+        guard allowed() else { return }
+        guard modelTask == nil else { message(tr("FM is already organizing these cards. Wait or cancel the request.")); return }
+        guard Preferences.lexiconOrganizerEnabled else { message(tr("Enable FM background organization first; one request at a time")); return }
+        let ids = selectedIDs
+        guard !ids.isEmpty else { message(tr("Select at least one vocabulary card before asking FM.")); return }
         let draft = graph
         let request = CardOrganizationRequest(revision: revision, graph: draft.selecting(ids))
-        message(tr("FM is preparing suggestions; approved vocabulary remains unchanged"))
+        message(tr("FM is organizing the selected cards (up to 60 seconds). Approved vocabulary is unchanged."))
         modelTask = Task { [weak self] in
             guard let self else { return }; defer { modelTask = nil }
             do {
                 let data = try await Task.detached(priority: .utility) { try request.encoded() }.value
                 let result = try await ModelServiceClient.shared.organizeCards(data)
-                var batch = try await Task.detached(priority: .utility) { try request.validateResponse(result) }.value
-                guard allowed(), graph == draft, revision == request.base_revision, Preferences.lexiconOrganizerEnabled else { return }
+                let response = try await Task.detached(priority: .utility) { try request.validateServiceResponse(result) }.value
+                var batch = CardProposalBatch(base: request.base_revision, changes: response.changes)
+                try Task.checkCancellation()
+                guard allowed() else { return }
+                guard graph == draft, revision == request.base_revision else { message(tr("Suggestions are stale; organize again")); return }
+                guard Preferences.lexiconOrganizerEnabled else { throw ModelServiceFailure.cancelled }
                 batch.graph_digest = try draft.digest()
                 let session = CardReviewSession(graph: draft, proposal: batch)
-                pending = session
                 let path = LearningRuntime.shared.root.appendingPathComponent("card-proposals.json")
-                try await Task.detached(priority: .utility) { try JSONEncoder().encode(session).write(to: path, options: .atomic); try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: path.path) }.value
-                message(tr("Suggestions are ready for individual review"))
-            } catch { message(tr("FM is unavailable or cancelled; manual editing remains available") + "\n" + error.localizedDescription) }
+                let saved = try await Task.detached(priority: .utility) {
+                    let bytes = try JSONEncoder().encode(session)
+                    try CardProposalPersistence.write(bytes, to: path); return bytes
+                }.value
+                // 儲存期間若使用者取消或草稿改變，不能在下次開啟視窗時復活舊建議。
+                if Task.isCancelled || IsSecureEventInputEnabled() || graph != draft || revision != request.base_revision || !Preferences.lexiconOrganizerEnabled {
+                    _ = try await Task.detached(priority: .utility) { try CardProposalPersistence.discard(saved, at: path) }.value
+                }
+                try Task.checkCancellation()
+                guard allowed() else { return }
+                guard graph == draft, revision == request.base_revision else { message(tr("Suggestions are stale; organize again")); return }
+                guard Preferences.lexiconOrganizerEnabled else { throw ModelServiceFailure.cancelled }
+                pending = session
+                if response.rejected.isEmpty {
+                    message(tr(batch.changes.isEmpty ? "FM completed without new suggestions. Try adding a meaning or domain to the card." : "Suggestions are ready for individual review"))
+                } else {
+                    let summary = String(format: tr("FM returned %d valid suggestions; %d invalid suggestions were excluded. Nothing has been applied."), batch.changes.count, response.rejected.count)
+                    let reasons = response.rejected.map { item in
+                        let key: String
+                        switch item.reason {
+                        case .reading: key = "Chinese name or Bopomofo reading is invalid."
+                        case .reference: key = "Card or name reference is invalid, duplicated or self-referential."
+                        case .fields: key = "Name, input code or other fields failed validation."
+                        }
+                        return String(format: tr("Suggestion %d: %@"), item.index, tr(key))
+                    }
+                    message(([summary] + reasons).joined(separator: "\n"))
+                }
+            } catch let error as ModelServiceFailure { message(tr(error.messageKey)) }
+              catch is CancellationError { message(tr(ModelServiceFailure.cancelled.messageKey)) }
+              catch { message(tr("Card organization failed validation or could not save suggestions. Approved vocabulary is unchanged.") + "\n" + error.localizedDescription) }
         }
     }
+    @objc private func cancelCardOrganization() {
+        guard modelTask != nil else { message(tr("No card organization is running.")); return }
+        modelTask?.cancel()
+    }
     @objc private func reviewSuggestions() {
-        guard allowed(), let session = pending, let window else { return }
+        guard allowed(), let window else { return }
+        guard let session = pending, !session.proposal.changes.isEmpty else { message(tr("No suggestions to review. Select a card and ask FM first.")); return }
         let batch = session.proposal
-        guard !dirty || graph == session.graph else { message(tr("Suggestions are stale; organize again")); return }
+        guard graph == session.graph else { message(tr("Suggestions are stale; organize again")); return }
         guard batch.base_revision == revision else { message(tr("Suggestions are stale; organize again")); return }
         let a = NSAlert(); a.messageText = tr("Review Suggestions…"); a.informativeText = tr("Select only the changes you want. They become a draft; Save and Apply confirms deployment.")
         let stack = NSStackView(); stack.orientation = .vertical; stack.alignment = .leading

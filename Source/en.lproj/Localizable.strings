@@ -706,3 +706,33 @@
 "Restore Original Legacy Version…" = "Restore Original Legacy Version…";
 
 "Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified." = "Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified.";
+
+/* FM 詞彙卡整理狀態 */
+"FM is busy or finishing cancellation. Please try again shortly." = "FM is busy or finishing cancellation. Please try again shortly.";
+"FM is recovering from a service failure. Please retry after one minute." = "FM is recovering from a service failure. Please retry after one minute.";
+"FM exceeded the waiting limit. Try fewer cards or retry after the model is ready." = "FM exceeded the waiting limit. Try fewer cards or retry after the model is ready.";
+"FM organization was cancelled. Approved vocabulary is unchanged." = "FM organization was cancelled. Approved vocabulary is unchanged.";
+"The FM service disconnected. Please retry after one minute." = "The FM service disconnected. Please retry after one minute.";
+"The selected cards exceed the model input limit or contain invalid data. Try fewer cards." = "The selected cards exceed the model input limit or contain invalid data. Try fewer cards.";
+"FM returned invalid suggestion fields. Nothing was applied; please retry." = "FM returned invalid suggestion fields. Nothing was applied; please retry.";
+"This Mac or macOS version does not support Foundation Models." = "This Mac or macOS version does not support Foundation Models.";
+"Enable Apple Intelligence in System Settings before using FM." = "Enable Apple Intelligence in System Settings before using FM.";
+"The on-device model is not ready. Wait for Apple Intelligence to finish preparing it." = "The on-device model is not ready. Wait for Apple Intelligence to finish preparing it.";
+"The on-device model does not support the requested language." = "The on-device model does not support the requested language.";
+"The cards exceed the model context limit. Select fewer cards." = "The cards exceed the model context limit. Select fewer cards.";
+"FM declined this request. No suggestion was applied." = "FM declined this request. No suggestion was applied.";
+"FM is temporarily rate limited. Please retry later." = "FM is temporarily rate limited. Please retry later.";
+"FM could not generate suggestions. Please retry; manual editing remains available." = "FM could not generate suggestions. Please retry; manual editing remains available.";
+"FM is already organizing these cards. Wait or cancel the request." = "FM is already organizing these cards. Wait or cancel the request.";
+"Select at least one vocabulary card before asking FM." = "Select at least one vocabulary card before asking FM.";
+"FM is organizing the selected cards (up to 60 seconds). Approved vocabulary is unchanged." = "FM is organizing the selected cards (up to 60 seconds). Approved vocabulary is unchanged.";
+"FM completed without new suggestions. Try adding a meaning or domain to the card." = "FM completed without new suggestions. Try adding a meaning or domain to the card.";
+"Card organization failed validation or could not save suggestions. Approved vocabulary is unchanged." = "Card organization failed validation or could not save suggestions. Approved vocabulary is unchanged.";
+"No card organization is running." = "No card organization is running.";
+"No suggestions to review. Select a card and ask FM first." = "No suggestions to review. Select a card and ask FM first.";
+"Cancel FM Organization" = "Cancel FM Organization";
+"FM returned %d valid suggestions; %d invalid suggestions were excluded. Nothing has been applied." = "FM returned %d valid suggestions; %d invalid suggestions were excluded. Nothing has been applied.";
+"Chinese name or Bopomofo reading is invalid." = "Chinese name or Bopomofo reading is invalid.";
+"Card or name reference is invalid, duplicated or self-referential." = "Card or name reference is invalid, duplicated or self-referential.";
+"Name, input code or other fields failed validation." = "Name, input code or other fields failed validation.";
+"Suggestion %d: %@" = "Suggestion %d: %@";

@@ -704,3 +704,33 @@
 "Restore Original Legacy Version…" = "回復遷移前的原始版本…";
 
 "Restore the approved vocabulary from before its first v2 migration. Native user dictionary files are not modified." = "回復首次遷移 v2 前的核准詞庫。不修改原生使用者詞庫檔案。";
+
+/* FM 詞彙卡整理狀態 */
+"FM is busy or finishing cancellation. Please try again shortly." = "FM 正在忙碌或結束上一項取消工作，請稍後重試。";
+"FM is recovering from a service failure. Please retry after one minute." = "FM 服務正在恢復，請於一分鐘後重試。";
+"FM exceeded the waiting limit. Try fewer cards or retry after the model is ready." = "FM 超過等待時間，請減少卡片數量，或等模型準備完成後重試。";
+"FM organization was cancelled. Approved vocabulary is unchanged." = "FM 整理已取消，已核准詞庫沒有變更。";
+"The FM service disconnected. Please retry after one minute." = "FM 服務連線中斷，請於一分鐘後重試。";
+"The selected cards exceed the model input limit or contain invalid data. Try fewer cards." = "選取卡片超過模型輸入上限或資料不合法，請減少卡片數量並檢查內容。";
+"FM returned invalid suggestion fields. Nothing was applied; please retry." = "FM 回傳的建議欄位不合法，未套用任何變更，請重新整理。";
+"This Mac or macOS version does not support Foundation Models." = "這台 Mac 或 macOS 版本不支援 Foundation Models。";
+"Enable Apple Intelligence in System Settings before using FM." = "請先在系統設定中啟用 Apple Intelligence。";
+"The on-device model is not ready. Wait for Apple Intelligence to finish preparing it." = "本機模型尚未就緒，請等待 Apple Intelligence 完成模型準備。";
+"The on-device model does not support the requested language." = "本機模型不支援所需語言。";
+"The cards exceed the model context limit. Select fewer cards." = "卡片內容超過模型上下文上限，請減少選取數量。";
+"FM declined this request. No suggestion was applied." = "FM 拒絕這次整理要求，未套用任何建議。";
+"FM is temporarily rate limited. Please retry later." = "FM 暫時限制請求次數，請稍後重試。";
+"FM could not generate suggestions. Please retry; manual editing remains available." = "FM 產生建議失敗，請稍後重試；仍可手動編輯。";
+"FM is already organizing these cards. Wait or cancel the request." = "FM 正在整理卡片，請等待完成或取消這次整理。";
+"Select at least one vocabulary card before asking FM." = "請先在清單選取至少一張詞彙卡，再請 FM 整理。";
+"FM is organizing the selected cards (up to 60 seconds). Approved vocabulary is unchanged." = "FM 正在整理選取的卡片（最多等待 60 秒），已核准詞庫不變。";
+"FM completed without new suggestions. Try adding a meaning or domain to the card." = "FM 已完成，但沒有新建議；可先補充卡片的詞義或領域再試。";
+"Card organization failed validation or could not save suggestions. Approved vocabulary is unchanged." = "卡片整理資料驗證失敗或建議無法儲存，已核准詞庫不變。";
+"No card organization is running." = "目前沒有正在執行的卡片整理。";
+"No suggestions to review. Select a card and ask FM first." = "目前沒有可檢視的建議，請先選取卡片並請 FM 整理。";
+"Cancel FM Organization" = "取消 FM 整理";
+"FM returned %d valid suggestions; %d invalid suggestions were excluded. Nothing has been applied." = "FM 有 %d 項有效建議，另有 %d 項不合法建議已排除；尚未套用任何變更。";
+"Chinese name or Bopomofo reading is invalid." = "中文名稱或注音讀音不合法。";
+"Card or name reference is invalid, duplicated or self-referential." = "卡片或名稱引用不存在、重複或指向自己。";
+"Name, input code or other fields failed validation." = "名稱、輸入碼或其他欄位未通過驗證。";
+"Suggestion %d: %@" = "第 %d 項：%@";

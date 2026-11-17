@@ -65,7 +65,11 @@ final class LearningRuntime: NSObject {
     }
     func noteActivity(secure: Bool) {
         lastActivity = Date(); self.secure = secure
-        if organizerTask != nil { cancelOrganization() }
+        if organizerTask != nil {
+            organizerGate.cancel(); organizerTask?.cancel()
+            ModelServiceClient.shared.cancelBackground()
+        }
+        if secure { ModelServiceClient.shared.cancelOrganizing() }
         if secure { let queue = queue; Task.detached { queue.clear() } }
     }
     @discardableResult func offer(_ entry: LexiconEntry, kind: ObservationKind) -> Bool {
@@ -121,7 +125,7 @@ final class LearningRuntime: NSObject {
     func cancelOrganization() {
         if organizerTask != nil { status = "背景整理已取消；正常輸入與統計繼續" }
         organizerGate.cancel(); organizerTask?.cancel()
-        ModelServiceClient.shared.cancelBackground()
+        ModelServiceClient.shared.cancelOrganizing()
     }
     func publish(_ value: LexiconSnapshot, recordAudit: Bool = true) async {
         generation &+= 1; let revision = generation

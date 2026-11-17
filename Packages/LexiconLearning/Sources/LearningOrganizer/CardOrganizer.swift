@@ -22,3 +22,28 @@ public struct CardOrganizationRequest: Codable, Sendable {
         return CardProposalBatch(base: base_revision, changes: changes)
     }
 }
+
+/// 只包含已通過驗證的獨立建議；拒絕項只保留項次與固定原因，不傳遞非法模型內容。
+public struct CardProposalRejection: Codable, Sendable, Equatable {
+    public enum Reason: String, Codable, Sendable { case reading, reference, fields }
+    public var index: Int
+    public var reason: Reason
+    public init(index: Int, reason: Reason) { self.index = index; self.reason = reason }
+}
+public struct CardOrganizationResponse: Codable, Sendable {
+    public var changes: [CardChange]
+    public var rejected: [CardProposalRejection]
+    public init(changes: [CardChange], rejected: [CardProposalRejection]) { self.changes = changes; self.rejected = rejected }
+}
+extension CardOrganizationRequest {
+    public func validateServiceResponse(_ data: Data) throws -> CardOrganizationResponse {
+        guard data.count <= 65_536 else { throw LexiconError.invalid("模型回應超過上限") }
+        try JSONPreflight.validate(data)
+        let response = try JSONDecoder().decode(CardOrganizationResponse.self, from: data)
+        let total = response.changes.count + response.rejected.count
+        guard total <= 4, Set(response.rejected.map(\.index)).count == response.rejected.count,
+              response.rejected.allSatisfy({ (1...max(1,total)).contains($0.index) }) else { throw LexiconError.invalid("模型回應項次不合法") }
+        _ = try validateResponse(JSONEncoder().encode(response.changes))
+        return response
+    }
+}
