@@ -131,7 +131,9 @@ class McBopomofoInputMethodController: IMKInputController {
     private var fHoldGesture = FHoldGesture()
     private let fReleaseMonitor = FReleaseMonitor()
     private static var didRequestFMonitoring = false
-    private var fHoldTimer: Timer?
+    private let fHoldTimer = FHoldDeadline()
+    // 與首字母長按共用已測試的接收者／代次容器，避免晚到回呼跨輸入位置。
+    private var fHoldContext = InitialLetterHoldContext<AnyObject>()
     private var pendingFEvent: NSEvent?
     private var fHoldStartedAt: TimeInterval?
     private var symbolKeysDown = SymbolKeyOwnership()
@@ -717,7 +719,7 @@ class McBopomofoInputMethodController: IMKInputController {
             switch effect {
             case .schedule:
                 // Key-down 立即顯示可撤回的原字；引擎直到短按確定才接收一次事件。
-                fHoldTimer?.invalidate()
+                fHoldTimer.cancel()
                 let started = pendingFEvent?.timestamp ?? ProcessInfo.processInfo.systemUptime
                 fHoldStartedAt = started
                 let literal = pendingFEvent?.characters ?? "f"
@@ -728,37 +730,37 @@ class McBopomofoInputMethodController: IMKInputController {
                     preview = keyHandler.fHoldPreview(key: key) ?? literal
                 } else { preview = literal }
                 handle(state: InputState.PendingF(original: state, preview: preview), client: client)
+                guard let receiver = client as? IMKTextInput else {
+                    _ = applyFHold(.release, client: client); continue
+                }
+                let token = fHoldContext.begin(receiver: receiver as AnyObject)
                 guard fReleaseMonitor.start(onRelease: { [weak self] releasedAt in
-                    guard let self else { return }
-                    self.advanceFHold(to: releasedAt, client: self.currentClient)
-                    self.applyFHold(.observedRelease, client: self.currentClient)
+                    guard let self, let receiver = self.fHoldContext.resolve(token) else { return }
+                    guard !IsSecureEventInputEnabled() else { self.cancelFHold(client: receiver); return }
+                    self.advanceFHold(to: releasedAt, client: receiver)
+                    self.applyFHold(.observedRelease, client: receiver)
                 }) else {
-                    // Permission denial or tap failure must never swallow the original F.
                     _ = applyFHold(.release, client: client)
                     continue
                 }
-                let timer = Timer(timeInterval: 0.01, repeats: true) { [weak self] timer in
-                    guard let self else { timer.invalidate(); return }
-                    guard !IsSecureEventInputEnabled(), self.currentClient != nil else {
-                        self.cancelFHold(client: self.currentClient)
-                        return
-                    }
+                // 只排一次截止工作，不使用 10 ms 輪詢，也不混用 NSEvent 與 uptime 時鐘。
+                // 留 2 ms 避免「恰好門檻」誤判；事件到達仍以事件時間結算邊界。
+                let delay = fHoldGesture.delay
+                fHoldTimer.schedule(after: delay + 0.002) { [weak self] in
+                    guard let self, let receiver = self.fHoldContext.resolve(token) else { return }
+                    guard !IsSecureEventInputEnabled() else { self.cancelFHold(client: receiver); return }
                     guard self.fReleaseMonitor.isEnabled, CGPreflightListenEventAccess() else {
-                        self.applyFHold(.release, client: self.currentClient)
-                        return
+                        self.applyFHold(.release, client: receiver); return
                     }
-                    self.applyFHold(.elapsed(ProcessInfo.processInfo.systemUptime - started),
-                                    client: self.currentClient)
+                    self.applyFHold(.elapsed(delay + 0.002), client: receiver)
                 }
-                fHoldTimer = timer
-                RunLoop.main.add(timer, forMode: .common)
             case .invalidate:
                 // 只在手勢結束或取消時清理；提前進入分層不能走這個分支。
                 restorePendingF(client: client)
                 fHoldStartedAt = nil
+                fHoldContext.cancel()
                 fReleaseMonitor.stop()
-                fHoldTimer?.invalidate()
-                fHoldTimer = nil
+                fHoldTimer.cancel()
             case .replayTap:
                 if let pending = pendingFEvent {
                     pendingFEvent = nil
@@ -782,7 +784,11 @@ class McBopomofoInputMethodController: IMKInputController {
                         handle(state: .Empty(), client: client)
                     } else { _ = handleTextEvent(pending, client: client) }
                 }
-                pendingFEvent = nil
+                if !began {
+                    pendingFEvent = nil
+                    _ = applyFHold(.cancel, client: client)
+                }
+                // 空手長按放開時需要重播；只有真正結束手勢才清除原始事件。
             case .endLayer:
                 if let symbols = state as? InputState.QuickSymbols, symbols.held {
                     keyHandler.endQuickSymbols(with: state) { self.handle(state: $0, client: client) }
@@ -790,6 +796,7 @@ class McBopomofoInputMethodController: IMKInputController {
             case .consume: break
             }
         }
+        if fHoldGesture.phase == .idle { pendingFEvent = nil }
         // F 的放開可能先由被動監聽器送達；套用最近觀察到的 Shift 狀態，
         // 原組字若來自 Shift 英文，避免包裝狀態留下過期模式。
         releaseShiftCompositionIfNeeded(client: client)
@@ -905,8 +912,18 @@ class McBopomofoInputMethodController: IMKInputController {
             }
             if applyFHold(.press(eligible: eligible, repeating: event.isARepeat), client: client) { return true }
         } else if event.type == .keyDown {
-            // 先前已按事件時間結算長按；仍在等待時就先送回 F，再處理本鍵。
-            _ = applyFHold(.otherKey, client: client)
+            // 回呼先到、實鍵較早時仍以原事件時間保護快速打字。
+            if let started = fHoldStartedAt {
+                _ = applyFHold(.otherKeyAtElapsed(event.timestamp - started), client: client)
+            } else { _ = applyFHold(.otherKey, client: client) }
+            // 未映射的可列印文字回到普通輸入；不吞掉使用者的下一個字母。
+            if let symbols = state as? InputState.QuickSymbols, symbols.held,
+               event.modifierFlags.intersection([.command, .control, .option, .function]).isEmpty,
+               QuickSymbolLayer.output(for: event.keyCode, entries: symbols.entries) == nil,
+               let text = event.characters, !text.isEmpty,
+               text.unicodeScalars.allSatisfy({ (32...126).contains($0.value) }) {
+                _ = applyFHold(.unmappedText, client: client)
+            }
         } else if event.type == .flagsChanged &&
                     event.keyCode != UInt16(kVK_Shift) && event.keyCode != UInt16(kVK_RightShift) {
             _ = applyFHold(.otherKey, client: client)
@@ -976,7 +993,12 @@ class McBopomofoInputMethodController: IMKInputController {
             (attributes?["IMKTextOrientation"] as? NSNumber)?.intValue == 0 || false
         let input = KeyHandlerInput(event: event, isVerticalMode: useVerticalMode)
 
+        let heldBefore = (state as? InputState.QuickSymbols).flatMap { $0.held ? $0.editingComposition : nil }
         let result = keyHandler.handle(input: input, state: state) { newState in
+            if let before = heldBefore, let after = (newState as? InputState.QuickSymbols)?.editingComposition,
+               before.raw != after.raw || before.displayCursor != after.displayCursor {
+                _ = self.fHoldGesture.handle(.layerCommand)
+            }
             self.handle(state: newState, client: client)
         } errorCallback: {
             if Preferences.beepUponInputError {

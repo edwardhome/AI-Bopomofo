@@ -67,6 +67,7 @@ struct QuickSymbolTests {
             #expect(gesture.handle(.otherKey).isEmpty)
             #expect(ownership.keyDown(code, repeating: false, layerActive: true, shortcut: false) == false)
             #expect(QuickSymbolLayer.output(for: code) == output)
+            _ = gesture.handle(.layerCommand)
             #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
             #expect(ownership.keyDown(code, repeating: true, layerActive: false, shortcut: false) == true)
             #expect(ownership.keyUp(code) == true)
@@ -115,7 +116,7 @@ struct QuickSymbolTests {
             let released = gesture.handle(.observedRelease)
             if released.contains(.invalidate) { monitoring = false }
             #expect(!monitoring)
-            #expect(released == [.invalidate, .endLayer, .consume])
+            #expect(released == [.invalidate, .endLayer, .replayTap, .consume])
             #expect(gesture.phase == .idle)
             #expect(gesture.handle(.release) == [.consume])
         }
@@ -162,14 +163,14 @@ struct QuickSymbolTests {
     }
 
     @Test func heldLayerCancelOrMonitorFailureCannotReenter() {
-        for end in [FHoldGesture.Event.cancel, .release] {
+        for (end, replay) in [(FHoldGesture.Event.cancel, false), (.release, true)] {
             var gesture = FHoldGesture()
             _ = gesture.handle(.press(eligible: true, repeating: false))
             _ = gesture.handle(.elapsed(0.151))
             let effects = gesture.handle(end)
             #expect(effects.contains(.invalidate))
             #expect(effects.contains(.endLayer))
-            #expect(!effects.contains(.replayTap))
+            #expect(effects.contains(.replayTap) == replay)
             #expect(gesture.handle(.elapsed(1)).isEmpty)
             #expect(gesture.handle(.otherKey).isEmpty)
         }
@@ -181,7 +182,7 @@ struct QuickSymbolTests {
             _ = gesture.handle(.press(eligible: true, repeating: false))
             if held { _ = gesture.handle(.elapsed(0.301)) }
             let observed = gesture.handle(.observedRelease)
-            #expect(observed.contains(.replayTap) == !held)
+            #expect(observed.contains(.replayTap))
             #expect(observed.contains(.endLayer) == held)
             #expect(gesture.phase == .idle)
             #expect(gesture.handle(.observedRelease).contains(.replayTap) == false)
@@ -214,6 +215,7 @@ struct QuickSymbolTests {
         // The adapter advances using R's timestamp even if the timer has not fired.
         #expect(gesture.handle(.elapsed(0.450)) == [.beginLayer])
         #expect(gesture.handle(.otherKey).isEmpty)
+        _ = gesture.handle(.layerCommand)
         #expect(gesture.handle(.observedRelease) == [.invalidate, .endLayer, .consume])
         #expect(gesture.handle(.release) == [.consume])
     }
@@ -254,7 +256,7 @@ struct QuickSymbolTests {
             _ = gesture.handle(.press(eligible: true, repeating: false))
             #expect(gesture.handle(.elapsed(seconds)).isEmpty)
             #expect(gesture.handle(.elapsed(seconds + 0.001)) == [.beginLayer])
-            #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+            #expect(gesture.handle(.release) == [.invalidate, .endLayer, .replayTap, .consume])
         }
     }
 
@@ -268,7 +270,7 @@ struct QuickSymbolTests {
         var gesture = FHoldGesture()
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.elapsed(0.151)) == [.beginLayer])
-        #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+        #expect(gesture.handle(.observedRelease).contains(.replayTap))
     }
 
     @Test func invalidDelayIsBoundedAndDefaultIncludesGraceInterval() {
@@ -302,14 +304,14 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.timeout).isEmpty)
     }
 
-    @Test func holdEntersAndReleaseExitsWithoutTypingF() {
+    @Test func unusedHoldEntersAndReleaseRestoresF() {
         var gesture = FHoldGesture(delayMilliseconds: 100)
         _ = gesture.handle(.press(eligible: true, repeating: false))
         #expect(gesture.handle(.timeout) == [.beginLayer])
         #expect(gesture.phase == .held)
         #expect(gesture.handle(.press(eligible: false, repeating: true)) == [.consume])
         #expect(gesture.handle(.otherKey).isEmpty)
-        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .replayTap, .consume])
         #expect(gesture.phase == .idle)
     }
 
@@ -351,7 +353,7 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.elapsed(0.100)).isEmpty)
         #expect(gesture.handle(.elapsed(0.101)) == [.beginLayer])
         #expect(gesture.handle(.elapsed(0.150)).isEmpty)
-        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .replayTap, .consume])
         #expect(gesture.handle(.release).isEmpty)
         #expect(gesture.handle(.elapsed(0.200)).isEmpty)
     }
@@ -371,7 +373,7 @@ struct QuickSymbolTests {
         #expect(gesture.handle(.release) == [.invalidate, .replayTap, .consume])
         _ = gesture.handle(.press(eligible: true, repeating: false))
         _ = gesture.handle(.elapsed(0.101))
-        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .consume])
+        #expect(gesture.handle(.release) == [.invalidate, .endLayer, .replayTap, .consume])
         #expect(gesture.phase == .idle)
     }
 
@@ -450,4 +452,63 @@ struct HeldSymbolEditingTests {
         _ = keys.keyDown(15, repeating: false, layerActive: true, shortcut: false)
         #expect(keys.keyDown(15, repeating: true, layerActive: false, shortcut: true) == false)
     }
+    @Test func usedThenDeletedLayerNeverRestoresF() {
+        for passiveFirst in [true, false] {
+            var gesture = FHoldGesture(delayMilliseconds: 100)
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            #expect(gesture.handle(.elapsed(0.101)) == [.beginLayer])
+            _ = gesture.handle(.layerCommand) // 輸入符號。
+            _ = gesture.handle(.layerCommand) // 退格刪到空，仍不能恢復 F。
+            let first = gesture.handle(passiveFirst ? .observedRelease : .release)
+            #expect(first == [.invalidate, .endLayer, .consume])
+            #expect(!gesture.handle(passiveFirst ? .release : .observedRelease).contains(.replayTap))
+        }
+    }
+    @Test func unusedHoldRepeatsAndLateNotificationsReplayOnlyOnce() {
+        for passiveFirst in [true, false] {
+            var gesture = FHoldGesture(delayMilliseconds: 150)
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            _ = gesture.handle(.elapsed(0.151))
+            for _ in 0..<10 { #expect(gesture.handle(.press(eligible: true, repeating: true)) == [.consume]) }
+            let released = gesture.handle(passiveFirst ? .observedRelease : .release)
+            #expect(released == [.invalidate, .endLayer, .replayTap, .consume])
+            #expect(!gesture.handle(passiveFirst ? .release : .observedRelease).contains(.replayTap))
+            #expect(gesture.handle(.elapsed(10)).isEmpty)
+        }
+    }
+    @Test func cancellationNeverRestoresHeldFAndNextGestureResetsUsage() {
+        var gesture = FHoldGesture(delayMilliseconds: 100)
+        for used in [false, true] {
+            _ = gesture.handle(.press(eligible: true, repeating: false)); _ = gesture.handle(.elapsed(0.101))
+            if used { _ = gesture.handle(.layerCommand) }
+            #expect(!gesture.handle(.cancel).contains(.replayTap))
+            #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+        }
+        _ = gesture.handle(.press(eligible: true, repeating: false)); _ = gesture.handle(.elapsed(0.101))
+        #expect(gesture.handle(.release).contains(.replayTap))
+    }
+
+    @Test func queuedEarlyKeyRemainsTypingAfterDeadlineCallback() {
+        for elapsed in [0.05, 0.15] {
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            _ = gesture.handle(.elapsed(0.152))
+            #expect(gesture.handle(.otherKeyAtElapsed(elapsed)) == [.invalidate, .endLayer, .replayTap])
+            #expect(gesture.phase == .idle)
+            #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+        }
+    }
+
+    @Test func unmappedTextEndsHoldWithoutLosingOriginalOrNextKey() {
+        for used in [false, true] {
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false)); _ = gesture.handle(.elapsed(0.151))
+            if used { _ = gesture.handle(.layerCommand) }
+            let effects = gesture.handle(.unmappedText)
+            #expect(effects.contains(.endLayer)); #expect(!effects.contains(.consume))
+            #expect(effects.contains(.replayTap) == !used)
+            #expect(!gesture.handle(.observedRelease).contains(.replayTap))
+        }
+    }
+
 }

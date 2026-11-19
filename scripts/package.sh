@@ -21,9 +21,9 @@ cp LICENSE.txt "$licenses/McBopomofo-MIT.txt"
 cp ACKNOWLEDGEMENTS.md "$licenses/ACKNOWLEDGEMENTS.md"
 if [[ -d licenses ]]; then cp licenses/* "$licenses/"; fi
 python3 - "$licenses" <<'PY'
-import pathlib, shutil, sys
+import os, pathlib, shutil, sys
 target = pathlib.Path(sys.argv[1])
-base = pathlib.Path('build/DerivedData/SourcePackages/checkouts')
+base = pathlib.Path(os.environ.get('AI_BOPOMOFO_PACKAGE_CACHE', 'build/DerivedData/SourcePackages')) / 'checkouts'
 for path in base.rglob('*'):
     if path.is_file() and path.name.lower() in ('license', 'license.txt', 'copying', 'notice', 'notice.txt'):
         shutil.copy2(path, target / str(path.relative_to(base)).replace('/', '-'))
@@ -32,11 +32,14 @@ codesign --force --deep --sign - "$out/AI-Bopomofo.app"
 python3 scripts/verify-bundle.py "$out/AI-Bopomofo.app"
 # Component is fixed at /Library/Input Methods; no relocation into the upstream bundle.
 python3 - <<'PY'
-import plistlib
+import os, plistlib
+component = {'RootRelativeBundlePath':'AI-Bopomofo.app',
+             'BundleIsRelocatable':False, 'BundleOverwriteAction':'upgrade'}
+# 僅在明確交付回退套件時允許覆寫較新版 app；不修改 app 外的詞庫或設定。
+if os.environ.get('AI_BOPOMOFO_ALLOW_DOWNGRADE') == '1':
+    component['BundleIsVersionChecked'] = False
 with open('build/component.plist', 'wb') as f:
-    plistlib.dump([{'RootRelativeBundlePath':'AI-Bopomofo.app',
-                   'BundleIsRelocatable':False,
-                   'BundleOverwriteAction':'upgrade'}], f)
+    plistlib.dump([component], f)
 PY
 stage="$(mktemp -d "$PWD/build/package.XXXXXX")"
 trap 'rm -rf "$stage"' EXIT

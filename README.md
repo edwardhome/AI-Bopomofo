@@ -6,6 +6,10 @@
 
 [下載版本](https://github.com/edwardhome/AI-Bopomofo/releases) · [安裝說明](docs/installation.md) · [F 分層](docs/quick-symbols.md) · [Shift 英文](docs/vim-input.md) · [詞彙匯入](docs/dictionary.md) · [自行編譯](docs/development.md) · [GitHub 命令列指南](docs/github-workflow.md)
 
+## 1.3.1：F 長按修正（待實鍵驗收）
+
+以 v1.3.0 為基底。F 超過門檻時即收起原字預覽；空手長按放開仍輸入一次 `f`／`ㄑ`，使用符號後即使刪到空也不補 F。保留既有時間設定、Shift＋F 大小寫與 App 規則。2.0.0 詞彙卡開發擱置，原分支保留；這份套件沒有帶入該功能。安裝由使用者操作，尚未合併或發布。[驗證與安裝](docs/releases/1.3.1.md)
+
 ## 1.3.0：應用程式輸入模式規則
 
 新增「偏好設定 → 應用程式」，可為 App 指定預設英文或注音。預設關閉、規則空白，支援加入已安裝的終端機範例；同一 App 的手動切換保留到離開，再次進入才重套預設。只在 AI注音內生效，不切換系統來源，不修改 Vim 配置。[操作與實鍵驗收](docs/app-input-rules.md) · [驗證範圍](docs/releases/1.3.0.md)

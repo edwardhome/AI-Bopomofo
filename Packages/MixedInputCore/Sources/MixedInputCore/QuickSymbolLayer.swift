@@ -112,6 +112,9 @@ public struct FHoldGesture {
         case release
         case observedRelease
         case otherKey
+        case layerCommand
+        case otherKeyAtElapsed(Double)
+        case unmappedText
         case timeout
         case cancel
         case elapsed(Double)
@@ -120,6 +123,7 @@ public struct FHoldGesture {
     public private(set) var phase: Phase = .idle
     // The passive tap may finish the gesture before IMK receives the same key-up.
     private var ownsKeyUp = false
+    private var usedLayer = false
     public init(delayMilliseconds: Int = Self.defaultDelayMilliseconds) {
         delay = Double(Self.clampedDelayMilliseconds(delayMilliseconds)) / 1000
     }
@@ -130,6 +134,7 @@ public struct FHoldGesture {
             if phase != .idle || (repeating && ownsKeyUp) { return [.consume] }
             guard eligible && !repeating else { return [] }
             phase = .pending
+            usedLayer = false
             ownsKeyUp = true
             return [.schedule, .consume]
         case .observedRelease:
@@ -144,9 +149,25 @@ public struct FHoldGesture {
             phase = .idle
             switch previous {
             case .pending: return [.invalidate, .replayTap, .consume]
-            case .held: return [.invalidate, .endLayer, .consume]
+            case .held:
+                // 曾輸入再刪空仍算使用過分層，不能依目前緩衝區是否空白判斷。
+                return usedLayer ? [.invalidate, .endLayer, .consume] : [.invalidate, .endLayer, .replayTap, .consume]
             case .idle: return owned ? [.consume] : []
             }
+        case .layerCommand:
+            if phase == .held { usedLayer = true }
+            return []
+        case .unmappedText:
+            guard phase == .held else { return handle(.otherKey) }
+            phase = .idle
+            return usedLayer ? [.invalidate, .endLayer] : [.invalidate, .endLayer, .replayTap]
+        case .otherKeyAtElapsed(let seconds):
+            // 佇列忙碌時截止回呼可能先於較早發生的實鍵送達；仍尊重實鍵時間。
+            if phase == .held, !usedLayer, seconds <= delay {
+                phase = .idle
+                return [.invalidate, .endLayer, .replayTap]
+            }
+            return handle(.otherKey)
         case .otherKey:
             guard phase == .pending else { return [] }
             // 門檻內任何下一鍵都屬正常打字；只能由 elapsed 判斷長按。

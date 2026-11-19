@@ -367,6 +367,34 @@ struct MixedInputTests {
         #expect(s.committed.isEmpty)
     }
 
+
+    @Test func unusedHeldFRestoresOriginalInPhoneticAndASCII() throws {
+        let layout = Preferences.keyboardLayout
+        defer { Preferences.keyboardLayout = layout }
+        Preferences.keyboardLayout = .standard
+        for ascii in [false, true] {
+            let session = Session()
+            if ascii { session.begin(); session.type("hello") }
+            var gesture = FHoldGesture()
+            _ = gesture.handle(.press(eligible: true, repeating: false))
+            session.state = InputState.PendingF(original: session.state, preview: ascii ? "f" : "ㄑ")
+            let pending = try #require(session.state as? InputState.PendingF)
+            #expect(pending.markedText.string.hasSuffix(ascii ? "f" : "ㄑ"))
+            #expect(gesture.handle(.elapsed(0.152)) == [.beginLayer])
+            session.transition(pending.original)
+            #expect(session.handler.beginQuickSymbols(with: session.state, held: true, stateCallback: session.transition))
+            let symbols = try #require(session.state as? InputState.QuickSymbols)
+            #expect(!InputState.fHoldMarkedText(original: symbols.markedComposition).string.hasSuffix(ascii ? "f" : "ㄑ"))
+            let effects = gesture.handle(.observedRelease)
+            #expect(effects == [.invalidate, .endLayer, .replayTap, .consume])
+            session.handler.endQuickSymbols(with: session.state, stateCallback: session.transition)
+            session.key("f", code: 3)
+            #expect((session.state as? InputState.Inputting)?.composingBuffer == (ascii ? "hellof" : "ㄑ"))
+            #expect(session.committed.isEmpty)
+            #expect(!gesture.handle(.release).contains(.replayTap))
+        }
+    }
+
     @Test func delayedFTapRemainsPhonetic() {
         let previousLayout = Preferences.keyboardLayout
         defer { Preferences.keyboardLayout = previousLayout }
